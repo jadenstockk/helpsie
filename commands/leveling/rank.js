@@ -34,7 +34,7 @@ module.exports = {
           .setLevel(level)
           .setRank(rank)
           .setCustomStatusColor("#48a5ff")
-          .setBackground('IMAGE', path.join(__dirname, '../../storage/2.jpg'))
+          .setBackground('IMAGE', path.join(__dirname, `../../storage/${Math.floor(Math.random() * 2) + 1}.png`))
           
           rankcard.build()
           .then(data => {
