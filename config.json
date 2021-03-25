@@ -1,0 +1,20 @@
+{
+  "token": "NzgxMjkzMDczMDUyOTkxNTY5.X77h4A.7C-6R2vR7qcUIyLwU39V770Ogbg",
+  "database": "mongodb+srv://databaseADMIN:uMc0gVkmLkhT3M8M@discord-database.tdp8m.mongodb.net/Data",
+  "youtubeAPI": "AIzaSyDf7WcajXU57j-rTeTKneD2HVQTQUIhz4A",
+  "twitchToken": "l2hxy6x6lput6kjalpmaln9gn73y6p",
+  "twitchID": "5qxanaqez9051u1ok0fbqwjtnmcf1d",
+  "imageSearchID": "3da5caea72bbee50d",
+  "imageSearchAPI": "AIzaSyDjTDikOFjBPFQoXiAo2_0hlo6uItqSfo0",
+  "activity": {
+    "name": "!help",
+    "type": "LISTENING"
+  },
+  "redisPath": "//redis-11546.c240.us-east-1-3.ec2.cloud.redislabs.com:11546?password=eVEKQoStpc4mtb3YbUKrHTv9HIKJhNT9",
+  "dmsID": "794853417910665256",
+  "dmsTOKEN": "k1CABBWD1NcWPisPkVqkn5BHMzVuSsZ9WzQ_88dlUTom5V1VJpNhc-CBuowU-_zuPusf",
+  "errorID": "794945283778805760",
+  "errorTOKEN": "QhpPswzJuQCSx7koLJt-iT_TotWGTyw6Sn6LAilAFJpdXPFOz1MwWM4Rq0vI2NwI_vaV",
+  "guildlogID": "797043173464604702",
+  "guildlogTOKEN": "YVDwsKtezJjsAMStfkQf3YJ0Hq7QapxHomJscIHCvF0liY2PIwBlbfplq_yZ_XOyUiZg"
+}
