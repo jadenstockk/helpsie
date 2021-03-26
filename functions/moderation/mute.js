@@ -6,6 +6,7 @@ const timetostring = require('@danm/timespent');
 const serverlogs = require("./serverlogs");
 const { expire } = require("../../database");
 const errorhandler = require("../../errorhandler");
+const checkpunishability = require("./checkforerrors");
 
 module.exports = {
     mute: async (user, guild, seconds, moderator, reason, client, message) => {
@@ -31,6 +32,30 @@ module.exports = {
             )
         }
 
+        if (!muteRole) await guild.roles.create({
+            data: {
+                name: "Muted",
+                permissions: false,
+                color: '818386',
+                position: 1,
+            }
+        }).then(role => {
+            muteRole = role;
+            client.database.updateGuildData(guild.id, client, 'muteRole', role.id);
+
+            guild.channels.cache.forEach(async channel => {
+
+                channel.overwritePermissions([{
+                    id: role.id,
+                    deny: ['SEND_MESSAGES'],
+                }, ]);
+
+            })
+        })
+
+        let checkPerms = checkpunishability(message.guild, muteRole);
+        if (checkPerms) return message.channel.send(checkPerms);
+
         const redisClient = await database.redisClient;
         try {
             const redisKey = `muted-${user.id}-${guild.id}`;
@@ -38,7 +63,7 @@ module.exports = {
             if (seconds > 0) timeString = timetostring.short(ms(seconds + ' seconds'));
             else timeString = '∞';
 
-            if (seconds > (ms('1 year') / 1000 )) return errorMessage(`You cannot mute someone for over 1 year`);
+            if (seconds > (ms('1 year') / 1000)) return errorMessage(`You cannot mute someone for over 1 year`);
 
             await redisClient.get(redisKey, async (err, result) => {
 
@@ -53,26 +78,6 @@ module.exports = {
                 }
 
                 async function muteDataAdd() {
-
-                    if (!muteRole) guild.roles.create({
-                        data: {
-                            name: "Muted",
-                            permissions: false,
-                            color: '818386',
-                            position: user.roles.highest.position || 1,
-                        }
-                    }).then(role => {
-                        muteRole = role;
-                        client.database.updateGuildData(guild.id, client, 'muteRole', role.id)
-
-                        guild.channels.cache.forEach(channel => {
-
-                            channel.overwritePermissions([{
-                                id: role.id,
-                                deny: ['SEND_MESSAGES'],
-                            }, ]);
-                        })
-                    })
 
                     user.roles.add(muteRole, 'Muted member');
 
@@ -108,7 +113,7 @@ module.exports = {
                 }
             });
 
-        } catch(err) {
+        } catch (err) {
             errorhandler.init(err, __filename, message);
         }
     },
@@ -139,6 +144,9 @@ module.exports = {
 
         const roleID = client.settings.get(guild.id).muteRole;
         if (roleID) muteRole = guild.roles.cache.get(roleID);
+        
+        let checkPerms = checkpunishability(message.guild, muteRole);
+        if (muteRole) if (checkPerms) return message.channel.send(checkPerms);
 
         const redisClient = await database.redisClient;
         try {
@@ -148,7 +156,8 @@ module.exports = {
 
                 if (err) return errorhandler.init(err, __filename);
 
-                let getRole = user.roles.cache.get(muteRole.id);
+                let getRole;
+                if (muteRole) getRole = user.roles.cache.get(muteRole.id);
 
                 if ((!getRole) && (!result)) return errorMessage(`You cannot unmute someone that is not muted`);
                 else await muteDataRemove();
@@ -158,7 +167,7 @@ module.exports = {
 
                     if (getRole) user.roles.remove(muteRole, 'Unmuted member');
                     if (result) await redisClient.del(redisKey);
-    
+
                     serverlogs.execute(guild, user.user, 'UNMUTED', moderator, null, null, client);
 
                     if (message) message.channel.send(
@@ -167,10 +176,10 @@ module.exports = {
                         .setColor("33FF5B")
                     )
                 }
-                
+
             });
 
-        } catch(err) {
+        } catch (err) {
             errorhandler.init(err, __filename, message);
         }
     },

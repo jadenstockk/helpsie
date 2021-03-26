@@ -3,3 +3,4 @@ setup command
 role rewards
 reaction roles
 birthdays feature
+music

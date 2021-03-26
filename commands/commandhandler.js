@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const errHandler = require('../errorhandler');
+const errchecker = require('../functions/moderation/checkforerrors');
 
 const validatePermissions = (permissions) => {
   const validPermissions = [
@@ -144,11 +145,8 @@ module.exports = (client, commandOptions) => {
                   }
                 }
 
-                if (clientMember.hasPermission('EMBED_LINKS')) return message.channel.send(new Discord.MessageEmbed()
-                .setDescription(`${nopeEmoji} Bot is missing permissions: ${missingPermissions.join(', ')}`)
-                .setColor("#FF3E3E")
-                )
-                else return message.channel.send(`${nopeEmoji} Bot is missing permissions: ${missingPermissions.join(', ')}`)
+                let checkErrors = errchecker(guild, false, missingPermissions.join(', '));
+                if (checkErrors) return message.channel.send(checkErrors);
               }
             }
           }
