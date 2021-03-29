@@ -131,7 +131,7 @@ client.once("ready", async () => {
 
 //TESTING
 client.on('message', async message => {
-  if (message.author.bot) return;
+  if (message.author.bot) return;  
 })
 
 setInterval(async () => {

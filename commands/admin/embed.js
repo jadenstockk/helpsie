@@ -4,6 +4,7 @@ module.exports = {
   commands: 'embed',
   permissions: 'ADMINISTRATOR',
   permissionMessage: true,
+  botPermissions: ['ADD_REACTIONS'],
   description: `Use this command to walk through the embed creator and create beautiful message embeds`,
   usage: ``,
 

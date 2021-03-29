@@ -72,11 +72,13 @@ module.exports = {
         ]
       }
 
+      let pageNumber = 0;
       let maxPage = 5;
 
-      if (!setting) {
+      if (!isNaN(setting)) pageNumber = parseInt(setting) - 1, setting = undefined;
+      if ((pageNumber < 0) || (pageNumber > maxPage)) pageNumber = 0;
 
-        let pageNumber = 0;
+      if (!setting) {
 
         message.channel.send(page(pageNumber)).then(msg => {
 

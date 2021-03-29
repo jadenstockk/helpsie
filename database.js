@@ -77,19 +77,17 @@ module.exports = {
     );
   },
 
-  fetchGuildData: async (guild, client, connecting) => {
-    await guildData.findOne(
-      { guild },
-      async (err, data) => {
-        if (err) console.log(err), client.console.log(`Problem when loading guild data\n\n${err}`, 'unsuccess', client);
+  fetchGuildData: async (guild, client, connecting, data) => {
+    if (!data) data = await guildData.findOne({ guild }).catch(err => {
+      console.log(err), client.console.log(`Problem when loading guild data\n\n${err}`, 'unsuccess', client)
+    })
+    
+    dataHandler(data, guild, client);
+    
+    if (connecting) {
+      dataFetched++
+    }
 
-        dataHandler(data, guild, client);
-
-          if (connecting) {
-            dataFetched++
-          }
-      }
-    );
   },
 
   updateGuildData: (guild, client, section, update) => {

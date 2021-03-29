@@ -17,11 +17,18 @@ let Schema = new mongoose.Schema({
 
     disabled: Array,
 
-    leveling: Object,
+    leveling: {
+        channel: String,
+        message: String,
+    },
 
     birthdays: Object,
 
-    welcome: Object,
+    welcome: {
+        channel: String,
+        message: String,
+        role: String,
+    },
 
     reactionRoles: Array,
 
