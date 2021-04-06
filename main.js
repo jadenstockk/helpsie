@@ -86,12 +86,14 @@ client.once("ready", async () => {
 
   fetchAllGuildData(client, true);
 
+  /*
   client.musicOptions = {
     searchAPI: config.youtubeAPI,
     play: require('./functions/music/playSong'),
     volume: 1
   }
   client.connections = new Map();
+  */
 
   setInterval(() => {
     topggVoting.updateServerCount(client);
