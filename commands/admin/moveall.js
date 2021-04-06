@@ -12,14 +12,12 @@ module.exports = {
   
         if (message.member.voice.channel) {
   
-          let moveChannel = message.guild.channels.cache.get(args[0]) || message.guild.channels.cache.find(channel => channel.name === args.slice(0).join(' '))
+          let moveChannel = message.guild.channels.cache.get(args[0]) || message.guild.channels.cache.find(channel => channel.name === args.slice(0).join(' ') && channel.type === 'voice')
           if (!moveChannel) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The voice channel you provided is invalid`).setColor("#FF3E3E"))
-          if (moveChannel.type !== 'voice') return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The voice channel you provided is invalid`).setColor("#FF3E3E"))
+          if (moveChannel.id === message.member.voice.channel.id) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} You are already in this voice channel`).setColor("#FF3E3E"))
           
           let channel = message.guild.channels.cache.get(message.member.voice.channel.id);
           let members = [];
-
-          message.delete();
 
           try {
             channel.members.forEach(member => {
@@ -31,7 +29,7 @@ module.exports = {
             message.channel.send(new Discord.MessageEmbed()
             .setDescription(`${checkEmoji} Moved **${members.length} members** from **${channel.name}** to **${moveChannel.name}**`)
             .setColor("#00FF7F")
-            ).then(msg => { msg.delete({ timeout: 3000 })})
+            )
 
           } catch(err) {
 

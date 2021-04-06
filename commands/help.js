@@ -233,8 +233,8 @@ module.exports = {
     let adminCommands = [
       `\`${prefix}setup\`\nRun the bot's setup process to more easily personalize it to your liking`,
       `\`${prefix}settings\`\nGet a list of all the bot's settings`,
-      `\`${prefix}disable\`\nDisable a certain command or group of commands`,
-      `\`${prefix}enable\`\nOnce disabled, enable a certain command or group of commands`,
+      `\`${prefix}disable <command/command group>\`\nDisable a certain command or group of commands`,
+      `\`${prefix}enable <command/command group>\`\nOnce disabled, enable a certain command or group of commands`,
       `\`${prefix}disabled\`\nGet a list of all the disabled commands in the server`,
       `\`${prefix}embed\`\nCreate beautiful message embeds with the embed creator`,
       `\`${prefix}reactionroles\`\nCreate and manage reaction roles`,

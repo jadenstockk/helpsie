@@ -13,6 +13,6 @@ module.exports = {
                 errHandler.init(err, __filename);
 
             }
-          });   
+          });
     }
 }

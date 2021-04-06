@@ -16,7 +16,7 @@ module.exports = {
                 let welcomeEmbed = new Discord.MessageEmbed()
                 .setColor("#059DFF")
                 .setAuthor(`Thanks for adding me to your server!`, client.user.displayAvatarURL())
-                .setDescription(`Hi there I'm ${client.user.username}. A powerful multipurpose Discord bot with features varying from moderation to reaction roles. ${client.user.username} makes it easy to create and customize your Discord server to your liking with a simple setup process!\n\n**Type \`${prefix}setup\` to be taken through the setup process to choose and customize the features you want to use**`)
+                .setDescription(`Hi there I'm ${client.user.username}. A powerful multipurpose Discord bot with features varying from moderation to birthday reminders. ${client.user.username} makes it easy to create and customize your Discord server to your liking with a simple setup process!\n\n**Type \`${prefix}setup\` to be taken through the setup process to choose and customize the features you want to use**`)
                 .setFooter(`Want to get straight into the commands? Type ${prefix}help for a list of commands`)
                 .setThumbnail(client.user.displayAvatarURL())
 

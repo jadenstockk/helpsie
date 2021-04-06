@@ -2,10 +2,11 @@ const mongoose = require("mongoose");
 const redis = require('redis');
 const config = require('./config.json');
 const errorhandler = require("./errorhandler");
+const botInfo = require("./models/botInfo");
 const guildData = require('./models/guildData');
 
 module.exports = {
-  init: () => {
+  mongoose: () => {
     const dbOptions = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -60,6 +61,9 @@ module.exports = {
   },
 
   fetchAllGuildData: async (client, connecting) => {
+    let data = await botInfo.findOne({ mainID: 1 });
+    client.blacklistedUsers = data.blacklistedUsers;
+
     await guildData.find(
       async (err, data) => {
         if (err) console.log(err), client.console.log(`Problem when loading all guild data\n\n${err}`, 'unsuccess', client);
@@ -127,17 +131,17 @@ module.exports = {
             guild: message.guild.id,
 
           });
-          newData.save();
+          await newData.save();
 
           dataUpdate(section, update);
-          data.save();
+          await data.save();
 
         } else {
           dataUpdate(section, update);
-          data.save();
+          await data.save();
 
         }
-        client.database.fetchGuildData(guild, client);
+        client.database.fetchGuildData(guild, client, undefined, data);
       }
     );
   }
@@ -189,6 +193,9 @@ async function dataHandler(data, guild, client) {
     if (!data.leveling) leveling = { channel: undefined, message: `**Well done {user} you just reached level {level}!** 🥳`, roles: [] };
     else leveling = data.leveling;
 
+    if (!data.birthdays) birthdays = { channel: undefined, message: undefined, role: undefined };
+    else birthdays = data.birthdays;
+
     if (!data.reactionRoles) reactionRoles = [];
     else reactionRoles = data.reactionRoles;
 
@@ -211,6 +218,7 @@ async function dataHandler(data, guild, client) {
       muteRole,
       reactionRoles,
       leveling,
+      birthdays,
       autoModActions
 
     });
@@ -226,6 +234,7 @@ async function dataHandler(data, guild, client) {
       disabled: [],
       modRole: undefined,
       welcome: { channel: undefined, message: undefined, role: undefined },
+      birthdays: { channel: undefined, message: undefined, role: undefined },
       logsChannel: { token: undefined, id: undefined, channelID: undefined }, 
       muteRole: undefined,
       reactionRoles: [],

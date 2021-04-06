@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'birthday',
+    name: 'checkbirthdays',
     description: 'wish them happy birthdayyy',
 
     async execute(client) {
@@ -8,8 +8,6 @@ module.exports = {
         const spacetime = require('spacetime');
 
         let now = spacetime.now();
-        let channel = client.guilds.cache.get('721065682401493002').channels.cache.get('808331343868067860');
-        let general = client.guilds.cache.get('721065682401493002').channels.cache.get('727990054026346496');
 
         userData.find(
             { bDate: `${now.month() + 1}/${now.date()}` },
@@ -23,11 +21,20 @@ module.exports = {
                       if (member.bWished.includes(`${now.year()}`)) return;
 
                       let user = client.users.cache.get(member.user);
+                      let settings = client.settings.get(member.guild).birthdays;
+                      let channel = settings.channel;
+                      let message = settings.message;
+                      if (!settings || !channel || !message) return;
+
+                      channel = client.channels.cache.get(channel);
+                      if (!channel) return;
 
                       channel.send(
+                          user,
+                          
                           new Discord.MessageEmbed()
                           .setAuthor(`Happy Birthday ${user.tag}`, user.displayAvatarURL())
-                          .setDescription(`Today is ${user}'s Birthday! Everyone wish them in ${general}! 🥳`)
+                          .setDescription(message.replace('{user}', user))
                           .setColor('BLUE')
                       )
 

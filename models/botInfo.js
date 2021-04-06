@@ -6,6 +6,7 @@ let Schema = new mongoose.Schema({
     commandsRun: Number,
     users: Number,
     guilds: Number,
+    blacklistedUsers: { type: Array, default: [] },
 
 });
 

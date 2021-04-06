@@ -6,6 +6,8 @@
   "twitchID": "5qxanaqez9051u1ok0fbqwjtnmcf1d",
   "imageSearchID": "3da5caea72bbee50d",
   "imageSearchAPI": "AIzaSyDjTDikOFjBPFQoXiAo2_0hlo6uItqSfo0",
+  "appID": "781293073052991569",
+  "publicKey": "1ef2f875f2e64483d39327f16b4db60417133ab3706242dd310f3f9ac3dcc22f",
   "activity": {
     "name": "!help",
     "type": "LISTENING"

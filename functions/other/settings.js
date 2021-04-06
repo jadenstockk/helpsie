@@ -376,6 +376,49 @@ module.exports = {
       updateSettings('welcomechannel', welcomechannel.id, success);
 
 
+    } else if (setting === 'birthdaymessage') {
+
+      if ((!settinginfo && !currentSettings.birthdays.message)) return message.channel.send(new Discord.MessageEmbed().setDescription(`Birthday message is not setup`).setColor("#059DFF"))
+      if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Current birthday message is set to: ${currentSettings.birthdays.message}}`).setColor("#059DFF"))
+
+      settinginfo = args.splice(1).join(' ');
+
+      let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set birthday message to: ${settinginfo}`).setColor("#00FF7F"));
+
+      let currentmessage;
+      if (currentSettings.birthdays) currentmessage = currentSettings.birthdays.message;
+      let birthdaymessage = settinginfo;
+
+      if (birthdaymessage === 'off') return updateSettings('birthdaymessage', undefined, success);
+
+      if (birthdaymessage === currentmessage) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Birthday message is already set to: ${settinginfo}`).setColor("#FF3E3E"))
+
+      updateSettings('birthdaymessage', birthdaymessage, success);
+
+
+    } else if (setting === 'birthdaychannel') {
+
+      if ((!settinginfo && !currentSettings.birthdays.channel) || (!settinginfo && !message.guild.channels.cache.get(currentSettings.birthdays.channel))) return message.channel.send(new Discord.MessageEmbed().setDescription(`Birthday channel is not setup`).setColor("#059DFF"))
+      if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Current birthday channel is set to: ${message.guild.channels.cache.get(currentSettings.welcome.channel)}`).setColor("#059DFF"))
+
+      let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set birthday channel to: ${settinginfo}`).setColor("#00FF7F"));
+
+      let currentchannel;
+      if (currentSettings.birthdays) currentchannel = currentSettings.birthdays.channel;
+
+      let birthdaychannel = settinginfo.replace('<', '')
+      birthdaychannel = birthdaychannel.replace('>', '')
+      birthdaychannel = birthdaychannel.replace('#', '')
+
+      birthdaychannel = message.guild.channels.cache.get(birthdaychannel);
+
+      if (!birthdaychannel) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The channel you entered is not valid`).setColor("#FF3E3E"))
+
+      if (birthdaychannel.id === currentchannel) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Birthday channel is already set to: ${settinginfo}`).setColor("#FF3E3E"))
+
+      updateSettings('birthdaychannel', birthdaychannel.id, success);
+
+
     } else if (setting === 'welcomemessage') {
 
       if ((!settinginfo && !currentSettings.welcome.message)) return message.channel.send(new Discord.MessageEmbed().setDescription(`Welcome message is not setup`).setColor("#059DFF"))
@@ -503,6 +546,18 @@ module.exports = {
                   message: newsetting,
                 }
               });
+              else if (type === 'birthdaychannel') newData = new guildData({
+                guild: message.guild.id,
+                birthdays: {
+                  channel: newsetting,
+                }
+              });
+              else if (type === 'birthdaymessage') newData = new guildData({
+                guild: message.guild.id,
+                birthdays: {
+                  message: newsetting,
+                }
+              });
 
               await newData.save();
 
@@ -524,6 +579,9 @@ module.exports = {
 
               else if (type === 'welcomechannel') data.welcome.channel = newsetting;
               else if (type === 'welcomemessage') data.welcome.message = newsetting;
+
+              else if (type === 'birthdaychannel') data.birthdays.channel = newsetting;
+              else if (type === 'birthdaymessage') data.birthdays.message = newsetting;
 
               else if (type === 'levelingchannel') data.leveling.channel = newsetting;
               else if (type === 'levelingmessage') data.leveling.message = newsetting;

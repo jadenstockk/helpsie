@@ -8,6 +8,7 @@ module.exports = {
         for (i in allCommands) if (message.content.startsWith(`${client.settings.get(message.guild.id).prefix}${allCommands[i]}`)) return;
         if (message.content === '') return;
         if (client.levelingTimeouts.has(`${message.author.id}  | ${message.guild.id}`)) return;
+        if (client.blacklistedUsers && client.blacklistedUsers.find(person => person.user === message.author.id)) return;
 
         let max = 25;
         let min = 15;

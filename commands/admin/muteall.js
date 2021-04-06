@@ -30,13 +30,11 @@ module.exports = {
             .setDescription(`${nopeEmoji} There are no unmuted members in this voice channel`)
             .setColor("#FF3E3E")
           )
-
-          message.delete();
   
           message.channel.send(new Discord.MessageEmbed()
           .setDescription(`${checkEmoji} Muted **${members.length} members** in **${channel.name}**`)
           .setColor("#00FF7F")
-          ).then(msg => { msg.delete({ timeout: 3000 })})
+          )
 
         } catch(err) {
 

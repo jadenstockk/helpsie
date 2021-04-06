@@ -70,10 +70,16 @@ module.exports = {
           `\`${commandPrefix} levelmessage <message/off>\` - ***currently set to:*** ${setting('data.leveling.message', 'message')}\nSet a message that will be sent when a user levels up - use "{user}" to mention the user that's leveling up, and "{level}" to display the level *e.g. ${commandPrefix} levelmessage Well done {user} you just reached level {level}! 🥳*\n\n`,
           `\`${commandPrefix} levelroles\`\nCreate new level role rewards when members reach a certain level *e.g. ${commandPrefix} levelroles*\n\n`,
         ]
+        p7 = [
+          `**Birthday Settings:**\n\n`,
+          `\`${commandPrefix} birthdaychannel <channel>\` - ***currently set to: ${setting('data.birthdays.channel', 'channel')}***\nSet a channel where member levelups will be announced *e.g. ${commandPrefix} birthdaychannel #level-ups*\n\n`,
+          `\`${commandPrefix} birthdaymessage <message/off>\` - ***currently set to:*** ${setting('data.birthdays.message', 'message')}\nSet a message that will be sent when it's a user's birthday - use "{user}" to mention the user who's birthday it is *e.g. ${commandPrefix} birthdaymessage Today is {user}'s Birthday! Make sure you wish them on their special day! 🥳*\n\n`,
+          `\`${commandPrefix} birthdayrole\` - ***currently set to:*** ${setting('data.birthdays.role', 'role')}\nChoose a role to give to members when it's their birthday *e.g. ${commandPrefix} birthdayrole @its-my-birthday*\n\n`,
+        ]
       }
 
       let pageNumber = 0;
-      let maxPage = 5;
+      let maxPage = 6;
 
       if (!isNaN(setting)) pageNumber = parseInt(setting) - 1, setting = undefined;
       if ((pageNumber < 0) || (pageNumber > maxPage)) pageNumber = 0;
@@ -138,6 +144,7 @@ module.exports = {
           else if (page === 2) list = p4;
           else if (page === 3) list = p5;
           else if (page === 4) list = p6;
+          else if (page === 5) list = p7;
           else list = [`Error when loading settings page`];
 
           settingsList = new Discord.MessageEmbed()

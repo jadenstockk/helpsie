@@ -22,7 +22,11 @@ let Schema = new mongoose.Schema({
         message: String,
     },
 
-    birthdays: Object,
+    birthdays: {
+        channel: String,
+        message: String,
+        role: String,
+    },
 
     welcome: {
         channel: String,

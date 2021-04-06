@@ -2,14 +2,37 @@ const Discord = require("discord.js");
 const path = require('path');
 const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"] });
 const config = require('./config.json');
+const topggVoting = require('./events/topggVote');
 const fs = require("fs");
 const guildData = require('./models/guildData');
 const botInfo = require("./models/botInfo");
 const mute = require("./functions/moderation/mute");
+const { DiscordInteractions, ApplicationCommandOptionType } = require("slash-commands");
+const slash = require('slash-commands');
 const { fetchAllGuildData } = require("./database");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
+
+const interaction = new DiscordInteractions({
+  applicationId: config.appID,
+  authToken: config.token,
+  publicKey: config.publicKey,
+});
+
+const command = {
+  name: "ping",
+  description: "Get the bot's current API and client latency as well as uptime",
+};
+
+async function slashCmds() {
+  await interaction
+  //.getApplicationCommands('794565558862479360')
+  //.deleteApplicationCommand('826856166273056768', '794565558862479360')
+  .createApplicationCommand(command, '794565558862479360')
+  .then(console.log)
+  .catch(console.error);
+}
 
 client.console = require("./functions/botevents/console");
 
@@ -70,10 +93,15 @@ client.once("ready", async () => {
   }
   client.connections = new Map();
 
+  setInterval(() => {
+    topggVoting.updateServerCount(client);
+    
+  }, 20 * 60000);
+
   loadAll();
 
   function loadAll() {
-    setTimeout(() => {
+    setTimeout(async () => {
       if (dataFetched > (client.guilds.cache.size - 1)) {
 
         console.log(`Loaded guild data`)
@@ -83,7 +111,7 @@ client.once("ready", async () => {
         let onlineMessage = ` ${client.user.username} is online in ${client.guilds.cache.size} guilds `;
 
         console.clear(), console.log(`||${'-'.repeat(onlineMessage.length)}||\n||${onlineMessage}||\n||${'-'.repeat(onlineMessage.length)}||\n`)//, client.console.log(`All startup functions completed`, 'success', client);
-
+        
       } else {
         setTimeout(() => {
           loadAll();
@@ -131,9 +159,16 @@ client.once("ready", async () => {
 
 //TESTING
 client.on('message', async message => {
-  if (message.author.bot) return;  
+  if (message.author.bot) return;
 })
 
+//BIRTHDAYS
+setInterval(() => {
+  client.functions.get("checkbirthdays").execute(client);
+
+}, 30000);
+
+//STATS UPDATER
 setInterval(async () => {
   let commandsRun = client.commandsRun;
   let guilds = client.guilds.cache.size;
@@ -171,6 +206,7 @@ setInterval(async () => {
 
 }, 100000);
 
+topggVoting.init(client);
 client.database.redis();
-client.database.init();
+client.database.mongoose();
 client.login(config.token);

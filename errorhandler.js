@@ -9,6 +9,7 @@ module.exports = {
         if (message) message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} It seems there was an error! Please contact support if this reoccurs`).setColor("#FF3E3E")).catch(err2 => {
             console.log(err)
         })
-        console.log(`Error: ${path.basename(file)}`);
+        if (message) console.log(`Error: ${path.basename(file)} in guild ${message.guild.id}`);
+        else console.log(`Error: ${path.basename(file)}`);        
     }
 }

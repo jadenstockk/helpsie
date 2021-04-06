@@ -1,6 +1,5 @@
 setup command
+finish settings
 role rewards
-reaction roles
-birthdays feature
 music
 command limiter
