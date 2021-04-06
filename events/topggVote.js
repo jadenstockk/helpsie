@@ -34,7 +34,9 @@ const init = async (client) => {
     })
     */
 
-    function updateServerCount(client) {}
+    function updateServerCount(client) {
+        return;
+    }
 }
 module.exports.init = init;
 module.exports.updateServerCount = this.updateServerCount;
