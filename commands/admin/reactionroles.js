@@ -101,6 +101,12 @@ module.exports = {
                 .setColor("#FF3E3E")
             )
 
+            if (reactionRoles.find(rr => rr.message === reactionrole.message && rr.role === reactionrole.role && rr.emoji === reactionrole.emoji)) return message.channel.send(
+                new Discord.MessageEmbed()
+                .setDescription(`${nopeEmoji} There is already a reaction role on that message that has the same emoji and role as you provided`)
+                .setColor("#FF3E3E")
+            )
+
             let checkerrs = checkforerrors(message.guild, roleFetch, false, client);
             if (checkerrs) return message.channel.send(checkerrs);
 
