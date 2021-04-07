@@ -7,10 +7,11 @@ module.exports = () => {
         client.user.setPresence({
             activity: {
                 type: 'LISTENING',
-                name: 'Jaden test me'
+                name: 'jaden code'
             }
         })
     })
 
-    client.login(process.env['BETA_TOKEN']);
+    if (!process.env['BETA_TOKEN']) return;
+    else client.login(process.env['BETA_TOKEN']);
 }

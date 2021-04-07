@@ -12,7 +12,7 @@ module.exports = {
     let supportEmbed = new Discord.MessageEmbed()
     .setAuthor(`Need some help or have a question?`, client.user.displayAvatarURL())
     .setDescription(`[Click here](https://discord.gg/5jaZRYnZU5) to join our support server for assistance!`)
-    .setColor("#059DFF")
+    .setColor(process.env['EMBED_COLOR'])
 
     function helpDisabled(group) {
       message.channel.send(
@@ -23,7 +23,7 @@ module.exports = {
     }
 
     let mainList = new Discord.MessageEmbed()
-      .setColor("#059DFF")
+      .setColor(process.env['EMBED_COLOR'])
       .setAuthor(`Commands List:`, client.user.displayAvatarURL())
 
     if (!disabled.includes('utilities')) mainList.addFields(
@@ -76,7 +76,7 @@ module.exports = {
     }
 
     let utilitiesList = new Discord.MessageEmbed()
-      .setColor("#059DFF")
+      .setColor(process.env['EMBED_COLOR'])
       .setAuthor(`Utility Commands:`, client.user.displayAvatarURL())
       .setDescription(utilityCommands.join('\n\n'))
 
@@ -127,7 +127,7 @@ module.exports = {
       }
   
       let birthdayList = new Discord.MessageEmbed()
-        .setColor("#059DFF")
+        .setColor(process.env['EMBED_COLOR'])
         .setAuthor(`Birthday Commands:`, client.user.displayAvatarURL())
         .setDescription(birthdayCommands.join('\n\n'))
 
@@ -172,7 +172,7 @@ module.exports = {
       }
       
       let modList = new Discord.MessageEmbed()
-        .setColor("#059DFF")
+        .setColor(process.env['EMBED_COLOR'])
         .setAuthor(`Moderation Commands:`, client.user.displayAvatarURL())
         .setDescription(
           moderationCommands.join('\n\n')
@@ -205,7 +205,7 @@ module.exports = {
           }
           
           let levelingList = new Discord.MessageEmbed()
-            .setColor("#059DFF")
+            .setColor(process.env['EMBED_COLOR'])
             .setAuthor(`Leveling Commands:`, client.user.displayAvatarURL())
             .setDescription(
               levelingCommands.join('\n\n')
@@ -269,7 +269,7 @@ module.exports = {
     }
 
     let adminList = new Discord.MessageEmbed()
-      .setColor("#059DFF")
+      .setColor(process.env['EMBED_COLOR'])
       .setAuthor(`Admin Commands:`, client.user.displayAvatarURL())
       .setDescription(adminCommands.join('\n\n'))
 

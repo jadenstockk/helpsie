@@ -38,13 +38,13 @@ module.exports = {
         if ((now.getDate() === localDate.getDate()) && (now.getMonth() === localDate.getMonth())) return message.channel.send(
           new Discord.MessageEmbed()
           .setDescription(`🎂 ${user}'s birthday is today!`)
-          .setColor("#059DFF")
+          .setColor(process.env['EMBED_COLOR'])
         )
 
         return message.channel.send(
           new Discord.MessageEmbed()
           .setDescription(`🎂 ${user}'s next birthday is in **${spacetime.now().since(birthday).precise}** on **${localDate.getDate()} ${months[localDate.getMonth()]} ${localDate.getFullYear()}**`)
-          .setColor("#059DFF")
+          .setColor(process.env['EMBED_COLOR'])
         )
       })
   }

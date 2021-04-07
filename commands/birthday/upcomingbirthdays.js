@@ -48,7 +48,7 @@ module.exports = {
       new Discord.MessageEmbed()
       .setAuthor(`🎂 Upcoming Birthdays in ${spacetime.now().year()}`)
       .setDescription(birthdaysFormatted.join('\n'))
-      .setColor("#059DFF")
+      .setColor(process.env['EMBED_COLOR'])
     )
   }
 };

@@ -151,7 +151,7 @@ module.exports = {
           .setAuthor(`${message.guild.name} Server Settings:`, message.guild.iconURL())
           .setDescription(list.join(''))
           .setFooter(`Page ${page + 1} of ${maxPage}`)
-          .setColor("#059DFF")
+          .setColor(process.env['EMBED_COLOR'])
 
           return settingsList;
         }

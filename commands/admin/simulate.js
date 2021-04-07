@@ -15,7 +15,7 @@ module.exports = {
           `\`memberjoin\` - when a member joins the server`
       ]
 
-      let embed = new Discord.MessageEmbed().setDescription(`**Choose one of the following events below to simulate:**\n\n${events.join('\n')}`).setColor("#059DFF").setFooter(`Type "${client.settings.get(message.guild.id).prefix}simulate <event>" to simulate the event of your choice`)
+      let embed = new Discord.MessageEmbed().setDescription(`**Choose one of the following events below to simulate:**\n\n${events.join('\n')}`).setColor(process.env['EMBED_COLOR']).setFooter(`Type "${client.settings.get(message.guild.id).prefix}simulate <event>" to simulate the event of your choice`)
 
       let event = args[0];
       if (!event) return message.channel.send(embed);

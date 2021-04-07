@@ -11,7 +11,7 @@ module.exports = {
   callback: (message, args, client) => {
 
     message.channel.send(new Discord.MessageEmbed()
-    .setColor("#059DFF")
+    .setColor(process.env['EMBED_COLOR'])
     .setAuthor(`Embed Creator | Step 1/5`, client.user.displayAvatarURL())
     .setDescription(`What channel do you want to send the embed in?`)).then(mainMsg => {
 
@@ -24,7 +24,7 @@ module.exports = {
             channelCollected.first().delete();
 
                         mainMsg.edit(new Discord.MessageEmbed()
-                        .setColor("#059DFF")
+                        .setColor(process.env['EMBED_COLOR'])
                         .setAuthor(`Embed Creator | Step 2/5`, client.user.displayAvatarURL())
                         .setDescription(`${checkEmoji} **Channel successfully set to:** ${channel}\n\nWhat do you want the title of the embed to be?`)
                         .setFooter(`Don't want a title? Type 'none' to leave this part out`))
@@ -36,7 +36,7 @@ module.exports = {
                                 if (title.toLowerCase() === 'none') title = ''
 
                                 mainMsg.edit(new Discord.MessageEmbed()
-                                .setColor("#059DFF")
+                                .setColor(process.env['EMBED_COLOR'])
                                 .setAuthor(`Embed Creator | Step 3/5`, client.user.displayAvatarURL())
                                 .setDescription(`${checkEmoji} **Title successfully set to:** ${title}\n\nWhat do you want the description of the embed to be?`)
                                 .setFooter(`Don't want a description? Type 'none' to leave this part out`))
@@ -52,7 +52,7 @@ module.exports = {
                                         descriptionCollected.first().delete();
                     
                                         mainMsg.edit(new Discord.MessageEmbed()
-                                        .setColor("#059DFF")
+                                        .setColor(process.env['EMBED_COLOR'])
                                         .setAuthor(`Embed Creator | Step 4/5`, client.user.displayAvatarURL())
                                         .setDescription(`${checkEmoji} **Description successfully set to:** ${description}\n\nWhat do you want the footer of the embed to be? Use '!SERVERICON!' in the beginning of your response to add the server's icon at the start of the footer`)
                                         .setFooter(`Don't want a footer? Type 'none' to leave this part out`))
@@ -69,7 +69,7 @@ module.exports = {
                                                 footerCollected.first().delete();
 
                                                 mainMsg.edit(new Discord.MessageEmbed()
-                                                .setColor("#059DFF")
+                                                .setColor(process.env['EMBED_COLOR'])
                                                 .setAuthor(`Embed Creator | Step 5/5`, client.user.displayAvatarURL())
                                                 .setDescription(`${checkEmoji} **Footer successfully set to:** ${footer}\n\nWhat do you want the color of the embed to be? (for more accurate to your liking colors, use [hex color codes](https://htmlcolorcodes.com/))`)
                                                 .setFooter(`Want a blank color? Type 'none' to leave this part out`))

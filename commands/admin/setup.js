@@ -93,7 +93,7 @@ module.exports = {
     function embed(description) {
       channel.send(
         new Discord.MessageEmbed()
-        .setColor("#059DFF")
+        .setColor(process.env['EMBED_COLOR'])
         .setAuthor(`${client.user.username} Setup | Step ${step + 1}/${steps.length}`, client.user.displayAvatarURL())
         .setDescription(description)
         .setFooter(`Type "skip" to leave this step out and move on or type "cancel" to end the setup process`)
@@ -102,7 +102,7 @@ module.exports = {
 
     channel.send(
       new Discord.MessageEmbed()
-      .setColor("#059DFF")
+      .setColor(process.env['EMBED_COLOR'])
       .setAuthor(`${client.user.username} Setup Process`, client.user.displayAvatarURL())
       .setDescription(`Welcome to ${client.user.username}'s setup process. This makes it easier for you to customize ${client.user.username} to your liking rather than having to type out long settings commands.\n\nWant to **skip** a **certain step** of the setup process? No problem, just **type \`skip\`** to move onto the **next step**!\n\nStarting to feel as though you **don't** really want to carry on with the **setup process**? No problem, just **type \`cancel\`**!\n\nNow that you've been briefed on what to expect, let's get started on the setup process!\n\n**Type \`start\` to begin**`)
       .setFooter(`Want to get straight into the commands? Type ${prefix}help for a list of commands`)

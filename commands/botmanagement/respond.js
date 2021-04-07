@@ -15,11 +15,11 @@ module.exports = {
             let files = message.attachments.first();
             if (!files) dm = new Discord.MessageEmbed()
                 .setDescription(`**Sent to ${user}**\n${response}`)
-                .setColor("#059DFF")
+                .setColor(process.env['EMBED_COLOR'])
 
             else dm = new Discord.MessageEmbed()
                 .setDescription(`**Sent to ${user}**\n${response}`)
-                .setColor("#059DFF")
+                .setColor(process.env['EMBED_COLOR'])
                 .attachFiles(files)
 
             user.send(dm);

@@ -7,6 +7,8 @@ const fs = require("fs");
 const guildData = require('./models/guildData');
 const botInfo = require("./models/botInfo");
 const mute = require("./functions/moderation/mute");
+const dotenv = require('dotenv');
+dotenv.config();
 const { DiscordInteractions, ApplicationCommandOptionType } = require("slash-commands");
 const slash = require('slash-commands');
 const { fetchAllGuildData } = require("./database");
@@ -73,7 +75,7 @@ module.exports.fetchLatest = fetchLatestData;
 
 client.once("ready", async () => {
 
-  client.user.setPresence({ activity: { name: config.activity.name, type: config.activity.type }});
+  client.user.setPresence({ activity: { name: process.env['ACTIVITYNAME'], type: 'LISTENING' }});
 
   global.nopeEmoji = client.emojis.cache.get('794858153694986271');
   global.muteEmoji = client.emojis.cache.get('794859653825691699');

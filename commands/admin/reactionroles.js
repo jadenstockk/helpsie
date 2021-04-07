@@ -49,7 +49,7 @@ module.exports = {
             const settinginfos = args;
             settinginfos.shift();
 
-            if ((!settinginfos) || (settinginfos.length < 1)) return message.channel.send(new Discord.MessageEmbed().setAuthor(`Reaction Role Creator`, message.guild.iconURL()).setDescription(`To create a new Automod Action, use the command as follows:\n**${prefix}reactionroles new \`<message link/id>\` \`<emoji>\` \`<role>\`**\n\nWhen members react with \`<emoji\` on \`<message link/id>\` they get \`<role>\`, and when they unreact, \`<role>\` gets removed from them`).setColor("#059DFF"));
+            if ((!settinginfos) || (settinginfos.length < 1)) return message.channel.send(new Discord.MessageEmbed().setAuthor(`Reaction Role Creator`, message.guild.iconURL()).setDescription(`To create a new Automod Action, use the command as follows:\n**${prefix}reactionroles new \`<message link/id>\` \`<emoji>\` \`<role>\`**\n\nWhen members react with \`<emoji\` on \`<message link/id>\` they get \`<role>\`, and when they unreact, \`<role>\` gets removed from them`).setColor(process.env['EMBED_COLOR']));
 
             let reactionrole = {
                 channel: settinginfos[0],
@@ -182,7 +182,7 @@ module.exports = {
 
         } else {
             let reactionRolesList = new Discord.MessageEmbed()
-                .setColor("#059DFF")
+                .setColor(process.env['EMBED_COLOR'])
                 .setAuthor(`Reaction Roles`, client.user.displayAvatarURL())
                 .setDescription(reactionCommands.join('\n') + '\n\n' + reactionrolesMaybe.join('\n\n'))
 

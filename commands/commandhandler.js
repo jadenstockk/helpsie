@@ -93,8 +93,10 @@ module.exports = (client, commandOptions) => {
 
       if (!client.settings.get(guild.id)) return;
 
-      const prefix = client.settings.get(guild.id).prefix;
-      if (!prefix) client.database.fetchGuildData(guild.id, clients)
+      let prefix = process.env['PREFIX'];
+      if (!prefix) client.settings.get(guild.id).prefix;
+      if (!prefix) await client.database.fetchGuildData(guild.id, clients);
+
       const disabled = client.settings.get(guild.id).disabled;
       const clientMember = message.guild.members.cache.get(client.user.id);
   
