@@ -97,7 +97,7 @@ module.exports = {
 
     } else if (setting === 'muted') {
 
-      if (!settinginfo && !currentSettings.muteRole) return message.channel.send(new Discord.MessageEmbed().setDescription(`Muted role is not setup`).setColor("#059DFF"))
+      if (!settinginfo && (!currentSettings.muteRole || message.guild.roles.cache.get(currentSettings.muteRole))) return message.channel.send(new Discord.MessageEmbed().setDescription(`Muted role is not setup`).setColor("#059DFF"))
       if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Muted role is set to: ${message.guild.roles.cache.get(currentSettings.muteRole)}`).setColor("#059DFF"))
 
       let muterole = message.guild.roles.cache.get(settinginfo.replace('<', '').replace('>', '').replace('@', '').replace('&', ''));
@@ -419,6 +419,23 @@ module.exports = {
       updateSettings('birthdaychannel', birthdaychannel.id, success);
 
 
+    } else if (setting === 'birthdayrole') {
+
+      if (!settinginfo && (!currentSettings.birthdays.role || message.guild.roles.cache.get(currentSettings.birthdays.role))) return message.channel.send(new Discord.MessageEmbed().setDescription(`Birthday role is not setup`).setColor("#059DFF"))
+      if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Birthday role is set to: ${message.guild.roles.cache.get(currentSettings.birthdays.role)}`).setColor("#059DFF"))
+
+      if (settinginfo.toLowerCase() === 'off') return updateSettings('birthdayrole', undefined, success);
+
+      let birthdayrole = message.guild.roles.cache.get(settinginfo.replace('<', '').replace('>', '').replace('@', '').replace('&', ''));
+
+      if (!birthdayrole) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered is not valid`).setColor("#FF3E3E"))
+
+      if (birthdayrole.id === currentSettings.birthdays.role) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Birthday role is already set to: ${settinginfo}`).setColor("#FF3E3E"))
+
+      let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set birthday role to: ${settinginfo}`).setColor("#00FF7F"))
+
+      updateSettings('birthdayrole', birthdayrole.id, success);
+
     } else if (setting === 'welcomemessage') {
 
       if ((!settinginfo && !currentSettings.welcome.message)) return message.channel.send(new Discord.MessageEmbed().setDescription(`Welcome message is not setup`).setColor("#059DFF"))
@@ -439,6 +456,24 @@ module.exports = {
       updateSettings('welcomemessage', welcomemessage, success);
 
 
+    } else if (setting === 'welcomerole') {
+
+      if (!settinginfo && (!currentSettings.welcome.role || message.guild.roles.cache.get(currentSettings.welcome.role))) return message.channel.send(new Discord.MessageEmbed().setDescription(`Welcome role is not setup`).setColor("#059DFF"))
+      if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Welcome role is set to: ${message.guild.roles.cache.get(currentSettings.welcome.role)}`).setColor("#059DFF"))
+
+      if (settinginfo.toLowerCase() === 'off') return updateSettings('welcomerole', undefined, success);
+
+      let welcomerole = message.guild.roles.cache.get(settinginfo.replace('<', '').replace('>', '').replace('@', '').replace('&', ''));
+
+      if (!welcomerole) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered is not valid`).setColor("#FF3E3E"))
+
+      if (welcomerole.id === currentSettings.welcome.role) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Welcome role is already set to: ${settinginfo}`).setColor("#FF3E3E"))
+
+      let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set welcome role to: ${settinginfo}`).setColor("#00FF7F"))
+
+      updateSettings('welcomerole', welcomerole.id, success);
+
+
     } else if (setting === 'levelchannel') {
 
       if ((!settinginfo && !currentSettings.leveling.channel) || (!settinginfo && !message.guild.channels.cache.get(currentSettings.leveling.channel))) return message.channel.send(new Discord.MessageEmbed().setDescription(`Leveling channel is not setup`).setColor("#059DFF"))
@@ -452,7 +487,7 @@ module.exports = {
       let levelingchannel = settinginfo.replace('<', '')
       levelingchannel = levelingchannel.replace('>', '')
       levelingchannel = levelingchannel.replace('#', '')
-      
+
       if (levelingchannel === 'off') return updateSettings('levelingchannel', undefined, success);
 
       levelingchannel = message.guild.channels.cache.get(levelingchannel);
@@ -546,6 +581,12 @@ module.exports = {
                   message: newsetting,
                 }
               });
+              else if (type === 'welcomerole') newData = new guildData({
+                guild: message.guild.id,
+                welcome: {
+                  role: newsetting,
+                }
+              });
               else if (type === 'birthdaychannel') newData = new guildData({
                 guild: message.guild.id,
                 birthdays: {
@@ -555,6 +596,24 @@ module.exports = {
               else if (type === 'birthdaymessage') newData = new guildData({
                 guild: message.guild.id,
                 birthdays: {
+                  message: newsetting,
+                }
+              });
+              else if (type === 'birthdayrole') newData = new guildData({
+                guild: message.guild.id,
+                birthdays: {
+                  role: newsetting,
+                }
+              });
+              else if (type === 'levelingchannel') newData = new guildData({
+                guild: message.guild.id,
+                leveling: {
+                  channel: newsetting,
+                }
+              });
+              else if (type === 'levelingmessage') newData = new guildData({
+                guild: message.guild.id,
+                leveling: {
                   message: newsetting,
                 }
               });
@@ -579,9 +638,11 @@ module.exports = {
 
               else if (type === 'welcomechannel') data.welcome.channel = newsetting;
               else if (type === 'welcomemessage') data.welcome.message = newsetting;
+              else if (type === 'welcomerole') data.welcome.role = newsetting;
 
               else if (type === 'birthdaychannel') data.birthdays.channel = newsetting;
               else if (type === 'birthdaymessage') data.birthdays.message = newsetting;
+              else if (type === 'birthdayrole') data.birthdays.role = newsetting;
 
               else if (type === 'levelingchannel') data.leveling.channel = newsetting;
               else if (type === 'levelingmessage') data.leveling.message = newsetting;

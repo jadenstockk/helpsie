@@ -62,7 +62,7 @@ module.exports = {
           `**Welcome Settings:**\n\n`,
           `\`${commandPrefix} welcomechannel <channel>\` - ***currently set to: ${setting('data.welcome.channel', 'channel')}***\nSet a channel where new server members will be greeted *e.g. ${commandPrefix} welcomechannel #welcome-channel*\n\n`,
           `\`${commandPrefix} welcomemessage <message/off>\` - ***currently set to:*** ${setting('data.welcome.message', 'message')}\nSet a message that will be sent in the welcome channel *e.g. ${commandPrefix} welcomemessage Hey {user}! Welcome to {server}!*\n\n`,
-          `\`${commandPrefix} welcomerole <role>\` - ***currently set to: ${setting('data.welcome.role', 'role')}***\nSet a role/roles that will be given to new server members *e.g. ${commandPrefix} welcomerole @member*\n\n`,
+          `\`${commandPrefix} welcomerole <role/off>\` - ***currently set to: ${setting('data.welcome.role', 'role')}***\nChoose a role that will be given to new server members when they join *e.g. ${commandPrefix} welcomerole @member*\n\n`,
         ]
         p6 = [
           `**Leveling Settings:**\n\n`,
@@ -74,7 +74,7 @@ module.exports = {
           `**Birthday Settings:**\n\n`,
           `\`${commandPrefix} birthdaychannel <channel>\` - ***currently set to: ${setting('data.birthdays.channel', 'channel')}***\nSet a channel where member levelups will be announced *e.g. ${commandPrefix} birthdaychannel #level-ups*\n\n`,
           `\`${commandPrefix} birthdaymessage <message/off>\` - ***currently set to:*** ${setting('data.birthdays.message', 'message')}\nSet a message that will be sent when it's a user's birthday - use "{user}" to mention the user who's birthday it is *e.g. ${commandPrefix} birthdaymessage Today is {user}'s Birthday! Make sure you wish them on their special day! 🥳*\n\n`,
-          `\`${commandPrefix} birthdayrole\` - ***currently set to:*** ${setting('data.birthdays.role', 'role')}\nChoose a role to give to members when it's their birthday *e.g. ${commandPrefix} birthdayrole @its-my-birthday*\n\n`,
+          `\`${commandPrefix} birthdayrole <role/off>\` - ***currently set to:*** ${setting('data.birthdays.role', 'role')}\nChoose a role to give to members when it's their birthday *e.g. ${commandPrefix} birthdayrole @its-my-birthday*\n\n`,
         ]
       }
 
