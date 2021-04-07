@@ -10,13 +10,14 @@ const mute = require("./functions/moderation/mute");
 const { DiscordInteractions, ApplicationCommandOptionType } = require("slash-commands");
 const slash = require('slash-commands');
 const { fetchAllGuildData } = require("./database");
+const betaOnline = require("./betaOnline");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
 
 const interaction = new DiscordInteractions({
   applicationId: config.appID,
-  authToken: config.token,
+  authToken: process.env['TOKEN'],
   publicKey: config.publicKey,
 });
 
@@ -96,7 +97,7 @@ client.once("ready", async () => {
   */
 
   setInterval(() => {
-    topggVoting.updateServerCount(client);
+    //topggVoting.updateServerCount(client);
     
   }, 20 * 60000);
 
@@ -208,7 +209,8 @@ setInterval(async () => {
 
 }, 100000);
 
-topggVoting.init(client);
+betaOnline();
+//topggVoting.init(client);
 client.database.redis();
 client.database.mongoose();
-client.login(config.token);
+client.login(process.env['TOKEN']);

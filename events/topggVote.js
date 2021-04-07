@@ -4,8 +4,6 @@ const init = async (client) => {
     const express = require("express");
     const bodyParser = require("body-parser");
 
-    /*
-
     const topgg = new top.Client('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc5MzQ0ODQxOTk2MzgzMDI3NCIsImJvdCI6dHJ1ZSwiaWF0IjoxNjEwODI1NDIyfQ.dAIr4Ai1TybtOdeKhvs74EslT3JYsTyYDK2o52DEso8');
 
     const app = express();
@@ -32,11 +30,6 @@ const init = async (client) => {
         })
         res.status(200).end()
     })
-    */
-
-    function updateServerCount(client) {
-        return;
-    }
 }
 module.exports.init = init;
 module.exports.updateServerCount = this.updateServerCount;
