@@ -13,7 +13,7 @@ module.exports = {
         const reactionroles = client.settings.get(reaction.message.guild.id).reactionRoles;
         if (!reactionroles || reactionroles.length < 1) return;
 
-        const member = reaction.message.member;
+        const member = reaction.message.guild.members.cache.get(user.id);
 
         const rr = reactionroles.find(r => (r.emoji.replace('<', '').replace('>', '').replace(':', '') === reaction.emoji.identifier || r.emoji === reaction.emoji.name) && r.message === reaction.message.id);
         if (!rr) return;
@@ -33,7 +33,7 @@ module.exports = {
         const reactionroles = client.settings.get(reaction.message.guild.id).reactionRoles;
         if (!reactionroles || reactionroles.length < 1) return;
 
-        const member = reaction.message.member;
+        const member = reaction.message.guild.members.cache.get(user.id);
 
         const rr = reactionroles.find(r => (r.emoji.replace('<', '').replace('>', '').replace(':', '') === reaction.emoji.identifier || r.emoji === reaction.emoji.name) && r.message === reaction.message.id);
         if (!rr) return;
