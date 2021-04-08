@@ -21,7 +21,6 @@ const {
 } = require("./database");
 const betaOnline = require("./betaOnline");
 const checkbirthdays = require("./functions/other/checkbirthdays");
-const app = require("./website/app");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
@@ -235,7 +234,6 @@ async function botIntervals() {
   }, 100000);
 }
 
-app();
 client.database.redis();
 client.database.mongoose();
 client.login(process.env['TOKEN']);

@@ -61,7 +61,9 @@ module.exports = {
   },
 
   fetchAllGuildData: async (client, connecting) => {
-    let data = await botInfo.findOne({ mainID: 1 });
+    let data = await botInfo.findOne({
+      mainID: 1
+    });
     client.blacklistedUsers = data.blacklistedUsers;
 
     await guildData.find(
@@ -82,12 +84,14 @@ module.exports = {
   },
 
   fetchGuildData: async (guild, client, connecting, data) => {
-    if (!data) data = await guildData.findOne({ guild }).catch(err => {
+    if (!data) data = await guildData.findOne({
+      guild
+    }).catch(err => {
       console.log(err), client.console.log(`Problem when loading guild data\n\n${err}`, 'unsuccess', client)
     })
-    
+
     dataHandler(data, guild, client);
-    
+
     if (connecting) {
       dataFetched++
     }
@@ -95,34 +99,35 @@ module.exports = {
   },
 
   updateGuildData: (guild, client, section, update) => {
-    guildData.findOne(
-      { guild: guild},
+    guildData.findOne({
+        guild: guild
+      },
       async (err, data) => {
         if (err) console.log(err), client.console.log(`Problem when updating guild data\n\n\`\`\`${err}\`\`\``, 'unsuccess', client);
 
         function dataUpdate(section, update) {
           if (section === 'prefix') return data.prefix = update;
-        
+
           else if (section === 'profanityFilter') return data.profanityFilter = update;
           else if (section === 'inviteBlocker') return data.inviteBlocker = update;
           else if (section === 'linkBlocker') return data.linkBlocker = update;
-        
+
           else if (section === 'modRole') return data.modRole = update;
           else if (section === 'muteRole') return data.muteRole = update;
-        
+
           else if (section === 'disabled') return data.disabled = update;
-        
+
           else if (section === 'levels') return data.levels = update;
           else if (section === 'leveling') return data.leveling = update;
-        
+
           else if (section === 'welcomeChannel') return data.welcome.channel = update;
           else if (section === 'welcomeMessage') return data.welcome.channel = update;
           else if (section === 'welcomeRole') return data.welcome.channel = update;
 
           else if (section === 'reactionRoles') return data.reactionRoles = update;
-        
+
           else if (section === 'logsChannel') return data.logsChannel = update;
-          
+
           else if (section === 'warns') return data.warns = update;
         }
 
@@ -148,25 +153,29 @@ module.exports = {
 };
 
 module.exports.expire = (callback) => {
-    const expired = () => {
-      const sub = redis.createClient({ url: config.redisPath })
-      sub.subscribe('__keyevent@0__:expired', () => {
-        sub.on('message', (channel, message) => {
-          callback(message)
-        })
+  const expired = () => {
+    const sub = redis.createClient({
+      url: config.redisPath
+    })
+    sub.subscribe('__keyevent@0__:expired', () => {
+      sub.on('message', (channel, message) => {
+        callback(message)
       })
+    })
 
-      sub.on('error', (err) => {
-        errorhandler.init(err, __filename);
-      })
-    }
-  
-    const pub = redis.createClient({ url: config.redisPath })
-    pub.send_command('config', ['set', 'notify-keyspace-events', 'Ex'], expired())
-
-    pub.on('error', (err) => {
+    sub.on('error', (err) => {
       errorhandler.init(err, __filename);
     })
+  }
+
+  const pub = redis.createClient({
+    url: config.redisPath
+  })
+  pub.send_command('config', ['set', 'notify-keyspace-events', 'Ex'], expired())
+
+  pub.on('error', (err) => {
+    errorhandler.init(err, __filename);
+  })
 }
 
 async function dataHandler(data, guild, client) {
@@ -180,29 +189,45 @@ async function dataHandler(data, guild, client) {
     else inviteBlocker = data.inviteBlocker;
     if (!data.linkBlocker) linkBlocker = 'off';
     else linkBlocker = data.linkBlocker;
-    
+
     if (!data.disabled) disabled = [];
     else disabled = data.disabled;
 
     modRole = data.modRole;
     muteRole = data.muteRole;
 
-    if (!data.welcome) welcome = { channel: undefined, message: undefined, role: undefined };
+    if (!data.welcome) welcome = {
+      channel: undefined,
+      message: undefined,
+      role: undefined
+    };
     else welcome = data.welcome;
 
-    if (!data.leveling) leveling = { channel: undefined, message: `**Well done {user} you just reached level {level}!** 🥳`, roles: [] };
+    if (!data.leveling) leveling = {
+      channel: undefined,
+      message: `**Well done {user} you just reached level {level}!** 🥳`,
+      roles: []
+    };
     else leveling = data.leveling;
 
-    if (!data.birthdays) birthdays = { channel: undefined, message: undefined, role: undefined };
+    if (!data.birthdays) birthdays = {
+      channel: undefined,
+      message: undefined,
+      role: undefined
+    };
     else birthdays = data.birthdays;
 
     if (!data.reactionRoles) reactionRoles = [];
     else reactionRoles = data.reactionRoles;
 
-    if ((!data.autoModActions )|| (data.autoModActions === [])) autoModActions = [];
+    if ((!data.autoModActions) || (data.autoModActions === [])) autoModActions = [];
     else autoModActions = data.autoModActions;
 
-    if (!data.logsChannel) logsChannel = { token: undefined, id: undefined, channelID: undefined };
+    if (!data.logsChannel) logsChannel = {
+      token: undefined,
+      id: undefined,
+      channelID: undefined
+    };
     else logsChannel = data.logsChannel;
 
     await client.settings.set(guild, {
@@ -233,12 +258,28 @@ async function dataHandler(data, guild, client) {
       linkBlocker: 'off',
       disabled: [],
       modRole: undefined,
-      welcome: { channel: undefined, message: undefined, role: undefined },
-      birthdays: { channel: undefined, message: undefined, role: undefined },
-      logsChannel: { token: undefined, id: undefined, channelID: undefined }, 
+      welcome: {
+        channel: undefined,
+        message: undefined,
+        role: undefined
+      },
+      birthdays: {
+        channel: undefined,
+        message: undefined,
+        role: undefined
+      },
+      logsChannel: {
+        token: undefined,
+        id: undefined,
+        channelID: undefined
+      },
       muteRole: undefined,
       reactionRoles: [],
-      leveling: { channel: undefined, message: `**Well done {user} you just reached level {level}!** 🥳`, roles: [] },
+      leveling: {
+        channel: undefined,
+        message: `**Well done {user} you just reached level {level}!** 🥳`,
+        roles: []
+      },
       autoModActions: []
 
     });
