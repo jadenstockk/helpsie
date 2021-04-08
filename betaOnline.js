@@ -12,6 +12,6 @@ module.exports = () => {
         })
     })
 
-    if (!process.env['BETA_TOKEN']) return;
+    if (!process.env['BETA_TOKEN'] || process.env['TOKEN'] === process.env['BETA_TOKEN']) return;
     else client.login(process.env['BETA_TOKEN']);
 }

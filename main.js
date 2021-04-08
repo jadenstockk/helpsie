@@ -1,6 +1,8 @@
 const Discord = require("discord.js");
 const path = require('path');
-const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"] });
+const client = new Discord.Client({
+  partials: ["MESSAGE", "CHANNEL", "REACTION"]
+});
 const config = require('./config.json');
 const topggVoting = require('./events/topggVote');
 const fs = require("fs");
@@ -9,10 +11,16 @@ const botInfo = require("./models/botInfo");
 const mute = require("./functions/moderation/mute");
 const dotenv = require('dotenv');
 dotenv.config();
-const { DiscordInteractions, ApplicationCommandOptionType } = require("slash-commands");
+const {
+  DiscordInteractions,
+  ApplicationCommandOptionType
+} = require("slash-commands");
 const slash = require('slash-commands');
-const { fetchAllGuildData } = require("./database");
+const {
+  fetchAllGuildData
+} = require("./database");
 const betaOnline = require("./betaOnline");
+const checkbirthdays = require("./functions/other/checkbirthdays");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
@@ -30,11 +38,11 @@ const command = {
 
 async function slashCmds() {
   await interaction
-  //.getApplicationCommands('794565558862479360')
-  //.deleteApplicationCommand('826856166273056768', '794565558862479360')
-  .createApplicationCommand(command, '794565558862479360')
-  .then(console.log)
-  .catch(console.error);
+    //.getApplicationCommands('794565558862479360')
+    //.deleteApplicationCommand('826856166273056768', '794565558862479360')
+    .createApplicationCommand(command, '794565558862479360')
+    .then(console.log)
+    .catch(console.error);
 }
 
 client.console = require("./functions/botevents/console");
@@ -44,8 +52,7 @@ client.settings = new Map();
 client.timeouts = new Map();
 client.commandsRun = 0;
 
-client.disabledCommands = [
-  {
+client.disabledCommands = [{
     command: 'removexp',
     reason: 'Instability due to bugs and various other issues'
   },
@@ -75,7 +82,12 @@ module.exports.fetchLatest = fetchLatestData;
 
 client.once("ready", async () => {
 
-  client.user.setPresence({ activity: { name: process.env['ACTIVITYNAME'], type: 'LISTENING' }});
+  client.user.setPresence({
+    activity: {
+      name: process.env['ACTIVITYNAME'],
+      type: 'LISTENING'
+    }
+  });
 
   global.nopeEmoji = client.emojis.cache.get('794858153694986271');
   global.muteEmoji = client.emojis.cache.get('794859653825691699');
@@ -100,7 +112,7 @@ client.once("ready", async () => {
 
   setInterval(() => {
     //topggVoting.updateServerCount(client);
-    
+
   }, 20 * 60000);
 
   loadAll();
@@ -115,8 +127,8 @@ client.once("ready", async () => {
         loadEvents();
         let onlineMessage = ` ${client.user.username} is online in ${client.guilds.cache.size} guilds `;
 
-        console.clear(), console.log(`||${'-'.repeat(onlineMessage.length)}||\n||${onlineMessage}||\n||${'-'.repeat(onlineMessage.length)}||\n`)//, client.console.log(`All startup functions completed`, 'success', client);
-        
+        console.clear(), console.log(`||${'-'.repeat(onlineMessage.length)}||\n||${onlineMessage}||\n||${'-'.repeat(onlineMessage.length)}||\n`) //, client.console.log(`All startup functions completed`, 'success', client);
+
       } else {
         setTimeout(() => {
           loadAll();
@@ -148,15 +160,19 @@ client.once("ready", async () => {
   }
 
   function loadEvents() {
+    if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return;
+
     const readCommands = (dir) => {
       const files = fs.readdirSync(path.join(__dirname, dir))
       for (const file of files) {
         eventRun = require(`./events/${file}`)
-          eventRun.init(client);
+        eventRun.init(client);
       }
     }
     readCommands('events');
     mute.expireManager(client);
+    checkbirthdays.expireManager(client);
+    botIntervals();
 
     console.log(`Loaded events`)
   }
@@ -167,49 +183,52 @@ client.on('message', async message => {
   if (message.author.bot) return;
 })
 
-//BIRTHDAYS
-setInterval(() => {
-  client.functions.get("checkbirthdays").execute(client);
+async function botIntervals() {
+  //BIRTHDAYS
+  setInterval(() => {
+    client.functions.get("checkbirthdays").execute(client);
 
-}, 30000);
+  }, 30000);
 
-//STATS UPDATER
-setInterval(async () => {
-  let commandsRun = client.commandsRun;
-  let guilds = client.guilds.cache.size;
-  let users = 0;
+  //STATS UPDATER
+  setInterval(async () => {
+    let commandsRun = client.commandsRun;
+    let guilds = client.guilds.cache.size;
+    let users = 0;
 
-  await client.guilds.cache.forEach(guild => {
-    users = users + guild.memberCount;
-  })
+    await client.guilds.cache.forEach(guild => {
+      users = users + guild.memberCount;
+    })
 
-  botInfo.findOne(
-    { mainID: 1 },
-    async (err, data) => {
-      if (err) return;
+    botInfo.findOne({
+        mainID: 1
+      },
+      async (err, data) => {
+        if (err) return;
 
-      if (!data) {
-        let newData = new botInfo({
-          mainID: 1,
-          commandsRun: commandsRun,
-          users: users,
-          guilds: guilds,
+        if (!data) {
+          let newData = new botInfo({
+            mainID: 1,
+            commandsRun: commandsRun,
+            users: users,
+            guilds: guilds,
 
-        })
-        await newData.save();
+          })
+          await newData.save();
 
-      } else {
-        data.commandsRun = data.commandsRun + commandsRun;
-        data.users = users;
-        data.guilds = guilds;
-        await data.save();
+        } else {
+          data.commandsRun = data.commandsRun + commandsRun;
+          data.users = users;
+          data.guilds = guilds;
+          await data.save();
 
+        }
+        client.commandsRun = 0;
       }
-      client.commandsRun = 0;
-    }
-  )
+    )
 
-}, 100000);
+  }, 100000);
+}
 
 betaOnline();
 //topggVoting.init(client);

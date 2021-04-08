@@ -1,3 +1,5 @@
+const checkbirthdays = require("../../functions/other/checkbirthdays");
+
 module.exports = {
     commands: 'addbirthday',
     description: `Use this command to set your birthday`,
@@ -50,6 +52,7 @@ module.exports = {
 
                 data.bDate = newDate;
                 data.bWished = [];
+                checkbirthdays.removeRoleCounter(message.guild, message.member, message.author, client);
                 await data.save();
 
                 return message.channel.send(

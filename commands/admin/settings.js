@@ -59,16 +59,16 @@ module.exports = {
           `\`${commandPrefix} actions delete <action number>\`\nDelete an existing automod action *e.g. ${commandPrefix} actions delete 3*\n\n`,
         ]
         p5 = [
-          `**Welcome Settings:**\n\n`,
-          `\`${commandPrefix} welcomechannel <channel>\` - ***currently set to: ${setting('data.welcome.channel', 'channel')}***\nSet a channel where new server members will be greeted *e.g. ${commandPrefix} welcomechannel #welcome-channel*\n\n`,
-          `\`${commandPrefix} welcomemessage <message/off>\` - ***currently set to:*** ${setting('data.welcome.message', 'message')}\nSet a message that will be sent in the welcome channel *e.g. ${commandPrefix} welcomemessage Hey {user}! Welcome to {server}!*\n\n`,
-          `\`${commandPrefix} welcomerole <role/off>\` - ***currently set to: ${setting('data.welcome.role', 'role')}***\nChoose a role that will be given to new server members when they join *e.g. ${commandPrefix} welcomerole @member*\n\n`,
-        ]
-        p6 = [
           `**Leveling Settings:**\n\n`,
           `\`${commandPrefix} levelchannel <channel/off>\` - ***currently set to: ${setting('data.leveling.channel', 'channel')}***\nSet a channel where member levelups will be announced *e.g. ${commandPrefix} levelchannel #level-ups*\n\n`,
           `\`${commandPrefix} levelmessage <message/off>\` - ***currently set to:*** ${setting('data.leveling.message', 'message')}\nSet a message that will be sent when a user levels up - use "{user}" to mention the user that's leveling up, and "{level}" to display the level *e.g. ${commandPrefix} levelmessage Well done {user} you just reached level {level}! 🥳*\n\n`,
           `\`${commandPrefix} levelroles\`\nCreate new level role rewards when members reach a certain level *e.g. ${commandPrefix} levelroles*\n\n`,
+        ]
+        p6 = [
+          `**Welcome Settings:**\n\n`,
+          `\`${commandPrefix} welcomechannel <channel>\` - ***currently set to: ${setting('data.welcome.channel', 'channel')}***\nSet a channel where new server members will be greeted *e.g. ${commandPrefix} welcomechannel #welcome-channel*\n\n`,
+          `\`${commandPrefix} welcomemessage <message/off>\` - ***currently set to:*** ${setting('data.welcome.message', 'message')}\nSet a message that will be sent in the welcome channel *e.g. ${commandPrefix} welcomemessage Hey {user}! Welcome to {server}!*\n\n`,
+          `\`${commandPrefix} welcomerole <role/off>\` - ***currently set to: ${setting('data.welcome.role', 'role')}***\nChoose a role that will be given to new server members when they join *e.g. ${commandPrefix} welcomerole @member*\n\n`,
         ]
         p7 = [
           `**Birthday Settings:**\n\n`,

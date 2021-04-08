@@ -1,3 +1,5 @@
+const checkbirthdays = require("../../functions/other/checkbirthdays");
+
 module.exports = {
   commands: 'unsetbirthday',
   permissions: 'ADMINISTRATOR',
@@ -38,6 +40,7 @@ module.exports = {
 
         data.bDate = null;
         data.bWished = [];
+        checkbirthdays.removeRoleCounter(message.guild, user, message.guild.members.cache.get(user.id), client);
         await data.save();
 
         return message.channel.send(

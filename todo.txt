@@ -1,5 +1,4 @@
 setup command
 finish settings
 role rewards
-music
 command limiter
