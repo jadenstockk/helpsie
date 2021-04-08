@@ -4,6 +4,7 @@ const init = async (client) => {
     const config = require('../config.json');
     const express = require("express");
     const bodyParser = require("body-parser");
+    /*
 
     const topgg = new top.Client(config.topggToken);
 
@@ -37,6 +38,7 @@ const init = async (client) => {
         })
         res.status(200).end()
     })
+    */
 }
 module.exports.init = init;
 module.exports.updateServerCount = this.updateServerCount;
