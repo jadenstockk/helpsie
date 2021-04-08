@@ -21,6 +21,7 @@ const {
 } = require("./database");
 const betaOnline = require("./betaOnline");
 const checkbirthdays = require("./functions/other/checkbirthdays");
+const supportBot = require("./supportBot");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
@@ -155,7 +156,7 @@ client.once("ready", async () => {
   }
 
   function loadEvents() {
-    if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return;
+    if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
 
     const readCommands = (dir) => {
       const files = fs.readdirSync(path.join(__dirname, dir))
@@ -167,7 +168,7 @@ client.once("ready", async () => {
     readCommands('events');
     mute.expireManager(client);
     checkbirthdays.expireManager(client);
-    botIntervals();
+    botFunctions();
 
     console.log(`Loaded events`)
   }
@@ -178,9 +179,10 @@ client.on('message', async message => {
   if (message.author.bot) return;
 })
 
-async function botIntervals() {
+async function botFunctions() {
   //topggVoting.init(client);
   betaOnline();
+  supportBot(client);
 
   //BIRTHDAYS
   setInterval(() => {

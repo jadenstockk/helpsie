@@ -24,6 +24,7 @@
     "pretty-ms": "^7.0.1",
     "redis": "^3.0.2",
     "replace-special-characters": "^1.0.2",
+    "serve-favicon": "^2.5.0",
     "slash-commands": "^1.4.0",
     "spacetime": "^6.14.0",
     "timestring": "^6.0.0",
@@ -38,7 +39,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "/website/app.js"
+    "start": "node website\\app.js"
   },
   "author": "Jaden Stock",
   "license": "ISC"

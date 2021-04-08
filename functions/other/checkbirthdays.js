@@ -96,21 +96,21 @@ module.exports = {
         expire(message => {
             if (!message.startsWith(`birthday-`)) return;
             const birthdayData = message.split('-');
-    
+
             const memberID = birthdayData[1];
             const guildID = birthdayData[2];
-    
+
             const guild = client.guilds.cache.get(guildID);
             const member = guild.members.cache.get(memberID);
-    
+
             const settings = client.settings.get(guild.id);
-    
+
             const roleID = settings.birthdays.role;
             if (!roleID) return;
-    
+
             const role = guild.roles.cache.get(roleID);
             if (!role) return;
-    
+
             member.roles.remove(role, 'Birthday role remove');
         })
     },
@@ -129,13 +129,13 @@ module.exports = {
 
                 } else {
 
-                    if (role && member.roles.cache.has(role)) member.roles.remove(role, 'Birthday role remove');
+                    member.roles.remove(role, 'Birthday role remove');
                     if (result) await redisClient.del(redisKey);
                 }
             });
 
         } catch (err) {
             errorhandler.init(err, __filename, message);
-        }        
+        }
     }
 }

@@ -1,5 +1,5 @@
 setup command
 finish settings
-role rewards
+levelroles
 command limiter
 birthday remove role bug

@@ -1,2 +1,2 @@
-web: node \website\app.js
+web: npm start
 worker: node main.js

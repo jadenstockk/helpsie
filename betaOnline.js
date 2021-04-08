@@ -8,7 +8,8 @@ module.exports = () => {
             activity: {
                 type: 'LISTENING',
                 name: 'jaden code'
-            }
+            },
+            status: 'idle'
         })
     })
 

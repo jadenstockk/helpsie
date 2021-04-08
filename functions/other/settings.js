@@ -521,12 +521,12 @@ module.exports = {
 
       } else if (setting === 'levelroles') {
 
-        let levelroles = currentSettings.levelRoles;
+        let levelroles = currentSettings.leveling.roles;
 
         if (settinginfo === 'new') {
-          if (levelroles.length > 4) return message.channel.send(
+          if (levelroles.length > 5) return message.channel.send(
             new Discord.MessageEmbed()
-            .setDescription(`${nopeEmoji} You are only allowed a maximum of 4 automod actions`)
+            .setDescription(`${nopeEmoji} You are only allowed a maximum of 5 level roles`)
             .setColor("#FF3E3E")
           )
 
@@ -535,52 +535,31 @@ module.exports = {
           settinginfos.shift();
           settinginfos.shift();
 
-          let punishments = ['ban', 'mute', 'kick'];
+          if ((!settinginfos) || (settinginfos.length < 1)) return message.channel.send(new Discord.MessageEmbed().setAuthor(`Automod Action Creator`, message.guild.iconURL()).setDescription(`To create a new level role, use the command as follows:\n**${currentSettings.prefix}settings levelroles new \`<level>\` \`<role>\`**\n\nWhen members reach level \`<level>\`, they will get \`<role>\`\n\n> \`<level>\` - this is the level that the member is required to reach to get the role\n> \`<role>\` - this is the role that the member gets if they reach the required level`).setColor("#059DFF"));
 
-          if ((!settinginfos) || (settinginfos.length < 1)) return message.channel.send(new Discord.MessageEmbed().setAuthor(`Automod Action Creator`, message.guild.iconURL()).setDescription(`To create a new Automod Action, use the command as follows:\n**${currentSettings.prefix}settings actions new \`<type>\` \`[optional mute duration]\` \`<warns>\` \`<time>\`**\n\n\`<type>\` members when they have \`<warns>\` warns or more in the last \`<time>\` minutes\n\n> \`<type>\` - this is the type of punishment (\`kick\`, \`ban\` or \`mute\`)\n> \`<warns>\` - this is the minimum amount of warns the user needs in order for them to be punished\n> \`<time>\` - this is the amount of time the minimum amount of warns applies in minutes *(e.g. if the time is 30 minutes, any warn over 30 minutes ago will not be counted when deciding on whether the member should be punished)*\n> \`[optional mute duration]\` - this part is only necessary if the type of punishment you choose is \`mute\` (it is the amount of time the member will be muted for in minutes)`).setColor("#059DFF"));
-
-          let action = {
-            type: settinginfos[0],
-            muteduration: null,
-            amount: settinginfos[1],
-            time: settinginfos[2]
+          let levelrole = {
+            level: settinginfos[0],
+            role: settinginfos[1]
           }
 
-          if (action.type === 'mute') action = {
-            type: settinginfos[0],
-            muteduration: settinginfos[1],
-            amount: settinginfos[2],
-            time: settinginfos[3]
-          }
+          let role;
 
-          if ((!action.type) || (!punishments.includes(action.type))) return message.channel.send(
+          if (levelrole.level) levelrole.level = parseInt(levelrole.role);
+          if (levelrole.role) levelrole.role = levelrole.role.replace('<', '').replace('@', '').replace('&', '').replace('>', ''), role = message.guild.roles.cache.get(levelrole.role);
+
+          if ((!levelrole.level) || (levelrole.level > 300)) return message.channel.send(
             new Discord.MessageEmbed()
-            .setDescription(`${nopeEmoji} Please provide a valid action type: \`kick\`, \`ban\` or \`mute\``)
+            .setDescription(`${nopeEmoji} Please provide a valid level number below 300`)
             .setColor("#FF3E3E")
           )
 
-          else if ((action.muteduration !== null) && (isNaN(action.muteduration))) return message.channel.send(
+          else if ((!levelrole.role) || (!role)) return message.channel.send(
             new Discord.MessageEmbed()
-            .setDescription(`${nopeEmoji} Please provide a valid mute duration`)
+            .setDescription(`${nopeEmoji} Please provide a valid role`)
             .setColor("#FF3E3E")
           )
 
-          else if ((!action.amount) || (isNaN(action.amount))) return message.channel.send(
-            new Discord.MessageEmbed()
-            .setDescription(`${nopeEmoji} Please provide a valid amount of warns`)
-            .setColor("#FF3E3E")
-          )
-
-          else if ((!action.time) || (isNaN(action.time))) return message.channel.send(
-            new Discord.MessageEmbed()
-            .setDescription(`${nopeEmoji} Please provide a valid time (this value must be in minutes)`)
-            .setColor("#FF3E3E")
-          )
-
-          let typeString = `**${action.type}** members`;
-          if (action.muteduration !== null) typeString = `**${action.type}** members for **${action.muteduration} minutes**`;
-
-          message.channel.send(new Discord.MessageEmbed().setAuthor(`Automod Action Creator`, message.guild.iconURL()).setDescription(`**${checkEmoji} Confirm / ${nopeEmoji} Deny new action:**\n\n${typeString} when they have **${action.amount} warns** or more in the last **${action.time} minutes**`).setColor("#059DFF"))
+          message.channel.send(new Discord.MessageEmbed().setAuthor(`Level Role Creator`, message.guild.iconURL()).setDescription(`**${checkEmoji} Confirm / ${nopeEmoji} Deny new action:**\n\n${typeString} when they have **${levelrole.role} warns** or more in the last **${levelrole.time} minutes**`).setColor("#059DFF"))
             .then(async msg => {
 
               await msg.react(checkEmoji);
@@ -595,9 +574,9 @@ module.exports = {
 
                   msg.delete();
 
-                  let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Action added: ${typeString} when they have **${action.amount} warns** or more in the last **${action.time} minutes**`).setColor("#00FF7F"));
+                  let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Action added: ${typeString} when they have **${levelrole.role} warns** or more in the last **${levelrole.time} minutes**`).setColor("#00FF7F"));
 
-                  updateSettings('automodactions', action, success);
+                  updateSettings('automodactions', levelrole, success);
 
                 } else {
 

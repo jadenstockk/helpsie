@@ -20,6 +20,7 @@ let Schema = new mongoose.Schema({
     leveling: {
         channel: String,
         message: String,
+        roles: Array,
     },
 
     birthdays: {

@@ -4,11 +4,13 @@ const express = require("express");
 const app = express();
 const path = require('path');
 const server = http.createServer(app);
+const favicon = require('serve-favicon');
 const port = process.env.PORT || 8000;
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(favicon(path.join(__dirname + '/public/favicon.ico')));
 
 app.get("/", (req, res) => {
   res.render('index', {
