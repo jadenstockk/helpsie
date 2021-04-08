@@ -1,7 +1,7 @@
 const init = async (client) => {
     const Discord = require('discord.js');
     const top = require('top.gg-core');
-    const config = require('../config.jsons');
+    const config = require('../config.json');
     const express = require("express");
     const bodyParser = require("body-parser");
 

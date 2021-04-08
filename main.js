@@ -191,7 +191,7 @@ async function botIntervals() {
 
   //TOP.GG STATS POSTER
   setInterval(() => {
-    topggVoting.updateServerCount(client);
+    //topggVoting.updateServerCount(client);
 
   }, 20 * 60000);
 
