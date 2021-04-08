@@ -2,3 +2,4 @@ setup command
 finish settings
 role rewards
 command limiter
+birthday remove role bug

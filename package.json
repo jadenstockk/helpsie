@@ -10,6 +10,7 @@
     "canvacord": "^5.0.8",
     "common-tags": "^1.8.0",
     "dblapi.js": "^2.4.1",
+    "dbots": "^8.0.2",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

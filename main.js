@@ -21,6 +21,7 @@ const {
 } = require("./database");
 const betaOnline = require("./betaOnline");
 const checkbirthdays = require("./functions/other/checkbirthdays");
+const app = require("./website/app");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
@@ -110,11 +111,6 @@ client.once("ready", async () => {
   client.connections = new Map();
   */
 
-  setInterval(() => {
-    //topggVoting.updateServerCount(client);
-
-  }, 20 * 60000);
-
   loadAll();
 
   function loadAll() {
@@ -184,11 +180,20 @@ client.on('message', async message => {
 })
 
 async function botIntervals() {
+  //topggVoting.init(client);
+  betaOnline();
+
   //BIRTHDAYS
   setInterval(() => {
     client.functions.get("checkbirthdays").execute(client);
 
   }, 30000);
+
+  //TOP.GG STATS POSTER
+  setInterval(() => {
+    topggVoting.updateServerCount(client);
+
+  }, 20 * 60000);
 
   //STATS UPDATER
   setInterval(async () => {
@@ -230,8 +235,7 @@ async function botIntervals() {
   }, 100000);
 }
 
-betaOnline();
-//topggVoting.init(client);
+app();
 client.database.redis();
 client.database.mongoose();
 client.login(process.env['TOKEN']);

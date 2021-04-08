@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+
+.command_head {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  color: white;
+}
+
+#category {
+  border-radius: 5px;
+  padding-bottom: 50px;
+}
+
+#category a {
+  background-color: #36393f;
+  color: white;
+}
+
+#category a.active {
+  background-color: rgb(121 145 246);
+  border-color: rgb(121 145 246);
+}
+
+#invisible {
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 5pt;
+  text-align: center;
+  width: 30%;
+  height: 5%;
+  background-size: cover;
+  background-clip: content-box;
+}
+
+.accordion-item {
+  background-color: #36393f;
+  color: rgb(255, 255, 255, .55);
+}
+
+.accordion-button {
+  color: white;
+}
+
+.accordion-button:not(.collapsed) {
+  color: white;
+  background-color: rgb(121 145 246);
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: url(https://cdn3.iconfinder.com/data/icons/faticons/32/arrow-up-01-512.png);
+  transform: rotate(180deg);
+  filter: invert(100%)
+}
+
+.accordion-button::after {
+   background-image: url(https://cdn3.iconfinder.com/data/icons/faticons/32/arrow-up-01-512.png);
+}
+
+.accordion-button:focus {
+  z-index: 0;
+  border-color: transparent;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem transparent;
+}
+
+.accordion-item:first-of-type {
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
+}
+
+.accordion-item:last-of-type {
+  border-bottom-left-radius: .25rem;
+  border-bottom-right-radius: .25rem;
+}
+
+#commands_menu {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Popup container */
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* The actual popup (appears on top) */
+.popup .popuptext {
+  visibility: hidden;
+  width: 400px;
+  background-color: rgb(109, 109, 109);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  font-size: small;
+  z-index: 1;
+  bottom: 125%;
+  margin-left: -212px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}

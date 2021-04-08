@@ -9,6 +9,7 @@
   "imageSearchAPI": "AIzaSyDjTDikOFjBPFQoXiAo2_0hlo6uItqSfo0",
   "appID": "781293073052991569",
   "publicKey": "1ef2f875f2e64483d39327f16b4db60417133ab3706242dd310f3f9ac3dcc22f",
+  "topggToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc5MzQ0ODQxOTk2MzgzMDI3NCIsImJvdCI6dHJ1ZSwiaWF0IjoxNjEwODI1NDIyfQ.dAIr4Ai1TybtOdeKhvs74EslT3JYsTyYDK2o52DEso8",
   "activity": {
     "name": "!help",
     "type": "LISTENING"

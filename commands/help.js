@@ -47,6 +47,7 @@ module.exports = {
 
     let utilityCommands = [
       `\`${prefix}userinfo <member>\`\nGet information about a certain member in the server`,
+      `\`${prefix}userinfo <member>\`\nGet information about a certain member in the server`,
       `\`${prefix}youtube <video>\`\nSearch for a YouTube video`,
       `\`${prefix}imgur <image>\`\nSearch for an image on Imgur`,
       `\`${prefix}urban <word/phrase>\`\nGet a definition of a word`,
