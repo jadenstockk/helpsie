@@ -1,2 +1,2 @@
-web: node \website\\app.js
+web: node \website\app.js
 worker: node main.js
