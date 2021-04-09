@@ -1,3 +1,4 @@
+const errorhandler = require("../../errorhandler");
 const userData = require("../../models/userData");
 
 module.exports = {
@@ -65,6 +66,27 @@ const addXP = async(guild, user, addedXP, message, client) => {
         })
 
         let levelingSettings = client.settings.get(message.guild.id).leveling;
+        let levelroles = levelingSettings.roles;
+        levelroles.sort(function (a, b) {
+            return a.level - b.level
+        });
+
+        console.log(level);
+
+        try {
+            levelroles.forEach((levelrole, index) => {
+                if (level >= levelrole.level) {
+                    let rolesToAdd = levelroles.slice(0, index + 1);
+                    rolesToAdd.forEach(role => {
+                        message.guild.members.cache.get(user).roles.add(role.role);
+                    })
+                }
+            })
+
+        } catch (err) {
+            errorhandler.init(err, __filename);
+            
+        }
 
         let channel = message.guild.channels.cache.get(levelingSettings.channel);
         if (!channel) channel = message.channel;
@@ -143,12 +165,10 @@ const resetXP = async(guild, user, message, client) => {
         {
             guild,
             user,
+            totalxp: 0,
+            level: 0,
             xp: 0,
-            $unset: {
-                totalxp,
-                level,
-                xp,
-            }
+
         }, {
             upsert: true,
             new: true,

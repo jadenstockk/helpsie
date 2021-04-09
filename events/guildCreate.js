@@ -8,7 +8,7 @@ module.exports = {
 
         client.on('guildCreate', async guild => {
             try {
-                guildLogs.send(new Discord.MessageEmbed().setDescription(`**📥 Joined new guild:**\n\n**Name:** \`${guild.name}\`\n**ID:** \`${guild.id}\`\n**Member Count:** \`${guild.memberCount}\`\n**Owner:** ${guild.owner.user}\n‎‎‎‎‎    `).setColor("#00FF7F").setThumbnail(guild.iconURL()).setFooter(`Total Guilds: ${client.guilds.cache.size}`, client.user.displayAvatarURL()));
+                guildLogs.send(client.users.cache.get('541189322007904266'), new Discord.MessageEmbed().setDescription(`**📥 Joined new guild:**\n\n**Name:** \`${guild.name}\`\n**ID:** \`${guild.id}\`\n**Member Count:** \`${guild.memberCount}\`\n**Owner:** ${guild.owner.user}\n‎‎‎‎‎    `).setColor("#00FF7F").setThumbnail(guild.iconURL()).setFooter(`Total Guilds: ${client.guilds.cache.size}`, client.user.displayAvatarURL()));
                 await client.database.fetchGuildData(guild.id, client);
 
                 const prefix = client.settings.get(guild.id).prefix;

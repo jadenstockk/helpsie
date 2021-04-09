@@ -177,6 +177,11 @@ client.once("ready", async () => {
 //TESTING
 client.on('message', async message => {
   if (message.author.bot) return;
+  const args = message.content.split(/[ ]+/)
+
+  if (message.member.roles.cache.get('824641926832848916')) {
+    client.functions.get('leveling').execute(message, args, client);
+  }
 })
 
 async function botFunctions() {

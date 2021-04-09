@@ -7,7 +7,7 @@ module.exports = () => {
         client.user.setPresence({
             activity: {
                 type: 'LISTENING',
-                name: 'jaden code'
+                name: 'jaden code',
             },
             status: 'idle'
         })

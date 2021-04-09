@@ -19,7 +19,10 @@ let Schema = new mongoose.Schema({
 
     leveling: {
         channel: String,
-        message: String,
+        message: {
+            type: String,
+            default: `**Well done {user} you just reached level {level}!** 🥳`
+        },
         roles: Array,
     },
 

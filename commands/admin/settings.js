@@ -47,22 +47,22 @@ module.exports = {
           `\`${commandPrefix} muted <role>\` - ***currently set to: ${setting('data.muteRole', 'role')}***\nSet a role that will be given to members when they are muted *e.g. ${commandPrefix} muted @mute-role*\n\n`,
         ]
         p3 = [
+          `**Leveling Settings:**\n\n`,
+          `\`${commandPrefix} levelchannel <channel/off>\` - ***currently set to: ${setting('data.leveling.channel', 'channel')}***\nSet a channel where member levelups will be announced *e.g. ${commandPrefix} levelchannel #level-ups*\n\n`,
+          `\`${commandPrefix} levelmessage <message/off>\` - ***currently set to:*** ${setting('data.leveling.message', 'message')}\nSet a message that will be sent when a user levels up - use "{user}" to mention the user that's leveling up, and "{level}" to display the level *e.g. ${commandPrefix} levelmessage Well done {user} you just reached level {level}! 🥳*\n\n`,
+          `\`${commandPrefix} levelroles\`\nCreate new level role rewards when members reach a certain level *e.g. ${commandPrefix} levelroles*\n\n`,
+        ]
+        p4 = [
           `**Automod Settings:**\n\n`,
           `\`${commandPrefix} profanityfilter <warn/warndelete/delete/off>\` - ***currently set to: \`${setting('data.profanityFilter')}\`***\nWhen on, the bot will filter bad words in messages, nicknames and links - choose whether you want the bot to warn, delete or warn and delete content containing profanity *e.g. ${commandPrefix} profanityfilter warndelete*\n\n`,
           `\`${commandPrefix} inviteblocker <warn/warndelete/delete/off>\` - ***currently set to: \`${setting('data.inviteBlocker')}\`***\nWhen on, the bot will filter all server invite links sent - choose whether you want the bot to warn, delete or warn and delete content containing invite links *e.g. ${commandPrefix} inviteblocker warndelete*\n\n`,
           `\`${commandPrefix} linkblocker <warn/warndelete/delete/off>\` - ***currently set to: \`${setting('data.linkBlocker')}\`***\nWhen on, the bot will delete all links sent - choose whether you want the bot to warn, delete or warn and delete content containing links *e.g. ${commandPrefix} linkblocker warndelete*\n\n`,
         ]
-        p4 = [
+        p5 = [
           `**Automod Action Settings:**\n\n`,
           `\`${commandPrefix} actions\`\nGet a list of all the server's automod actions *e.g. ${commandPrefix} actions*\n\n`,
           `\`${commandPrefix} actions new\`\nCreate a new action that will either kick, ban or mute a member depending on the number of warnings they've gotten in a certain amount of time *e.g. ${commandPrefix} actions new*\n\n`,
           `\`${commandPrefix} actions delete <action number>\`\nDelete an existing automod action *e.g. ${commandPrefix} actions delete 3*\n\n`,
-        ]
-        p5 = [
-          `**Leveling Settings:**\n\n`,
-          `\`${commandPrefix} levelchannel <channel/off>\` - ***currently set to: ${setting('data.leveling.channel', 'channel')}***\nSet a channel where member levelups will be announced *e.g. ${commandPrefix} levelchannel #level-ups*\n\n`,
-          `\`${commandPrefix} levelmessage <message/off>\` - ***currently set to:*** ${setting('data.leveling.message', 'message')}\nSet a message that will be sent when a user levels up - use "{user}" to mention the user that's leveling up, and "{level}" to display the level *e.g. ${commandPrefix} levelmessage Well done {user} you just reached level {level}! 🥳*\n\n`,
-          `\`${commandPrefix} levelroles\`\nCreate new level role rewards when members reach a certain level *e.g. ${commandPrefix} levelroles*\n\n`,
         ]
         p6 = [
           `**Welcome Settings:**\n\n`,

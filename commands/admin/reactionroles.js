@@ -153,7 +153,7 @@ module.exports = {
     
                     let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Reaction role successfully deleted: **Emoji: ${role.emoji} | Role: ${message.guild.roles.cache.get(role.role)} | [Jump to message](https://discord.com/channels/${message.guild.id}/${role.channel}/${role.message})**`).setColor("#00FF7F"));
     
-                    reactionRoles.pop(role);
+                    reactionRoles.splice(reactionRoles.indexOf(role), 1);
 
                     await updateGuildData(message.guild.id, client, 'reactionRoles', reactionRoles);
 
