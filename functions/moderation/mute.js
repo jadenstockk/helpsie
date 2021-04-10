@@ -31,7 +31,8 @@ module.exports = {
                 .setColor("FF3E3E")
             )
         }
-
+        
+        if (!muteRole) if (checkpunishability(guild, false, false, ['MANAGE_ROLES'], client)) return;
         if (!muteRole) await guild.roles.create({
             data: {
                 name: "Muted",

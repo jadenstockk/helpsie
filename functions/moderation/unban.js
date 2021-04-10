@@ -5,6 +5,8 @@ module.exports = {
   description: 'when a user gets unbanned',
 
   async execute(guild, user, client) {
+    if (checkforerrors(member.guild, false, false, ['VIEW_AUDIT_LOG'], client)) return;
+
     const fetchedLogs = await guild.fetchAuditLogs({
       limit: 1,
       type: "MEMBER_BAN_REMOVE",
@@ -14,7 +16,10 @@ module.exports = {
 
     if (!banLog) return;
 
-    const { executor, target } = banLog;
+    const {
+      executor,
+      target
+    } = banLog;
 
     if (executor === client.user) return;
 
