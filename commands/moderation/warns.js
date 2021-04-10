@@ -6,7 +6,8 @@ const errorhandler = require("../../errorhandler");
 module.exports = {
   commands: 'warns',
   description: `Use this command to get a list of a particular member's warns`,
-  usage: `[optional member] - leave out the optional part to view YOUR warns`,  
+  usage: `[optional member] - leave out the optional part to view YOUR warns`,
+  group: 'moderation',
 
   callback: (message, args, client) => {
     let member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;

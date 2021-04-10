@@ -8,7 +8,8 @@ module.exports = {
   permissionMessage: true,
   botPermissions: ['MANAGE_MESSAGES'],
   description: `Use this command to clear (in other words delete) a certain number of messages in the channel you use the command in`,
-  usage: `<number of messages>`,  
+  usage: `<number of messages>`,
+  group: 'moderation',
 
   callback: async (message, args, client) => {
     const Discord = require("discord.js");

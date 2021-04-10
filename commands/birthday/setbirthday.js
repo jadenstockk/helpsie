@@ -7,6 +7,7 @@ module.exports = {
   permissionMessage: true,
   description: `Use this command to set someone else's birthday`,
   usage: `<member> <date>`,
+  group: 'birthdays',
 
   callback: (message, args, client) => {
     const Discord = require("discord.js");

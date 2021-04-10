@@ -2,6 +2,7 @@ module.exports = {
   commands: 'birthday',
   description: `Use this command to set your birthday`,
   usage: `<date>`,
+  group: 'birthdays',
 
   callback: (message, args, client) => {
     const Discord = require("discord.js");

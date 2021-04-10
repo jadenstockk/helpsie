@@ -8,6 +8,7 @@ module.exports = {
   botPermissions: ['MANAGE_ROLES', 'MANAGE_CHANNELS'],
   description: `Use this command to mute a particular member and prevent them from sending messages in text channels`,
   usage: `<member> [optional duration] [optional reason] - you can leave either the duration, reason or both the duration and reason out`,
+  group: 'moderation',
 
   callback: (message, args, client) => {
     const Discord = require("discord.js");

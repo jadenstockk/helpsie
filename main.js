@@ -15,13 +15,16 @@ const {
   ApplicationCommandOptionType
 } = require("slash-commands");
 const slash = require('slash-commands');
+const fetch = require('node-fetch');
 const {
   fetchAllGuildData
 } = require("./database");
-const betaOnline = require("./betaOnline");
+const betaOnline = require("./misc/betaOnline");
 const checkbirthdays = require("./functions/other/checkbirthdays");
-const supportBot = require("./supportBot");
+const supportBot = require("./misc/supportBot");
 const pushUpdates = require("./pushUpdates");
+const errorhandler = require("./errorhandler");
+const { response } = require("express");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
@@ -158,7 +161,7 @@ client.once("ready", async () => {
   }
 
   async function loadEvents() {
-    //if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
+    if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
 
     const readCommands = (dir) => {
       const files = fs.readdirSync(path.join(__dirname, dir))
@@ -210,9 +213,6 @@ client.on('message', async message => {
 
 async function botFunctions() {
 
-  betaOnline();
-  supportBot(client);
-
   //BIRTHDAYS
   setInterval(() => {
     client.functions.get("checkbirthdays").execute(client);
@@ -258,6 +258,10 @@ async function botFunctions() {
 
   }, 100000);
 }
+
+process.on('unhandledRejection', (err) => {
+  errorhandler.init(err, __filename);
+});
 
 client.database.redis();
 client.database.mongoose();

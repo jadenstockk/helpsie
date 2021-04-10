@@ -7,15 +7,17 @@ module.exports = {
   permissionMessage: true,
   description: `Use this command to setup the bot`,
   usage: ``,
+  group: 'admin',
 
   callback: (message, args, client) => {
 
-    const { channel } = message;
+    const {
+      channel
+    } = message;
     const current = client.settings.get(message.guild.id);
 
     let step = 0;
-    let steps = [
-      {
+    let steps = [{
         c: 'prefix',
         d: `What do you want the server's prefix to be? The server's prefix is the symbol, letter or combination of the two that is used to trigger the bot. For example, if you were to type \`!help\`, the prefix would be \`!\`. The current prefix is \`${current.prefix}\`, if you would like to change it, type a new prefix now.`
       },
@@ -109,25 +111,25 @@ module.exports = {
       .setFooter(`Want to get straight into the commands? Type ${prefix}help for a list of commands`)
 
     )
-/*
-    channel.awaitMessages(m => m.author.id === message.author.id, {
+    /*
+        channel.awaitMessages(m => m.author.id === message.author.id, {
 
-      max: 1,
-      time: 90000
+          max: 1,
+          time: 90000
 
-    }).then(async collected => {
+        }).then(async collected => {
 
-      let input = collected.first().content.toLowerCase();
+          let input = collected.first().content.toLowerCase();
 
-      if (input === 'start') {
-        processManager();
+          if (input === 'start') {
+            processManager();
 
-      }
+          }
 
-    }).catch(() => {
-      error(`**${client.user.username} Setup Process** timed out due to no input from the user`);
-    })
-*/
+        }).catch(() => {
+          error(`**${client.user.username} Setup Process** timed out due to no input from the user`);
+        })
+    */
     async function processManager() {
       embed(steps[step].d);
 
@@ -135,25 +137,25 @@ module.exports = {
 
         max: 1,
         time: 90000
-  
+
       }).then(async collected => {
-  
+
         let input = collected.first().content.toLowerCase();
-  
+
         if (input === 'skip' || input === 'next') {
           step++;
           processManager();
-  
+
         } else if (input === 'cancel' || input === 'end') {
           error(`**${client.user.username} Setup Process** ended by user`);
-  
+
         } else {
           let currentSettings = client.settings.get(message.guild.id);
           let setting = steps[step].c;
           let settinginfo = args[1];
 
           settings.execute(message, args, client, setting, settinginfo, currentSettings);
-  
+
         }
       }).catch(() => {
         error(`**${client.user.username} Setup Process** timed out due to no input from the user`);

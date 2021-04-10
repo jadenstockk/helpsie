@@ -8,6 +8,7 @@ module.exports = {
   botPermissions: ['BAN_MEMBERS'],
   description: `Use this command to ban members from the server`,
   usage: `<member>`,
+  group: 'moderation',
 
   callback: (message, args, client) => {
     const Discord = require("discord.js");

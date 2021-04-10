@@ -1,68 +1,69 @@
 module.exports = {
-    commands: 'disabled',
-    permissions: 'ADMINISTRATOR',
-    permissionError: `You have to be an administrator to use this command`,
-    permissionMessage: true,
-    description: `Use this command to view a list of all the disabled commands in the server`,
-    usage: ``,
-  
-    callback: (message, args, client) => {
-      const Discord = require("discord.js");
-      const guildData = require('../../models/guildData');
+  commands: 'disabled',
+  permissions: 'ADMINISTRATOR',
+  permissionError: `You have to be an administrator to use this command`,
+  permissionMessage: true,
+  description: `Use this command to view a list of all the disabled commands in the server`,
+  usage: ``,
+  group: 'admin',
 
-      let prefix = client.settings.get(message.guild.id).prefix;
-      let disabled = client.settings.get(message.guild.id).disabled;
+  callback: (message, args, client) => {
+    const Discord = require("discord.js");
+    const guildData = require('../../models/guildData');
 
-      let clear = args[0];
+    let prefix = client.settings.get(message.guild.id).prefix;
+    let disabled = client.settings.get(message.guild.id).disabled;
 
-      if (clear === 'clear') {
-        let success = new Discord.MessageEmbed()
+    let clear = args[0];
+
+    if (clear === 'clear') {
+      let success = new Discord.MessageEmbed()
         .setDescription(`${checkEmoji} Successfully enabled all commands`)
         .setColor("#00FF7F")
 
-        guildData.findOne(
-          { guild: message.guild.id },
-          async (err, data) => {
-            if (err) console.log(err);
-            if (!data) {
+      guildData.findOne({
+          guild: message.guild.id
+        },
+        async (err, data) => {
+          if (err) console.log(err);
+          if (!data) {
 
-              client.database.fetchGuildData(message.guild.id, client);
-      
-            } else {
+            client.database.fetchGuildData(message.guild.id, client);
 
-              if (!data.disabled) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} \`${disableCommand}\` is already disabled`).setColor("#FF3E3E"));
-              else data.disabled = [];
-              await data.save();
+          } else {
 
-              message.channel.send(success);
+            if (!data.disabled) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} \`${disableCommand}\` is already disabled`).setColor("#FF3E3E"));
+            else data.disabled = [];
+            await data.save();
 
-              client.database.fetchGuildData(message.guild.id, client);
+            message.channel.send(success);
 
-            }
+            client.database.fetchGuildData(message.guild.id, client);
+
           }
-        );
+        }
+      );
 
-      } else {
-        let disabledList = [];
-      
-        if (disabled) disabled.forEach(command => {
-          disabledList.push(`\`${command}\``)
-        })
-  
-        if (disabled.length < 1) message.channel.send(
-          new Discord.MessageEmbed()
-          .setDescription(`${nopeEmoji} There are no disabled commands on this server`)
-          .setColor("#FF3E3E")
-        )
-  
-        else message.channel.send(
-          new Discord.MessageEmbed()
-          .setTitle(`Disabled Commands:`)
-          .setDescription(`${disabledList.join('\n')}`)
-          .setColor("#FF3E3E")
-          .setFooter(`Type "${prefix}disabled clear" to enable all disabled commands`)
-        )
-      }
-    },
-  };
-  
+    } else {
+      let disabledList = [];
+
+      if (disabled) disabled.forEach(command => {
+        disabledList.push(`\`${command}\``)
+      })
+
+      if (disabled.length < 1) message.channel.send(
+        new Discord.MessageEmbed()
+        .setDescription(`${nopeEmoji} There are no disabled commands on this server`)
+        .setColor("#FF3E3E")
+      )
+
+      else message.channel.send(
+        new Discord.MessageEmbed()
+        .setTitle(`Disabled Commands:`)
+        .setDescription(`${disabledList.join('\n')}`)
+        .setColor("#FF3E3E")
+        .setFooter(`Type "${prefix}disabled clear" to enable all disabled commands`)
+      )
+    }
+  },
+};

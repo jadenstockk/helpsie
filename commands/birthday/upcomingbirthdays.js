@@ -2,13 +2,16 @@ module.exports = {
   commands: 'upcomingbirthdays',
   description: `Use this command to set your birthday`,
   usage: `<date>`,
+  group: 'birthdays',
 
   callback: async (message, args, client) => {
     const Discord = require("discord.js");
     const spacetime = require('spacetime');
     const userData = require('../../models/userData');
 
-    let data = await userData.find({ guild: message.guild.id });
+    let data = await userData.find({
+      guild: message.guild.id
+    });
     let birthdays = [];
     let birthdaysFormatted = [];
 
@@ -25,13 +28,17 @@ module.exports = {
 
       let date = new Date(localDate.getFullYear(), localDate.getMonth(), localDate.getDate(), 0, 0, 0, 0);
 
-      birthdays.push({ date, user, formatted });
+      birthdays.push({
+        date,
+        user,
+        formatted
+      });
     })
 
     birthdays.sort((a, b) => b.date - a.date);
     birthdays.reverse();
 
-    for (var i=0;i<=9; i++) {
+    for (var i = 0; i <= 9; i++) {
       let birthday = birthdays[i];
 
       if (birthday) {

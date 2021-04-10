@@ -10,6 +10,7 @@ module.exports = {
   permissionMessage: true,
   description: `Use this command to find a certain member's warn by using it's id`,
   usage: `<warn id>`,
+  group: 'moderation',
 
   callback: (message, args, client) => {
     let id = args[0];

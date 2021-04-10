@@ -6,6 +6,7 @@ module.exports = {
   permissionError: `You aren't allowed to warn people`,
   permissionMessage: true,
   botPermissions: ['MANAGE_ROLES'],
+  group: 'moderation',
 
   callback: (message, args, client) => {
     const Discord = require("discord.js");

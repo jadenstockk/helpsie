@@ -1,5 +1,6 @@
 module.exports = {
     commands: ['twitch'],
+    group: 'utilities',
 
     callback: async (message, args) => {
 

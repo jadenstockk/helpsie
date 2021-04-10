@@ -1,14 +1,15 @@
 module.exports = {
-    commands: ['ping'],
-  
-    callback: (message, args, client) => {
-      const Discord = require("discord.js");
-      const timeconverter = require("@danm/timespent");
+  commands: ['ping'],
+  group: 'utilities',
 
-      message.channel.send(`\`Calculating ping...\``).then(msg => {
-          let ping = msg.createdTimestamp - message.createdTimestamp
+  callback: (message, args, client) => {
+    const Discord = require("discord.js");
+    const timeconverter = require("@danm/timespent");
 
-          msg.edit(`**Bot Ping:** \`${ping}ms\`\n**API Ping:** \`${client.ws.ping}ms\`\n**Uptime:** \`${timeconverter.short(client.uptime)}\``)
-      })
-    },
-  };
+    message.channel.send(`\`Calculating ping...\``).then(msg => {
+      let ping = msg.createdTimestamp - message.createdTimestamp
+
+      msg.edit(`**Bot Ping:** \`${ping}ms\`\n**API Ping:** \`${client.ws.ping}ms\`\n**Uptime:** \`${timeconverter.short(client.uptime)}\``)
+    })
+  },
+};

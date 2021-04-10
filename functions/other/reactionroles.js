@@ -22,7 +22,7 @@ module.exports = {
         if (!role) return;
 
         if (!reaction.message.guild.me.hasPermission('MANAGE_ROLES')) return;
-        if (checkforerrors(reaction.message.guild, role, false, client)) return;
+        if (checkforerrors(reaction.message.guild, role, false, false, client)) return;
 
         if (member.roles.cache.has(rr.role)) return;
         else {
@@ -42,7 +42,7 @@ module.exports = {
         if (!role) return;
 
         if (!reaction.message.guild.me.hasPermission('MANAGE_ROLES')) return;
-        if (checkforerrors(reaction.message.guild, role, false, client)) return;
+        if (checkforerrors(reaction.message.guild, role, false, false, client)) return;
 
         if (!member.roles.cache.has(rr.role)) return;
         else {

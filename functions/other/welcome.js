@@ -1,3 +1,4 @@
+const errorhandler = require("../../errorhandler");
 const serverlogs = require("../moderation/serverlogs");
 
 module.exports = {
@@ -19,7 +20,7 @@ module.exports = {
     let channel = client.channels.cache.get(settings.channel);
     if (!channel) return;
 
-    channel.send(settings.message.replace('{user}', member.user).replace('{server}', member.guild.name));
+    channel.send(settings.message.replace('{user}', member.user).replace('{server}', member.guild.name)).catch(err => errorhandler.init(err, __filename));
 
     let role = member.guild.roles.cache.get(settings.role);
     if (!role) return;

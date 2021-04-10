@@ -1,5 +1,6 @@
 module.exports = {
   commands: ['covid'],
+  group: 'utilities',
 
   callback: (message, args, client) => {
 

@@ -5,6 +5,7 @@ module.exports = {
   permissionError: `You aren't allowed to set slowmode`,
   permissionMessage: true,
   botPermissions: ['MANAGE_CHANNELS'],
+  group: 'moderation',
 
   callback: (message, args, client) => {
       let slowmodeAmount = args[0];

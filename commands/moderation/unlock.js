@@ -6,6 +6,7 @@ module.exports = {
   botPermissions: ['MANAGE_CHANNELS'],
   description: `Use this command to unlock the channel you use the command in`,
   usage: ``,
+  group: 'moderation',
 
   callback: (message, args, client) => {
       const Discord = require("discord.js");

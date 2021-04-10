@@ -4,6 +4,7 @@ module.exports = {
   commands: 'removebirthday',
   description: `Use this command to remove your birthday`,
   usage: ``,
+  group: 'birthdays',
 
   callback: (message, args, client) => {
     const Discord = require("discord.js");

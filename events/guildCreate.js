@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const config = require('../config.json');
 const errHandler = require('../errorhandler');
+const checkforerrors = require('../functions/moderation/checkforerrors');
 const pushUpdates = require('../pushUpdates');
 const guildLogs = new Discord.WebhookClient(config.guildlogID, config.guildlogTOKEN);
 
@@ -27,7 +28,7 @@ module.exports = {
 
                 const welcome = client.channels.cache.get(channel);
 
-                welcome.send(welcomeEmbed);
+                welcome.send(welcomeEmbed).catch(err => errHandler.init(err, __filename));
 
             } catch (err) {
                 errHandler.init(err, __filename);

@@ -53,7 +53,7 @@ module.exports = {
             })
         })
 
-        let checkPerms = checkpunishability(message.guild, muteRole);
+        let checkPerms = checkpunishability(message.guild, muteRole, false, ['MANAGE_ROLES']);
         if (checkPerms) return message.channel.send(checkPerms);
 
         const redisClient = await database.redisClient;
@@ -145,7 +145,7 @@ module.exports = {
         const roleID = client.settings.get(guild.id).muteRole;
         if (roleID) muteRole = guild.roles.cache.get(roleID);
         
-        let checkPerms = checkpunishability(message.guild, muteRole);
+        let checkPerms = checkpunishability(message.guild, muteRole, false, ['MANAGE_ROLES']);
         if (muteRole) if (checkPerms) return message.channel.send(checkPerms);
 
         const redisClient = await database.redisClient;

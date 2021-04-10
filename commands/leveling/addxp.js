@@ -7,6 +7,7 @@ module.exports = {
   permissionMessage: true,
   description: `Use this command to add a certain amount of xp (experience which increases your progress to the next level) to a certain member`,
   usage: `<member> <amount of xp>`,
+  group: 'leveling',
 
   callback: async (message, args, client) => {
     const Discord = require("discord.js");
