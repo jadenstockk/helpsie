@@ -40,7 +40,7 @@ module.exports = {
 
         data.bDate = null;
         data.bWished = [];
-        checkbirthdays.removeRoleCounter(message.guild, user, message.guild.members.cache.get(user.id), client);
+        checkbirthdays.removeRoleCounter(message.guild, message.guild.members.cache.get(user.id), user, client);
         await data.save();
 
         return message.channel.send(

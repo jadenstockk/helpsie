@@ -4,7 +4,7 @@ const client = new Discord.Client({
   partials: ["MESSAGE", "CHANNEL", "REACTION"]
 });
 const config = require('./config.json');
-const topggVoting = require('./events/topggVote');
+const voting = require('./events/botPagesVoting');
 const fs = require("fs");
 const guildData = require('./models/guildData');
 const botInfo = require("./models/botInfo");
@@ -22,6 +22,7 @@ const {
 const betaOnline = require("./betaOnline");
 const checkbirthdays = require("./functions/other/checkbirthdays");
 const supportBot = require("./supportBot");
+const pushUpdates = require("./pushUpdates");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
@@ -49,8 +50,10 @@ async function slashCmds() {
 client.console = require("./functions/botevents/console");
 
 client.levelingTimeouts = new Set();
+client.addxpTimeouts = new Set();
 client.settings = new Map();
 client.timeouts = new Map();
+client.birthdaysWished = [];
 client.commandsRun = 0;
 
 client.disabledCommands = [{
@@ -155,6 +158,12 @@ client.once("ready", async () => {
     console.log(`Loaded commands`)
   }
 
+  let users = 0;
+  await client.guilds.cache.forEach(guild => {
+    users = users + guild.memberCount;
+  })
+  voting.init(users, client);
+
   function loadEvents() {
     if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
 
@@ -177,15 +186,38 @@ client.once("ready", async () => {
 //TESTING
 client.on('message', async message => {
   if (message.author.bot) return;
+  const { guild } = message;
   const args = message.content.split(/[ ]+/)
 
   if (message.member.roles.cache.get('824641926832848916')) {
-    client.functions.get('leveling').execute(message, args, client);
+    //client.functions.get('leveling').execute(message, args, client);
+    //client.functions.get('checkbirthdays').execute(client);
+    /*
+    function getRequiredXP(level) {
+
+      requiredXP = 100;
+      xpAdd = 55;
+    
+      for (var i = 0; i < level; i++) {
+        requiredXP = requiredXP + xpAdd;
+        xpAdd = xpAdd + 10;
+    
+      }
+      return requiredXP;
+    }
+
+    lol = 0;
+    for (var i = 0; i < 46; i++) {
+      lol = lol + getRequiredXP(i);
+  
+    }
+    console.log(lol);
+    */
   }
 })
 
 async function botFunctions() {
-  //topggVoting.init(client);
+
   betaOnline();
   supportBot(client);
 
@@ -195,9 +227,13 @@ async function botFunctions() {
 
   }, 30000);
 
-  //TOP.GG STATS POSTER
-  setInterval(() => {
-    //topggVoting.updateServerCount(client);
+  //STATS POSTER
+  setInterval(async () => {
+    let users = 0;
+    await client.guilds.cache.forEach(guild => {
+      users = users + guild.memberCount;
+    })
+    voting.updateServerCount(users, client);
 
   }, 20 * 60000);
 

@@ -1,5 +1,5 @@
 setup command
-finish settings
-levelroles
+tips
+discord bot list api
+setlevel comamnd
 command limiter
-birthday remove role bug

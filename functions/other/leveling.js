@@ -19,7 +19,7 @@ module.exports = {
 
         client.levelingTimeouts.add(`${message.author.id}  | ${message.guild.id}`)
 
-        setInterval(() => {
+        setTimeout(() => {
             client.levelingTimeouts.delete(`${message.author.id}  | ${message.guild.id}`)
             
         }, 60000);
@@ -53,7 +53,7 @@ const addXP = async(guild, user, addedXP, message, client) => {
     if (xp >= needed ) {
         while (xp >= needed) {
             ++level
-            xp -= needed
+            xp = xp - needed
         }
 
         await userData.updateOne({
@@ -70,8 +70,6 @@ const addXP = async(guild, user, addedXP, message, client) => {
         levelroles.sort(function (a, b) {
             return a.level - b.level
         });
-
-        console.log(level);
 
         try {
             levelroles.forEach((levelrole, index) => {
@@ -178,16 +176,16 @@ const resetXP = async(guild, user, message, client) => {
 
 function getRequiredXP(level) {
 
-      requiredXP = 100;
-      xpAdd = 55;
-
-      for (var i = 0; i < level; i++) {
-          requiredXP = requiredXP + xpAdd;
-          xpAdd = xpAdd + 10;
-
-      }
-      return requiredXP;
-}
+    requiredXP = 100;
+    xpAdd = 55;
+  
+    for (var i = 0; i < level; i++) {
+      requiredXP = requiredXP + xpAdd;
+      xpAdd = xpAdd + 10;
+  
+    }
+    return requiredXP - 100;
+  }
 
 function getLevel(xp) {
 

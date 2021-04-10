@@ -7,6 +7,7 @@ const ms = require('ms');
 const timetostring = require('@danm/timespent');
 const { expire } = require("../../database");
 const errorhandler = require("../../errorhandler");
+const botInfo = require('../../models/botInfo');
 
 module.exports = {
     name: 'checkbirthdays',
@@ -16,7 +17,7 @@ module.exports = {
 
         let now = spacetime.now();
 
-        userData.find({
+        await userData.find({
                 bDate: `${now.month() + 1}/${now.date()}`
             },
             async (err, data) => {
@@ -25,7 +26,7 @@ module.exports = {
                     return;
 
                 } else {
-                    data.forEach(async member => {
+                    await data.forEach(async (member, index) => {
                         if (member.bWished.includes(`${now.year()}`)) return;
 
                         let user = client.users.cache.get(member.user);
@@ -47,6 +48,19 @@ module.exports = {
                             .setDescription(message.replace('{user}', user))
                             .setColor('BLUE')
                         )
+
+                        setTimeout(() => {
+                            if (!client.birthdaysWished.includes(`${client.birthdaysWished}-${now.year()}`)) {
+                                client.birthdaysWished.push(`${client.birthdaysWished}-${now.year()}`);
+                                user.send(
+                                    new Discord.MessageEmbed()
+                                        .setDescription(`**Hey there ${user}!**\n\nWe wanted to wish you a very happy birthday and we hope that everyone makes you feel like the special person you are today! 🥳\n\n**Regards,**\n${logo} ${client.user.username} Support Team`)
+                                        .setThumbnail('https://i.gifer.com/origin/1a/1af8d3b487b77085d5288814f151e1de.gif')
+                                        .setColor('BLUE')
+                                );
+                            }
+                            
+                        }, index * 10);
 
                         function secondsUntilMidnight() {
                             var midnight = new Date();
@@ -77,7 +91,6 @@ module.exports = {
 
                                     guildmember.roles.add(role, 'Birthday role add');
                                     await redisClient.set(redisKey, 'true', 'EX', seconds);
-                                    console.log(redisKey, seconds);
                                 }
                             });
 
