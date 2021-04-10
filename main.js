@@ -162,7 +162,7 @@ client.once("ready", async () => {
   await client.guilds.cache.forEach(guild => {
     users = users + guild.memberCount;
   })
-  voting.init(users, client);
+  //voting.init(users, client);
 
   function loadEvents() {
     if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
@@ -229,11 +229,13 @@ async function botFunctions() {
 
   //STATS POSTER
   setInterval(async () => {
+    /*
     let users = 0;
     await client.guilds.cache.forEach(guild => {
       users = users + guild.memberCount;
     })
     voting.updateServerCount(users, client);
+    */
 
   }, 20 * 60000);
 
