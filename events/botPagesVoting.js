@@ -1,5 +1,5 @@
-/*
 const init = async (users, client) => {
+    /*
     const Discord = require('discord.js');
     const config = require('../config.json');
     const top = require('top.gg-core');
@@ -75,7 +75,10 @@ const init = async (users, client) => {
 
         }
     })
+    */
+    
+    function updateServerCount(users, client) {
+    }
 }
 module.exports.init = init;
 module.exports.updateServerCount = this.updateServerCount;
-*/
