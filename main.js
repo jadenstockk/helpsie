@@ -4,7 +4,6 @@ const client = new Discord.Client({
   partials: ["MESSAGE", "CHANNEL", "REACTION"]
 });
 const config = require('./config.json');
-const voting = require('./events/botPagesVoting');
 const fs = require("fs");
 const guildData = require('./models/guildData');
 const botInfo = require("./models/botInfo");
@@ -123,7 +122,7 @@ client.once("ready", async () => {
         console.log(`Loaded guild data`)
 
         loadCommands();
-        loadEvents();
+        await loadEvents();
         let onlineMessage = ` ${client.user.username} is online in ${client.guilds.cache.size} guilds `;
 
         console.clear(), console.log(`||${'-'.repeat(onlineMessage.length)}||\n||${onlineMessage}||\n||${'-'.repeat(onlineMessage.length)}||\n`) //, client.console.log(`All startup functions completed`, 'success', client);
@@ -158,14 +157,8 @@ client.once("ready", async () => {
     console.log(`Loaded commands`)
   }
 
-  let users = 0;
-  await client.guilds.cache.forEach(guild => {
-    users = users + guild.memberCount;
-  })
-  //voting.init(users, client);
-
-  function loadEvents() {
-    if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
+  async function loadEvents() {
+    //if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
 
     const readCommands = (dir) => {
       const files = fs.readdirSync(path.join(__dirname, dir))
@@ -178,7 +171,6 @@ client.once("ready", async () => {
     mute.expireManager(client);
     checkbirthdays.expireManager(client);
     botFunctions();
-
     console.log(`Loaded events`)
   }
 });
@@ -226,18 +218,6 @@ async function botFunctions() {
     client.functions.get("checkbirthdays").execute(client);
 
   }, 30000);
-
-  //STATS POSTER
-  setInterval(async () => {
-    /*
-    let users = 0;
-    await client.guilds.cache.forEach(guild => {
-      users = users + guild.memberCount;
-    })
-    voting.updateServerCount(users, client);
-    */
-
-  }, 20 * 60000);
 
   //STATS UPDATER
   setInterval(async () => {
