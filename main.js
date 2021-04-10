@@ -15,16 +15,11 @@ const {
   ApplicationCommandOptionType
 } = require("slash-commands");
 const slash = require('slash-commands');
-const fetch = require('node-fetch');
 const {
   fetchAllGuildData
 } = require("./database");
-const betaOnline = require("./misc/betaOnline");
 const checkbirthdays = require("./functions/other/checkbirthdays");
-const supportBot = require("./misc/supportBot");
-const pushUpdates = require("./pushUpdates");
 const errorhandler = require("./errorhandler");
-const { response } = require("express");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
