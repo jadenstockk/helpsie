@@ -1,9 +1,11 @@
+/*
 const init = async (users, client) => {
     const Discord = require('discord.js');
     const config = require('../config.json');
     const top = require('top.gg-core');
     const express = require("express");
     const bodyParser = require("body-parser");
+    
 
     const appname = process.env.HEROKU_APP_NAME;
     if (appname) {
@@ -76,3 +78,4 @@ const init = async (users, client) => {
 }
 module.exports.init = init;
 module.exports.updateServerCount = this.updateServerCount;
+*/
