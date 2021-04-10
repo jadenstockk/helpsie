@@ -230,10 +230,6 @@ async function botFunctions() {
   }, 100000);
 }
 
-process.on('unhandledRejection', (err) => {
-  errorhandler.init(err, __filename);
-});
-
 client.database.redis();
 client.database.mongoose();
 client.login(process.env['TOKEN']);
