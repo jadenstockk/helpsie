@@ -5,6 +5,7 @@ const path = require('path');
 
 module.exports = {
     init: (err, file, message) => {
+        console.log(err);
         let type = 'Public Version';
         let guild = "";
         if (process.env['TOKEN'] === process.env['BETA_TOKEN']) type = 'Beta Version';

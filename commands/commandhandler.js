@@ -87,7 +87,7 @@ module.exports = (client, commandOptions) => {
     }
 
     validatePermissions(botPermissions)
-    botPermissions.push('SEND_MESSAGES', 'EMBED_LINKS', 'READ_MESSAGE_HISTORY', 'USE_EXTERNAL_EMOJIS');
+    botPermissions.push('VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS', 'READ_MESSAGE_HISTORY', 'USE_EXTERNAL_EMOJIS');
   }
 
   client.on('message', async (message) => {
@@ -123,7 +123,7 @@ module.exports = (client, commandOptions) => {
 
           for (var i in disabled) {
             if (commands.includes(disabled[i])) return;
-            if (group === disabled[i]) return;            
+            if (group) if (group === disabled[i]) return;
           }
 
           for (const permission of permissions) {
@@ -191,7 +191,7 @@ module.exports = (client, commandOptions) => {
             }
           }
 
-          let commandDisabled = client.disabledCommands.find(disable => disable.command === alias)
+          let commandDisabled = client.disabledCommands.find(disable => disable.command === alias);
           if (commandDisabled) return message.channel.send(new Discord.MessageEmbed().setDescription(`${logo} This command has been disabled by the ${client.user.username} Team\n**Reason:** ${commandDisabled.reason}`).setColor("#FF3E3E"));
   
 

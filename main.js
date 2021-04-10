@@ -114,13 +114,13 @@ client.once("ready", async () => {
   loadAll();
 
   function loadAll() {
-    setTimeout(async () => {
+    setTimeout(() => {
       if (dataFetched > (client.guilds.cache.size - 1)) {
 
         console.log(`Loaded guild data`)
 
         loadCommands();
-        await loadEvents();
+        loadEvents();
         let onlineMessage = ` ${client.user.username} is online in ${client.guilds.cache.size} guilds `;
 
         console.clear(), console.log(`||${'-'.repeat(onlineMessage.length)}||\n||${onlineMessage}||\n||${'-'.repeat(onlineMessage.length)}||\n`) //, client.console.log(`All startup functions completed`, 'success', client);
@@ -156,7 +156,7 @@ client.once("ready", async () => {
   }
 
   async function loadEvents() {
-    if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
+    //if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
 
     const readCommands = (dir) => {
       const files = fs.readdirSync(path.join(__dirname, dir))
@@ -176,33 +176,9 @@ client.once("ready", async () => {
 //TESTING
 client.on('message', async message => {
   if (message.author.bot) return;
-  const { guild } = message;
   const args = message.content.split(/[ ]+/)
 
   if (message.member.roles.cache.get('824641926832848916')) {
-    //client.functions.get('leveling').execute(message, args, client);
-    //client.functions.get('checkbirthdays').execute(client);
-    /*
-    function getRequiredXP(level) {
-
-      requiredXP = 100;
-      xpAdd = 55;
-    
-      for (var i = 0; i < level; i++) {
-        requiredXP = requiredXP + xpAdd;
-        xpAdd = xpAdd + 10;
-    
-      }
-      return requiredXP;
-    }
-
-    lol = 0;
-    for (var i = 0; i < 46; i++) {
-      lol = lol + getRequiredXP(i);
-  
-    }
-    console.log(lol);
-    */
   }
 })
 

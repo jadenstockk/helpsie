@@ -13,10 +13,12 @@ module.exports = {
 
             try {
                 pushUpdates(`New Guild`,`Name: ${guild.name}\nMember Count: ${guild.memberCount}\nOwner: ${guild.owner.user.tag}\n‎‎‎‎‎Total Guilds: ${client.guilds.cache.size}`);
-                guildLogs.send(client.users.cache.get('541189322007904266'), new Discord.MessageEmbed().setDescription(`**📥 Joined new guild:**\n\n**Name:** \`${guild.name}\`\n**ID:** \`${guild.id}\`\n**Member Count:** \`${guild.memberCount}\`\n**Owner:** ${guild.owner.tag} (${guild.owner.user})\n‎‎‎‎‎    `).setColor("#00FF7F").setThumbnail(guild.iconURL()).setFooter(`Total Guilds: ${client.guilds.cache.size}`, client.user.displayAvatarURL())).catch(err => {
+                guildLogs.send(client.users.cache.get('541189322007904266'), new Discord.MessageEmbed().setDescription(`**📥 Joined new guild:**\n\n**Name:** \`${guild.name}\`\n**ID:** \`${guild.id}\`\n**Member Count:** \`${guild.memberCount}\`\n**Owner:** ${guild.owner.user.tag} (${guild.owner.user})\n‎‎‎‎‎    `).setColor("#00FF7F").setThumbnail(guild.iconURL()).setFooter(`Total Guilds: ${client.guilds.cache.size}`, client.user.displayAvatarURL())).catch(err => {
                     errorhandler.init(err, __filename);
                 })
                 await client.database.fetchGuildData(guild.id, client);
+
+                if (checkforerrors(guild, false, false, ['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS', 'READ_MESSAGE_HISTORY', 'USE_EXTERNAL_EMOJIS'], client)) return;
 
                 const prefix = client.settings.get(guild.id).prefix;
 
