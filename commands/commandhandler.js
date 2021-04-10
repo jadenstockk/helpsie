@@ -127,7 +127,7 @@ module.exports = (client, commandOptions) => {
           }
 
           for (const permission of permissions) {
-            if (!member.hasPermission(permission) && member.id !== '541189322007904266') {
+            if (!member.hasPermission(permission)) {
               if (permissionMessage) {
                 let embed = new Discord.MessageEmbed()
                 .setDescription(`${nopeEmoji} ${permissionError}`)
@@ -166,7 +166,7 @@ module.exports = (client, commandOptions) => {
   
           if (modRequired) {
             if (!member.roles.cache.get(modRole)) {
-              if (!member.hasPermission('ADMINISTRATOR') && member.id !== '541189322007904266') {
+              if (!member.hasPermission('ADMINISTRATOR')) {
                 if (permissionMessage) {
                   let embed = new Discord.MessageEmbed()
                   .setDescription(`${nopeEmoji} ${permissionError}`)
