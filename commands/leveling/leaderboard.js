@@ -17,7 +17,7 @@ module.exports = {
         guild: message.guild.id
       }).sort({
         totalxp: 'desc'
-      });
+      }).lean();
       ranks.forEach(rank => {
         if (!rank.totalxp || rank.totalxp === 0) ranks.pop(rank);
       })

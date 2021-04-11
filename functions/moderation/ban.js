@@ -1,4 +1,5 @@
 const serverlogs = require("../moderation/serverlogs");
+const checkforerrors = require("./checkforerrors");
 
 module.exports = {
   name: 'ban',

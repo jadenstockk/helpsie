@@ -36,6 +36,7 @@ module.exports = {
 
         if (!results) return message.channel.send(noResults);
 
+        results = results.toObject();
         let user = results.user;
         let warn = results.warns.find(warn => warn.id === id);
 

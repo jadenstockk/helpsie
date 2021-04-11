@@ -1,3 +1,4 @@
+const errorhandler = require("../../errorhandler");
 const checkforerrors = require("../../functions/moderation/checkforerrors");
 const {
   fetchLatest
@@ -29,13 +30,18 @@ module.exports = {
       function setting(type, special) {
         let value = eval(type);
 
-        if (value && special)
-          if (special === 'channel') value = message.guild.channels.cache.get(value);
-          else if (special === 'role') value = message.guild.roles.cache.get(value);
-        else if (special === 'message' && value === 'off') value === '\`off\`';
+        try {
+          if (value && special)
+            if (special === 'channel') value = message.guild.channels.cache.get(value);
+            else if (special === 'role') value = message.guild.roles.cache.get(value);
+          else if (special === 'message' && value === 'off') value === '\`off\`';
 
-        if (!value && (!special)) value = 'off';
-        else if (!value && special) value = '\`off\`';
+          if (!value && (!special)) value = 'off';
+          else if (!value && special) value = '\`off\`';
+
+        } catch (err) {
+          errorhandler.init(err, __filename);
+        }
 
         return value;
       }
@@ -82,6 +88,11 @@ module.exports = {
       ]
     }
 
+    function CheckForErrors() {
+      let checkErrors = checkforerrors(message.guild, false, false, ['ADD_REACTIONS', 'MANAGE_MESSAGES'], client);
+      if (checkErrors) return checkErrors;
+    }
+
     let pageNumber = 0;
     let maxPage = 6;
 
@@ -89,8 +100,7 @@ module.exports = {
     if ((pageNumber < 0) || (pageNumber > maxPage)) pageNumber = 0;
 
     if (!setting) {
-      let checkErrors = checkforerrors(message.guild, false, false, ['ADD_REACTIONS'], client);
-      if (checkErrors) message.channel.send(checkErrors);
+      if (CheckForErrors()) return message.channel.send(CheckForErrors());
 
       message.channel.send(page(pageNumber)).then(msg => {
 
@@ -109,27 +119,46 @@ module.exports = {
         });
 
         backwards.on('collect', r => {
+          if (CheckForErrors()) return msg.edit(CheckForErrors());
 
-          r.users.remove(message.author)
+          try {
+            r.users.remove(message.author)
 
-          if (pageNumber === 0) return;
+            if (pageNumber === 0) return;
 
-          pageNumber--;
-          msg.edit(page(pageNumber))
+            pageNumber--;
+            msg.edit(page(pageNumber))
+
+          } catch (err) {
+
+          }
         })
 
         forwards.on('collect', r => {
+          if (CheckForErrors()) return msg.edit(CheckForErrors());
 
-          r.users.remove(message.author)
+          try {
+            r.users.remove(message.author)
 
-          if (pageNumber === maxPage - 1) return;
+            if (pageNumber === maxPage - 1) return;
 
-          pageNumber++;
-          msg.edit(page(pageNumber));
+            pageNumber++;
+            msg.edit(page(pageNumber));
+
+          } catch (err) {
+
+          }
         })
 
         backwards.on('end', r => {
-          msg.reactions.removeAll();
+          if (CheckForErrors()) return msg.edit(CheckForErrors());
+          
+          try {
+            msg.reactions.removeAll();
+
+          } catch (err) {
+
+          }
         })
       })
 

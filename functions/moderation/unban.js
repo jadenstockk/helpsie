@@ -1,3 +1,4 @@
+const checkforerrors = require("./checkforerrors");
 const serverlogs = require("./serverlogs");
 
 module.exports = {

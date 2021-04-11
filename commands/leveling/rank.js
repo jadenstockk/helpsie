@@ -4,6 +4,7 @@ module.exports = {
   commands: 'rank',
   description: `Use this command to view your current level and progress to the next level as well as your ranking in the server`,
   usage: `[optional member] - leave the optional part out to view YOUR rank`,
+  botPermissions: ['ATTACH_FILES'],
   group: 'leveling',
 
   callback: (message, args, client) => {
@@ -28,7 +29,7 @@ module.exports = {
           guild: message.guild.id
         }).sort({
           level: "desc"
-        });
+        }).lean();
         rank = rank.findIndex(x => x.user === user.id) + 1;
 
         let rankcard = new canvacord.Rank()

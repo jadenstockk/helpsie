@@ -124,6 +124,9 @@ client.once("ready", async () => {
         loadEvents();
         let onlineMessage = ` ${client.user.username} is online in ${client.guilds.cache.size} guilds `;
 
+        allCommands = allCommands.toString();
+        console.log(allCommands);
+
         console.clear(), console.log(`||${'-'.repeat(onlineMessage.length)}||\n||${onlineMessage}||\n||${'-'.repeat(onlineMessage.length)}||\n`) //, client.console.log(`All startup functions completed`, 'success', client);
 
       } else {
@@ -146,8 +149,9 @@ client.once("ready", async () => {
         if (stat.isDirectory()) {
           readCommands(path.join(dir, file))
         } else if (file !== baseFile) {
-          const option = require(path.join(__dirname, dir, file))
-          commandBase(client, option)
+          const option = require(path.join(__dirname, dir, file));
+          commandBase(client, option);
+          allCommands.push(option.commands.toString());
         }
       }
     }
@@ -190,51 +194,60 @@ async function botFunctions() {
 
   }, 60000);
 
+  //TIME CHECKER
   setInterval(() => {
-    console.log(`[${spacetime.now(`Africa/Johannesburg`).time()}]: Online: ${client.ws.ping}`);
-    
+    console.log(`[${spacetime.now(`Africa/Johannesburg`).time()}]: Online: ${client.ws.ping}ms`);
+
   }, 60000);
+
+  //LEVELING
+  setInterval(() => {
+    console.log(`[${spacetime.now(`Africa/Johannesburg`).time()}]: Online: ${client.ws.ping}ms`);
+
+  }, 120000);
 
   //STATS UPDATER
   setInterval(async () => {
-    let commandsRun = client.commandsRun;
-
-    /*
-    let guilds = client.guilds.cache.size;
-    let users = 0;
-    await client.guilds.cache.forEach(guild => {
-      users = users + guild.memberCount;
-    })/
-    */
-
-    botInfo.findOne({
-        mainID: 1
-      },
-      async (err, data) => {
-        if (err) return;
-
-        if (!data) {
-          let newData = new botInfo({
-            mainID: 1,
-            commandsRun: commandsRun,
-            //users: users,
-            //guilds: guilds,
-
-          })
-          await newData.save();
-
-        } else {
-          data.commandsRun = data.commandsRun + commandsRun;
-          //data.users = users;
-          //data.guilds = guilds;
-          await data.save();
-
-        }
-        client.commandsRun = 0;
-      }
-    )
+    updateStats();
 
   }, 60000 * 20);
+}
+
+async function updateStats() {
+  let commandsRun = client.commandsRun;
+
+  let guilds = client.guilds.cache.size;
+  let users = 0;
+  await client.guilds.cache.forEach(guild => {
+    users = users + guild.memberCount;
+  })
+
+  botInfo.findOne({
+      mainID: 1
+    },
+    async (err, data) => {
+      if (err) return;
+
+      if (!data) {
+        let newData = new botInfo({
+          mainID: 1,
+          commandsRun: commandsRun,
+          users: users,
+          guilds: guilds,
+
+        })
+        await newData.save();
+
+      } else {
+        data.commandsRun = data.commandsRun + commandsRun;
+        data.users = users;
+        data.guilds = guilds;
+        await data.save();
+
+      }
+      client.commandsRun = 0;
+    }
+  )  
 }
 
 client.database.redis();

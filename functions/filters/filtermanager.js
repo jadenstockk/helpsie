@@ -5,50 +5,59 @@ const profanityfilter = require("../filters/profanityfilter");
 const warn = require("../moderation/warn");
 
 module.exports = {
-    name: "filtermanager",
-    description: "manage bot filters",
-  
-    async execute(message, args, client) {
+  name: "filtermanager",
+  description: "manage bot filters",
 
-        if (message.author.bot) return;
-        if (message.member.hasPermission('ADMINISTRATOR')) return;
+  async execute(message, args, client) {
 
-        function handle(type, filtered) {
-            let target = message.member;
-            let moderator = client.user;
+    if (message.author.bot) return;
+    if (message.member.hasPermission('ADMINISTRATOR')) return;
+    const settings = client.settings.get(message.guild.id);
 
-            if (type === 'profanity') filterStatus = client.settings.get(message.guild.id).profanityFilter, reason = "Profanity usage", filtered = filtered.join(', ');
-            if (type === 'invite') filterStatus = client.settings.get(message.guild.id).inviteBlocker, reason = "Posted an invite";
-            if (type === 'link') filterStatus = client.settings.get(message.guild.id).inviteBlocker, reason = "Posted a link";
+    function handle(type, filtered) {
+      let target = message.member;
+      let moderator = client.user;
 
-            if (filterStatus === 'off') return;
-    
-            if (filterStatus === 'delete') {
-                message.delete();
-        
-              } else if (filterStatus === 'warndelete') {
-                message.delete();
-                warn.execute(client, reason, target, moderator, message, type, filtered);
-        
-              } else if (filterStatus === 'warn') {
-                warn.execute(client, reason, target, moderator, message, type, filtered);
-                
-              }
-            
-        }
+      if (type === 'profanity') filterStatus = settings.profanityFilter, reason = "Profanity usage", filtered = filtered.join(', ');
+      if (type === 'invite') filterStatus = settings.inviteBlocker, reason = "Posted an invite";
+      if (type === 'link') filterStatus = settings.inviteBlocker, reason = "Posted a link";
 
-        try {
-            let profanityFILTERED = await profanityfilter.filterprofanity(message.content, args, client);
-            if (profanityFILTERED) return handle('profanity', profanityFILTERED);
+      if (filterStatus === 'off') return;
 
-            let inviteFILTERED = await inviteblocker.blockinvite(message, args, client);
-            if (inviteFILTERED) return handle('invite', inviteFILTERED);
-            
-            let linkFILTERED = await linkblocker.blocklink(message, args, client);
-            if (linkFILTERED) return handle('link', linkFILTERED);
+      if (filterStatus === 'delete') {
+        message.delete();
 
-        } catch(err) {
-            errorhandler.init(err, __filename, message);
-        }
+      } else if (filterStatus === 'warndelete') {
+        message.delete();
+        warn.execute(client, reason, target, moderator, message, type, filtered);
+
+      } else if (filterStatus === 'warn') {
+        warn.execute(client, reason, target, moderator, message, type, filtered);
+
+      }
+
     }
+
+    try {
+      if (settings.profanityFilter !== 'off') {
+        let profanityFILTERED = await profanityfilter.filterprofanity(message.content, args, client)
+        if (profanityFILTERED) return handle('profanity', profanityFILTERED);
+
+      }
+      
+      if (settings.inviteBlocker !== 'off') {
+        let inviteFILTERED = await inviteblocker.blockinvite(message, args, client);
+        if (inviteFILTERED) return handle('invite', inviteFILTERED);
+
+      }
+      
+      if (settings.linkBlocker !== 'off') {
+        let linkFILTERED = await linkblocker.blocklink(message, args, client);
+        if (linkFILTERED) return handle('link', linkFILTERED);
+      }
+
+    } catch (err) {
+      errorhandler.init(err, __filename);
+    }
+  }
 }

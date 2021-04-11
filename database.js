@@ -205,7 +205,7 @@ async function dataHandler(data, guild, client) {
 
     if (!data.leveling) leveling = {
       channel: undefined,
-      message: `**Well done {user} you just reached level {level}!** 🥳`,
+      message: undefined,
       roles: []
     };
     else leveling = data.leveling;
@@ -277,7 +277,7 @@ async function dataHandler(data, guild, client) {
       reactionRoles: [],
       leveling: {
         channel: undefined,
-        message: `**Well done {user} you just reached level {level}!** 🥳`,
+        message: undefined,
         roles: []
       },
       autoModActions: []

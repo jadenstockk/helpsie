@@ -54,8 +54,9 @@ module.exports = {
             })
         })
 
-        let checkPerms = checkpunishability(message.guild, muteRole, false, ['MANAGE_ROLES']);
-        if (checkPerms) return message.channel.send(checkPerms);
+        let checkPerms = checkpunishability(guild, muteRole, false, ['MANAGE_ROLES']);
+        if (checkPerms && message) return message.channel.send(checkPerms);
+        else if (checkPerms) return;
 
         const redisClient = await database.redisClient;
         try {
