@@ -3,3 +3,4 @@ tips
 discord bot list api
 setlevel comamnd
 command limiter
+channel.send access manager

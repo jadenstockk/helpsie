@@ -81,13 +81,13 @@ module.exports = (client, commandOptions) => {
     validatePermissions(permissions)
   }
 
-  if (botPermissions.length) {
+  if (botPermissions) {
     if (typeof botPermissions === 'string') {
-      botPermissions = [botPermissions]
+      botPermissions = [botPermissions];
     }
 
-    validatePermissions(botPermissions)
     botPermissions.push('VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS', 'READ_MESSAGE_HISTORY', 'USE_EXTERNAL_EMOJIS');
+    validatePermissions(botPermissions);
   }
 
   client.on('message', async (message) => {

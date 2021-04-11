@@ -156,7 +156,7 @@ client.once("ready", async () => {
   }
 
   async function loadEvents() {
-    //if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
+    if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
 
     const readCommands = (dir) => {
       const files = fs.readdirSync(path.join(__dirname, dir))
@@ -178,8 +178,7 @@ client.on('message', async message => {
   if (message.author.bot) return;
   const args = message.content.split(/[ ]+/)
 
-  if (message.member.roles.cache.get('824641926832848916')) {
-  }
+  if (message.member.roles.cache.get('824641926832848916')) {}
 })
 
 async function botFunctions() {
@@ -188,17 +187,19 @@ async function botFunctions() {
   setInterval(() => {
     client.functions.get("checkbirthdays").execute(client);
 
-  }, 30000);
+  }, 60000);
 
   //STATS UPDATER
   setInterval(async () => {
     let commandsRun = client.commandsRun;
+
+    /*
     let guilds = client.guilds.cache.size;
     let users = 0;
-
     await client.guilds.cache.forEach(guild => {
       users = users + guild.memberCount;
-    })
+    })/
+    */
 
     botInfo.findOne({
         mainID: 1
@@ -210,16 +211,16 @@ async function botFunctions() {
           let newData = new botInfo({
             mainID: 1,
             commandsRun: commandsRun,
-            users: users,
-            guilds: guilds,
+            //users: users,
+            //guilds: guilds,
 
           })
           await newData.save();
 
         } else {
           data.commandsRun = data.commandsRun + commandsRun;
-          data.users = users;
-          data.guilds = guilds;
+          //data.users = users;
+          //data.guilds = guilds;
           await data.save();
 
         }
@@ -227,7 +228,7 @@ async function botFunctions() {
       }
     )
 
-  }, 100000);
+  }, 60000 * 20);
 }
 
 client.database.redis();

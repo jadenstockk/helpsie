@@ -112,8 +112,10 @@ module.exports = {
                 .setColor("#FF3E3E")
             )
 
-            let checkerrs = checkforerrors(message.guild, roleFetch, false, false, client);
-            if (checkerrs) return message.channel.send(checkerrs);
+            if (roleFetch.permissions.has('ADMINISTRATOR')) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered has admin permissions and is therefore not allowed to be used due to security purposes`).setColor("#FF3E3E"));
+
+            let checkErrors = checkforerrors(message.guild, roleFetch, false, ['MANAGE_ROLES'], client);
+            if (checkErrors) return message.channel.send(checkErrors);
 
             try {
                 await messageFetch.react(reactionrole.emoji);

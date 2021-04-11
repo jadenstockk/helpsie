@@ -6,10 +6,14 @@ module.exports = {
     const Discord = require("discord.js");
     const timeconverter = require("@danm/timespent");
 
-    message.channel.send(`\`Calculating ping...\``).then(msg => {
+    message.channel.send(new Discord.MessageEmbed()
+    .setDescription(`\`Calculating Latency and Uptime...\``)).then(msg => {
       let ping = msg.createdTimestamp - message.createdTimestamp
 
-      msg.edit(`**Bot Ping:** \`${ping}ms\`\n**API Ping:** \`${client.ws.ping}ms\`\n**Uptime:** \`${timeconverter.short(client.uptime)}\``)
+      msg.edit(new Discord.MessageEmbed()
+      .setAuthor(`${client.user.username} Latency and Uptime`, client.user.displayAvatarURL())
+      .setDescription(`**Bot Ping:** \`${ping}ms\`\n**API Ping:** \`${client.ws.ping}ms\`\n**Uptime:** \`${timeconverter.short(client.uptime)}\``)
+      .setColor(process.env['EMBED_COLOR']))
     })
   },
 };

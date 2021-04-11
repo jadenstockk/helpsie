@@ -1,3 +1,4 @@
+const checkforerrors = require("../../functions/moderation/checkforerrors");
 const {
   fetchLatest
 } = require("../../main");
@@ -7,7 +8,6 @@ module.exports = {
   permissions: 'ADMINISTRATOR',
   permissionError: `You have to be an administrator to use this command`,
   permissionMessage: true,
-  botPermissions: ['ADD_REACTIONS'],
   description: `Use this command to get a list of or change the bot's settings to your liking`,
   usage: `[optional setting] [optional new setting option] - leave the optional parts out to get a full list of all the bot's settings`,
   group: 'admin',
@@ -89,6 +89,8 @@ module.exports = {
     if ((pageNumber < 0) || (pageNumber > maxPage)) pageNumber = 0;
 
     if (!setting) {
+      let checkErrors = checkforerrors(message.guild, false, false, ['ADD_REACTIONS'], client);
+      if (checkErrors) message.channel.send(checkErrors);
 
       message.channel.send(page(pageNumber)).then(msg => {
 

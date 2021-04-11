@@ -2,10 +2,22 @@ const Discord = require("discord.js");
 const errorhandler = require("../../errorhandler");
 const guildData = require('../../models/guildData');
 const userData = require("../../models/userData");
+const checkforerrors = require("../moderation/checkforerrors");
 
 module.exports = {
   name: 'settings',
   description: 'settings update',
+
+  /**
+   * 
+   * @param {Discord.Message} message 
+   * @param {*} args 
+   * @param {Discord.Client} client 
+   * @param {*} setting 
+   * @param {*} settinginfo 
+   * @param {*} currentSettings 
+   * @returns 
+   */
 
   async execute(message, args, client, setting, settinginfo, currentSettings) {
     const clientMember = message.guild.members.cache.get(client.user.id);
@@ -25,9 +37,8 @@ module.exports = {
 
     } else if (setting === 'logs') {
 
-      if (!(clientMember.hasPermission('MANAGE_WEBHOOKS'))) return message.channel.send(new Discord.MessageEmbed()
-        .setDescription(`${nopeEmoji} Bot is missing permissions: \`Manage Webhooks\``)
-        .setColor("#FF3E3E"))
+      let checkPerms = checkforerrors(message.guild, false, false, ['MANAGE_WEBHOOKS'], client);
+      if (checkPerms) return message.channel.send(checkPerms);
 
       if ((!settinginfo && !currentSettings.logsChannel) || (!settinginfo && !message.guild.channels.cache.get(currentSettings.logsChannel.channelID))) return message.channel.send(new Discord.MessageEmbed().setDescription(`Server logs channel is not setup`).setColor("#059DFF"))
       if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Current server logs channel is set to: ${message.guild.channels.cache.get(currentSettings.logsChannel.channelID)}`).setColor("#059DFF"))
@@ -43,7 +54,8 @@ module.exports = {
         let channel = message.guild.channels.cache.get(currentSettings.logsChannel.channelID);
         if (channel) {
           let webhooks = await channel.fetchWebhooks();
-          webhooks.find(webhook => webhook.id === currentSettings.logsChannel.id).delete();
+          let webhook = webhooks.find(webhook => webhook.id === currentSettings.logsChannel.id);
+          if (webhook) webhook.delete();
         }
 
       }
@@ -88,6 +100,10 @@ module.exports = {
       let modrole = message.guild.roles.cache.get(settinginfo.replace('<', '').replace('>', '').replace('@', '').replace('&', ''));
 
       if (!modrole) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered is not valid`).setColor("#FF3E3E"))
+      if (modrole.permissions.has('ADMINISTRATOR')) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered has admin permissions and is therefore not allowed to be used due to security purposes`).setColor("#FF3E3E"));
+
+      let checkErrors = checkforerrors(message.guild, modrole, false, ['MANAGE_ROLES'], client);
+      if (checkErrors) return message.channel.send(checkErrors);
 
       if (modrole.id === currentSettings.modrole) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Moderator role is already set to: ${settinginfo}`).setColor("#FF3E3E"))
 
@@ -104,6 +120,10 @@ module.exports = {
       let muterole = message.guild.roles.cache.get(settinginfo.replace('<', '').replace('>', '').replace('@', '').replace('&', ''));
 
       if (!muterole) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered is not valid`).setColor("#FF3E3E"))
+      if (muterole.permissions.has('ADMINISTRATOR')) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered has admin permissions and is therefore not allowed to be used due to security purposes`).setColor("#FF3E3E"));
+
+      let checkErrors = checkforerrors(message.guild, muterole, false, ['MANAGE_ROLES'], client);
+      if (checkErrors) return message.channel.send(checkErrors);
 
       if (muterole.id === currentSettings.muteRole) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Muted role is already set to: ${settinginfo}`).setColor("#FF3E3E"))
 
@@ -435,7 +455,11 @@ module.exports = {
 
       let birthdayrole = message.guild.roles.cache.get(settinginfo.replace('<', '').replace('>', '').replace('@', '').replace('&', ''));
 
-      if (!birthdayrole) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered is not valid`).setColor("#FF3E3E"))
+      if (!birthdayrole) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered is not valid`).setColor("#FF3E3E"));
+      if (birthdayrole.permissions.has('ADMINISTRATOR')) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered has admin permissions and is therefore not allowed to be used due to security purposes`).setColor("#FF3E3E"));
+
+      let checkErrors = checkforerrors(message.guild, birthdayrole, false, ['MANAGE_ROLES'], client);
+      if (checkErrors) return message.channel.send(checkErrors);
 
       if (birthdayrole.id === currentSettings.birthdays.role) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Birthday role is already set to: ${settinginfo}`).setColor("#FF3E3E"))
 
@@ -472,7 +496,11 @@ module.exports = {
 
       let welcomerole = message.guild.roles.cache.get(settinginfo.replace('<', '').replace('>', '').replace('@', '').replace('&', ''));
 
-      if (!welcomerole) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered is not valid`).setColor("#FF3E3E"))
+      if (!welcomerole) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered is not valid`).setColor("#FF3E3E"));
+      if (welcomerole.permissions.has('ADMINISTRATOR')) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered has admin permissions and is therefore not allowed to be used due to security purposes`).setColor("#FF3E3E"));
+
+      let checkErrors = checkforerrors(message.guild, welcomerole, false, ['MANAGE_ROLES'], client);
+      if (checkErrors) return message.channel.send(checkErrors);
 
       if (welcomerole.id === currentSettings.welcome.role) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Welcome role is already set to: ${settinginfo}`).setColor("#FF3E3E"))
 
@@ -566,6 +594,11 @@ module.exports = {
           .setDescription(`${nopeEmoji} Please provide a valid role`)
           .setColor("#FF3E3E")
         )
+
+        if (role.permissions.has('ADMINISTRATOR')) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} The role you entered has admin permissions and is therefore not allowed to be used due to security purposes`).setColor("#FF3E3E"));
+
+        let checkErrors = checkforerrors(message.guild, role, false, ['MANAGE_ROLES'], client);
+        if (checkErrors) return message.channel.send(checkErrors);
 
         if (levelroles.find(role => role.role === levelrole.role && role.level === levelrole.level)) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} There is already a level role identical to the one you've just created`).setColor("#FF3E3E"));
         
