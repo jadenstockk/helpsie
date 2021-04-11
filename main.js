@@ -191,9 +191,9 @@ async function botFunctions() {
   }, 60000);
 
   setInterval(() => {
-    console.log(`${spacetime.now(`Africa/Johannesburg`).time()}: ${client.ws.ping}ms`);
+    console.log(`[${spacetime.now(`Africa/Johannesburg`).time()}]: Online: ${client.ws.ping}`);
     
-  }, 20000);
+  }, 60000);
 
   //STATS UPDATER
   setInterval(async () => {
