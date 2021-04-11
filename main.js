@@ -20,6 +20,7 @@ const {
 } = require("./database");
 const checkbirthdays = require("./functions/other/checkbirthdays");
 const errorhandler = require("./errorhandler");
+const spacetime = require("spacetime");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
@@ -156,7 +157,7 @@ client.once("ready", async () => {
   }
 
   async function loadEvents() {
-    if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
+    //if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
 
     const readCommands = (dir) => {
       const files = fs.readdirSync(path.join(__dirname, dir))
@@ -188,6 +189,11 @@ async function botFunctions() {
     client.functions.get("checkbirthdays").execute(client);
 
   }, 60000);
+
+  setInterval(() => {
+    console.log(`${spacetime.now(`Africa/Johannesburg`).time()}: ${client.ws.ping}ms`);
+    
+  }, 20000);
 
   //STATS UPDATER
   setInterval(async () => {
