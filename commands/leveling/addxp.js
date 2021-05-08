@@ -19,9 +19,9 @@ module.exports = {
     let xp = parseInt(args[1]);
     if (!xp || isNaN(xp)) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Please enter a valid amount of xp to add`).setColor("#FF3E3E"));
     if (xp > 1000000) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} You can't add more than 1 million xp to a member at once`).setColor("#FF3E3E"));
-    if (client.addxpTimeouts.has(`${message.author.id} | ${message.guild.id}`)) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} You have to wait 30 seconds after adding other 20k xp (this is for abuse reasons)`).setColor("#FF3E3E"));
+    if (client.addxpTimeouts.has(`${message.author.id} | ${message.guild.id}`)) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} You have to wait 30 seconds after adding other 100k xp (this is for abuse reasons)`).setColor("#FF3E3E"));
 
-    if (xp > 20000) {
+    if (xp > 100000) {
       client.addxpTimeouts.add(`${message.author.id} | ${message.guild.id}`)
 
       setTimeout(() => {
@@ -32,5 +32,5 @@ module.exports = {
 
     await leveling.addXP(message.guild.id, user.id, xp, message, client);
     message.channel.send(new Discord.MessageEmbed().setDescription(`${checkEmoji} Succesfully added **${xp}** xp to ${user}`).setColor("#00FF7F"));
-  },
+  }
 };

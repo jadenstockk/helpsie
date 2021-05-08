@@ -25,13 +25,21 @@ module.exports = {
       let leaderboard = [];
       for (var i = 0; i <= 9; i++) {
         if (ranks[i]) {
+          let entry = "";
           let number = i + 1;
+          if (number === 4) entry = "\n";
+          else if (number < 4) entry = "> ";
           if (number === 1) number = '🥇';
           else if (number === 2) number = '🥈';
           else if (number === 3) number = '🥉';
           else number = number + '.';
 
-          leaderboard.push(`**${number}** ${client.users.cache.get(ranks[i].user)} | **Level ${ranks[i].level}** | **Progress ${`${shortNum(ranks[i].xp)}`.replace('+','').replace('-', '')}/${`${shortNum(getRequiredXP(ranks[i].level))}`.replace('+','').replace('-', '')}**`)
+          let user = client.users.cache.get(ranks[i].user);
+          if (!user) user = 'Unknown';
+          else user = user.username;
+
+          entry = entry + `**${number} ${user}** | Level ${ranks[i].level || 0} | Progress ${`${shortNum(ranks[i].xp) || 0}`.replace('+', '').replace('-', '')}/${`${shortNum(getRequiredXP(ranks[i].level)) || 0}`.replace('+', '').replace('-', '')} | Messages ${`${shortNum(ranks[i].messages || 0)}`.replace('+', '').replace('-', '')}+`;
+          leaderboard.push(entry);
         }
       }
 
@@ -39,9 +47,8 @@ module.exports = {
 
       let embed = new Discord.MessageEmbed()
         .setColor("FFDC2C")
-        .setAuthor(message.guild.name + ' Leaderboard', message.guild.iconURL())
+        .setAuthor(message.guild.name + ' Leaderboard', 'https://i.ibb.co/XVbpjb2/pngtree-gold-trophy-icon-trophy-icon-winner-icon-png-image-1694365-removebg-preview.png')
         .setDescription(leaderboard.join('\n'))
-        .setThumbnail('https://i.ibb.co/XVbpjb2/pngtree-gold-trophy-icon-trophy-icon-winner-icon-png-image-1694365-removebg-preview.png')
 
       message.channel.send(embed);
     }

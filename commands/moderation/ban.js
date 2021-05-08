@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 const { ban } = require("../../functions/moderation/actions");
 
 module.exports = {
@@ -10,22 +11,36 @@ module.exports = {
   usage: `<member>`,
   group: 'moderation',
 
-  callback: (message, args, client) => {
-    const Discord = require("discord.js");
+  /**
+   * 
+   * @param {Discord.Message} message 
+   * @param {*} args 
+   * @param {Discord.Client} client 
+   * @returns 
+   */
 
-      if (message.author.bot) return;
+  callback: async (message, args, client) => {
+    if (message.author.bot) return;
 
-      let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+    let user;
+    let member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+
+    if (member) {
+      user = member.user;
+
+    } else {
+      user = await client.users.fetch(args[0]);
+
       if (!user) return message.channel.send(
         new Discord.MessageEmbed()
-        .setDescription(`${nopeEmoji} You didn't mention a valid member to ban`)
-        .setColor("#FF3E3E")
-        );
+          .setDescription(`${nopeEmoji} You didn't mention a valid user to ban`)
+          .setColor("#FF3E3E")
+      );
+    }
 
-      let reason = args.slice(1).join(' ');
-      if (!reason) reason = 'Unspecified';
+    let reason = args.slice(1).join(' ');
+    if (!reason) reason = 'Unspecified';
 
-      ban(user, message.guild, message.author, reason, client, message);
+    ban(user, message.guild, message.author, reason, client, message);
   },
 };
-

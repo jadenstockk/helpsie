@@ -61,6 +61,11 @@ module.exports = {
                     .setColor('BLUE')
                     .setAuthor(`${client.user.username} Voting Rewards`, client.user.displayAvatarURL())
                     .setDescription(`Thanks for voting for **${client.user.username}** on **[${site.name}](${site.link})**!\nYou now have a total of **${data.votes.length}** voting credits (rewards for voting coming soon)`))
+
+                client.channels.cache.get('833020524842057808').send(
+                    new Discord.MessageEmbed()
+                    .setColor('BLUE')
+                    .setDescription(`**${user.username}** just voted on **[${site.name}](${site.link})**!\nThey now have a total of **${data.votes.length}** voting credits (rewards for voting coming soon)`))
                 res.status(200).end()
 
             } catch (err) {

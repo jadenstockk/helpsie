@@ -69,10 +69,10 @@ module.exports = {
     else importantPermissionsFormatted = []
 
     let userInfo = new Discord.MessageEmbed()
-      .setAuthor(member.user.tag, member.user.displayAvatarURL())
-      .setThumbnail(member.user.displayAvatarURL())
+      .setAuthor(member.user.tag, member.user.displayAvatarURL({ dynamic: true }))
+      .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
       .setColor("#059DFF")
-      .setFooter(`User ID: ${member.user.id}`, member.user.displayAvatarURL())
+      .setFooter(`User ID: ${member.user.id}`, member.user.displayAvatarURL({ dynamic: true }))
       .setTimestamp()
       .setDescription(`
     > **Joined at:**

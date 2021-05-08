@@ -62,6 +62,21 @@ let Schema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+
+    limits: {
+        levelroles: {
+            type: Number,
+            default: 15,
+        },
+        reactionroles: {
+            type: Number,
+            default: 15,
+        },
+        automodactions: {
+            type: Number,
+            default: 4,
+        }
+    }
 });
 
 module.exports = mongoose.model("guildData", Schema);

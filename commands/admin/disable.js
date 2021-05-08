@@ -24,6 +24,8 @@ module.exports = {
       let success = new Discord.MessageEmbed()
         .setDescription(`${checkEmoji} Successfully disabled the ${type}: \`${disableCommand}\``)
         .setColor("#00FF7F")
+      
+      //disableCommand = { name: disableCommand};
 
       guildData.findOne({
           guild: message.guild.id

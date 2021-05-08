@@ -92,16 +92,12 @@ module.exports = {
     }).setFooter(`To disable a command/command group/function use "${prefix}disable <command/command group/function> [optional channel]"`)
 
     mainList.addFields({
-      name: `\u200B   `,
-      value: `**Suggested Commands:**\n${suggestedCommands.join('\n')}`
-    }, {
-      name: `\u200B   `,
-      value: `**Important Links:**\n[Invite](https://discord.com/api/oauth2/authorize?client_id=781293073052991569&permissions=1916267615&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fapi%2Fauth%2Fdiscord%2Fredirect&scope=bot) | [Support Server](https://discord.gg/5jaZRYnZU5) | [Vote](https://top.gg/bot/781293073052991569/vote)`
+      name: `\u200B\n**Important Links:**`,
+      value: `[Invite](https://discord.com/api/oauth2/authorize?client_id=781293073052991569&permissions=1916267615&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fapi%2Fauth%2Fdiscord%2Fredirect&scope=bot) | [Support Server](https://discord.gg/5jaZRYnZU5) | [Vote](https://top.gg/bot/781293073052991569/vote)\n\u200B`
     })
 
     let utilityCommands = [
-      `\`${prefix}help <member>\`\nGet information about a certain member in the server`,
-      `\`${prefix}userinfo <member>\`\nGet information about a certain member in the server`,
+      `\`${prefix}help\`\nGet information about a certain member in the server`,
       `\`${prefix}userinfo <member>\`\nGet information about a certain member in the server`,
       `\`${prefix}youtube <video>\`\nSearch for a YouTube video`,
       `\`${prefix}imgur <image>\`\nSearch for an image on Imgur`,
@@ -333,14 +329,12 @@ module.exports = {
 
 
     if (helpListType === 'utilities' || helpListType === 'utils') {
-      if ((modRole || message.member.hasPermission('ADMINISTRATOR'))) {
-        if (disabled.includes('utilities')) {
-          return helpDisabled('utilities');
-
-        }
-        message.channel.send(utilitiesList);
+      if (disabled.includes('utilities')) {
+        return helpDisabled('utilities');
 
       }
+      message.channel.send(utilitiesList);
+
 
     } else if (helpListType === 'leveling' || helpListType === 'levels' || helpListType === 'level') {
       if (disabled.includes('leveling')) return helpDisabled('leveling');
@@ -366,7 +360,7 @@ module.exports = {
     } else if (`${helpListType}`.startsWith('support')) {
       message.channel.send(supportEmbed);
 
-    } else if (helpListType === 'birthday' || helpListType === 'bday' || helpListType === 'birthdays') {
+    } else if (helpListType === 'birthday' || helpListType === 'bday' || helpListType === "birthday's" || helpListType === 'birthdays') {
       message.channel.send(birthdayList);
 
     } else {

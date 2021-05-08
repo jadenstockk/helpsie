@@ -18,6 +18,8 @@ module.exports = {
       let target = message.member;
       let moderator = client.user;
 
+      if (settings.disabled.find(one => one.name && one.name === type && one.channel && one.channel === message.channel.id)) return false;
+
       if (type === 'profanity') filterStatus = settings.profanityFilter, reason = "Profanity usage", filtered = filtered.join(', ');
       if (type === 'invite') filterStatus = settings.inviteBlocker, reason = "Posted an invite";
       if (type === 'link') filterStatus = settings.inviteBlocker, reason = "Posted a link";

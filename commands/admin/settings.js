@@ -33,19 +33,19 @@ module.exports = {
         try {
           if (value && special) {
             if (special === 'channel') value = message.guild.channels.cache.get(value);
-            else if (special === 'role') value = message.guild.roles.cache.get(value)
+            else if (special === 'role') value = message.guild.roles.cache.get(value);
             else if (special === 'message' && value === 'off') value === '\`off\`';
-            else if (special === 'on/off') value === '\`on\`';
+            else if (special === 'on/off') return '\`on\`';
           }
 
           if (!value && (!special)) value = 'off';
-          else if (!value && special) value = '\`off\`';
+          else if (!value && special) return '\`off\`';
+
+          return value;
 
         } catch (err) {
           errorhandler.init(err, __filename);
         }
-
-        return value;
       }
 
       p1 = [

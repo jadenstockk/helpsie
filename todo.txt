@@ -1,8 +1,7 @@
-setup command
-tips
 setlevel comamnd
 command limiter
 channel.send access manager
+limit manager and premium advert
 
 disable commands in specific channels
 remove the swear filter

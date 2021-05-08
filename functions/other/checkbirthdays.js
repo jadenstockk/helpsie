@@ -31,6 +31,7 @@ module.exports = {
 
                         let user = client.users.cache.get(member.user);
                         let guild = client.guilds.cache.get(member.guild);
+                        if (!guild) return;
                         let guildmember = guild.members.cache.get(member.user)
                         let settings = client.settings.get(member.guild).birthdays;
                         let channel = settings.channel;

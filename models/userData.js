@@ -17,6 +17,12 @@ let Schema = new mongoose.Schema({
         default: 0,
 
     },
+    messages: {
+
+        type: Number,
+        default: 0,
+
+    },
     level: {
 
         type: Number,

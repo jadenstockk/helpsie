@@ -3,32 +3,48 @@ const serverlogs = require("../moderation/serverlogs");
 const errorhandler = require("../../errorhandler");
 
 module.exports = {
+    /**
+     * 
+     * @param {Discord.User} user 
+     * @param {Discord.Guild} guild 
+     * @param {Discord.GuildMember} moderator 
+     * @param {*} reason 
+     * @param {Discord.Client} client 
+     * @param {Discord.Message} message 
+     * @returns 
+     */
+
     ban: async (user, guild, moderator, reason, client, message) => {
 
-        if (user.hasPermission('ADMINISTRATOR') && !user.user.bot)
-        if (message) return message.channel.send(
-            new Discord.MessageEmbed()
-            .setDescription(`${nopeEmoji} You aren't allowed to ban admins`)
-            .setColor("#FF3E3E")
-        );
-        else return;
+        let member;
+        member = guild.members.cache.get(user.id);
 
-        if (!user.bannable) return message.channel.send(
-            new Discord.MessageEmbed()
-            .setDescription(`${nopeEmoji} I do not have permission to ban this member`)
-            .setColor("#FF3E3E")
-        );
+        if (member) {
+            if (member.hasPermission('ADMINISTRATOR'))
+                if (message) return message.channel.send(
+                    new Discord.MessageEmbed()
+                    .setDescription(`${nopeEmoji} You aren't allowed to ban admins`)
+                    .setColor("#FF3E3E")
+                );
+                else return;
+
+            if (!member.bannable) return message.channel.send(
+                new Discord.MessageEmbed()
+                .setDescription(`${nopeEmoji} I do not have permission to ban this member`)
+                .setColor("#FF3E3E")
+            );
+        }
 
         let bannedMessage = new Discord.MessageEmbed()
             .setColor("FF3E3E")
             .setAuthor(
-                `${user.user.tag} has been banned`,
-                user.user.displayAvatarURL()
+                `${user.tag} has been banned`,
+                user.displayAvatarURL()
             )
             .setDescription(`**Reason:** ${reason}`)
 
         try {
-            user.ban({
+            guild.members.ban(user.id, {
                 reason
             });
 
@@ -37,7 +53,7 @@ module.exports = {
 
         } finally {
             if (message) message.channel.send(bannedMessage);
-            serverlogs.execute(guild, user.user, "BAN", moderator, reason, null, client);
+            serverlogs.execute(guild, user, "BAN", moderator, reason, null, client);
 
         }
     },
@@ -55,10 +71,12 @@ module.exports = {
                 else return;
 
             let unbannedMessage = new Discord.MessageEmbed()
-            .setColor("33FF5B")
-            .setAuthor(
-                `${bUser.user.tag} has been unbanned`,
-                bUser.user.displayAvatarURL({ dynamic: true })
+                .setColor("33FF5B")
+                .setAuthor(
+                    `${bUser.user.tag} has been unbanned`,
+                    bUser.user.displayAvatarURL({
+                        dynamic: true
+                    })
                 )
 
             try {
@@ -76,12 +94,12 @@ module.exports = {
     },
     kick: async (user, guild, moderator, reason, client, message) => {
         if (user.hasPermission('ADMINISTRATOR') && !user.user.bot)
-        if (message) return message.channel.send(
-            new Discord.MessageEmbed()
-            .setDescription(`${nopeEmoji} You aren't allowed to kick admins`)
-            .setColor("#FF3E3E")
-        );
-        else return;
+            if (message) return message.channel.send(
+                new Discord.MessageEmbed()
+                .setDescription(`${nopeEmoji} You aren't allowed to kick admins`)
+                .setColor("#FF3E3E")
+            );
+            else return;
 
         if (!user.kickable) return message.channel.send(
             new Discord.MessageEmbed()

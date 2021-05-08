@@ -112,7 +112,7 @@ module.exports = {
               kick(target, target.guild, client.user, 'Autokicked for too many warnings', client);
 
             } else if (typeOfAction === 'ban') {
-              ban(target, target.guild, client.user, 'Autobanned for too many warnings', client);
+              ban(target.user, target.guild, client.user, 'Autobanned for too many warnings', client);
 
             }
           }

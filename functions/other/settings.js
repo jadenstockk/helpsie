@@ -26,13 +26,15 @@ module.exports = {
 
     if (setting === 'prefix') {
 
+      let prefix = currentSettings.prefix;
+
       if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Current prefix is set to: \`${prefix}\``).setColor("#059DFF"))
 
       if (settinginfo === prefix) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Prefix is already set to: \`${prefix}\``).setColor("#FF3E3E"))
 
       let success = new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set prefix to: \`${settinginfo}\``).setColor("#00FF7F")
 
-      updateSettings('prefix', settinginfo, success);
+      await updateSettings('prefix', settinginfo, success);
 
 
     } else if (setting === 'logs') {
@@ -45,7 +47,7 @@ module.exports = {
 
       let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set server logs channel to: ${settinginfo}`).setColor("#00FF7F"))
 
-      if (settinginfo === 'off') return logsDelete(), updateSettings('logs', undefined, success);
+      if (settinginfo === 'off') return logsDelete(), await updateSettings('logs', undefined, success);
 
       async function logsDelete() {
 
@@ -89,7 +91,7 @@ module.exports = {
         channelID: logschannel.id
       })
 
-      logsDelete(), updateSettings('logs', logschannelWebhook, success);
+      logsDelete(), await updateSettings('logs', logschannelWebhook, success);
 
 
     } else if (setting === 'moderator') {
@@ -109,7 +111,7 @@ module.exports = {
 
       let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set moderator role to: ${settinginfo}`).setColor("#00FF7F"))
 
-      updateSettings('moderator', modrole.id, success);
+      await updateSettings('moderator', modrole.id, success);
 
 
     } else if (setting === 'muted') {
@@ -129,7 +131,7 @@ module.exports = {
 
       let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set muted role to: ${settinginfo}`).setColor("#00FF7F"))
 
-      updateSettings('muterole', muterole.id, success);
+      await updateSettings('muterole', muterole.id, success);
 
 
     } else if (setting === 'profanityfilter') {
@@ -151,7 +153,7 @@ module.exports = {
 
       let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set profanity filter to: \`${settinginfo}\``).setColor("#00FF7F"))
 
-      updateSettings('profanityfilter', profanityfilter, success);
+      await updateSettings('profanityfilter', profanityfilter, success);
 
 
     } else if (setting === 'inviteblocker') {
@@ -182,7 +184,7 @@ module.exports = {
 
       let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set invite blocker to: \`${settinginfo}\``).setColor("#00FF7F"))
 
-      updateSettings('inviteblocker', inviteblocker, success);
+      await updateSettings('inviteblocker', inviteblocker, success);
 
 
     } else if (setting === 'linkblocker') {
@@ -200,7 +202,7 @@ module.exports = {
 
       let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set link blocker to: \`${settinginfo}\``).setColor("#00FF7F"))
 
-      updateSettings('linkblocker', linkblocker, success);
+      await updateSettings('linkblocker', linkblocker, success);
 
 
     } else if (setting === 'actions') {
@@ -208,9 +210,9 @@ module.exports = {
       let automodactions = currentSettings.autoModActions;
 
       if (settinginfo === 'new') {
-        if (automodactions.length > 4) return message.channel.send(
+        if (automodactions.length >= currentSettings.limits.automodactions) return message.channel.send(
           new Discord.MessageEmbed()
-          .setDescription(`${nopeEmoji} You are only allowed a maximum of 4 automod actions`)
+          .setDescription(`${nopeEmoji} You are only allowed a maximum of ${currentSettings.limits.automodactions} automod actions`)
           .setColor("#FF3E3E")
         )
 
@@ -400,13 +402,13 @@ module.exports = {
 
       if (welcomechannel.id === currentchannel) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Welcome channel is already set to: ${settinginfo}`).setColor("#FF3E3E"))
 
-      updateSettings('welcomechannel', welcomechannel.id, success);
+      await updateSettings('welcomechannel', welcomechannel.id, success);
 
 
     } else if (setting === 'birthdaymessage') {
 
       if ((!settinginfo && !currentSettings.birthdays.message)) return message.channel.send(new Discord.MessageEmbed().setDescription(`Birthday message is not setup`).setColor("#059DFF"))
-      if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Current birthday message is set to: ${currentSettings.birthdays.message}}`).setColor("#059DFF"))
+      if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Current birthday message is set to: ${currentSettings.birthdays.message}`).setColor("#059DFF"))
 
       settinginfo = args.splice(1).join(' ');
 
@@ -420,7 +422,7 @@ module.exports = {
 
       if (birthdaymessage === currentmessage) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Birthday message is already set to: ${settinginfo}`).setColor("#FF3E3E"))
 
-      updateSettings('birthdaymessage', birthdaymessage, success);
+      await updateSettings('birthdaymessage', birthdaymessage, success);
 
 
     } else if (setting === 'birthdaychannel') {
@@ -443,7 +445,7 @@ module.exports = {
 
       if (birthdaychannel.id === currentchannel) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Birthday channel is already set to: ${settinginfo}`).setColor("#FF3E3E"))
 
-      updateSettings('birthdaychannel', birthdaychannel.id, success);
+      await updateSettings('birthdaychannel', birthdaychannel.id, success);
 
 
     } else if (setting === 'birthdayrole') {
@@ -465,12 +467,12 @@ module.exports = {
 
       let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set birthday role to: ${settinginfo}`).setColor("#00FF7F"))
 
-      updateSettings('birthdayrole', birthdayrole.id, success);
+      await updateSettings('birthdayrole', birthdayrole.id, success);
 
     } else if (setting === 'welcomemessage') {
 
       if ((!settinginfo && !currentSettings.welcome.message)) return message.channel.send(new Discord.MessageEmbed().setDescription(`Welcome message is not setup`).setColor("#059DFF"))
-      if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Current welcome message is set to: ${currentSettings.welcome.message}}`).setColor("#059DFF"))
+      if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Current welcome message is set to: ${currentSettings.welcome.message}`).setColor("#059DFF"))
 
       settinginfo = args.splice(1).join(' ');
 
@@ -484,7 +486,7 @@ module.exports = {
 
       if (welcomemessage === currentmessage) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Welcome message is already set to: ${settinginfo}`).setColor("#FF3E3E"))
 
-      updateSettings('welcomemessage', welcomemessage, success);
+      await updateSettings('welcomemessage', welcomemessage, success);
 
 
     } else if (setting === 'welcomerole') {
@@ -506,7 +508,7 @@ module.exports = {
 
       let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set welcome role to: ${settinginfo}`).setColor("#00FF7F"))
 
-      updateSettings('welcomerole', welcomerole.id, success);
+      await updateSettings('welcomerole', welcomerole.id, success);
 
 
     } else if (setting === 'levelchannel') {
@@ -531,7 +533,7 @@ module.exports = {
 
       if (levelingchannel.id === currentchannel) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Leveling channel is already set to: ${settinginfo}`).setColor("#FF3E3E"))
 
-      updateSettings('levelingchannel', levelingchannel.id, success);
+      await updateSettings('levelingchannel', levelingchannel.id, success);
 
 
     } else if (setting === 'levelmessage') {
@@ -551,7 +553,7 @@ module.exports = {
 
       if (levelingmessage === currentmessage) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Leveling message is already set to: ${settinginfo}`).setColor("#FF3E3E"))
 
-      updateSettings('levelingmessage', levelingmessage, success);
+      await updateSettings('levelingmessage', levelingmessage, success);
 
 
     } else if (setting === 'levelroles') {
@@ -560,9 +562,9 @@ module.exports = {
       let levelroles = currentSettings.leveling.roles;
 
       if (settinginfo === 'new') {
-        if (levelroles.length > 5) return message.channel.send(
+        if (levelroles.length >= currentSettings.limits.levelroles) return message.channel.send(
           new Discord.MessageEmbed()
-          .setDescription(`${nopeEmoji} You are only allowed a maximum of 5 level roles`)
+          .setDescription(`${nopeEmoji} You are only allowed a maximum of ${currentSettings.limits.levelroles} level roles`)
           .setColor("#FF3E3E")
         )
 
@@ -721,11 +723,11 @@ module.exports = {
       if (currentSettings.tips) currenttips = currentSettings.tips;
       let tips = settinginfo;
 
-      if (tips === 'off') return updateSettings('tips', false, success);
+      if (tips === 'off') return await updateSettings('tips', false, success);
 
       if (tips === currenttips) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Tips is already set to: \`${settinginfo}\``).setColor("#FF3E3E"))
 
-      updateSettings('levelingmessage', tips, success);
+      await updateSettings('levelingmessage', tips, success);
 
 
     } else {
@@ -736,9 +738,8 @@ module.exports = {
       )
     }
 
-    function updateSettings(type, newsetting, success) {
-      try {
-        guildData.findOne({
+    async function updateSettings(type, newsetting, success) {
+        await guildData.findOne({
             guild: message.guild.id
           },
           async (err, data) => {
@@ -838,11 +839,11 @@ module.exports = {
                 tips: newsetting
               });
 
+              await message.channel.send(success);
+
               await newData.save();
 
-              client.database.fetchGuildData(message.guild.id, client);
-
-              message.channel.send(success);
+              await client.database.fetchGuildData(message.guild.id, client);
 
             } else {
 
@@ -871,20 +872,15 @@ module.exports = {
 
               else if (type === 'tips') data.tips = newsetting;
 
+              await message.channel.send(success);
+
               await data.save();
 
-              client.database.fetchGuildData(message.guild.id, client, false, data);
-
-              message.channel.send(success);
+              await client.database.fetchGuildData(message.guild.id, client, false, data);
 
             }
           }
         );
-
-      } catch (err) {
-        errorhandler.init(err, __filename, message);
-
-      }
     }
   }
 }

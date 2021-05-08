@@ -226,6 +226,8 @@ async function dataHandler(data, guild, client) {
     };
     else logsChannel = data.logsChannel;
 
+    limits = data.limits;
+
     await client.settings.set(guild, {
 
       prefix,
@@ -241,7 +243,8 @@ async function dataHandler(data, guild, client) {
       leveling,
       birthdays,
       autoModActions,
-      tips
+      tips,
+      limits
 
     });
 
@@ -278,7 +281,11 @@ async function dataHandler(data, guild, client) {
         roles: []
       },
       autoModActions: [],
-      tips: true
+      tips: true,
+
+      limits: {
+        levelroles: 5
+      }
 
     });
   }

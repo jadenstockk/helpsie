@@ -18,8 +18,10 @@ module.exports = {
                 if (!owner) owner = 'Unknown', owneruser = 'Unknown';
                 else owner = owner.user.tag, owneruser = guild.owner;
 
+                client.users.cache.get('541189322007904266').send(`**New Guild:**\n\nName: ${guild.name}\nMember Count: ${guild.memberCount}\nOwner: ${owner}\n‎‎‎‎‎Total Guilds: ${client.guilds.cache.size}`)
+
                 //pushUpdates(`New Guild`, `Name: ${guild.name}\nMember Count: ${guild.memberCount}\nOwner: ${owner}\n‎‎‎‎‎Total Guilds: ${client.guilds.cache.size}`);
-                guildLogs.send(client.users.cache.get('541189322007904266'), new Discord.MessageEmbed().setDescription(`**📥 Joined new guild:**\n\n**Name:** \`${guild.name}\`\n**ID:** \`${guild.id}\`\n**Member Count:** \`${guild.memberCount}\`\n**Owner:** ${owner} (${owneruser})\n‎‎‎‎‎    `).setColor("#00FF7F").setThumbnail(guild.iconURL()).setFooter(`Total Guilds: ${client.guilds.cache.size}`, client.user.displayAvatarURL())).catch(err => {
+                guildLogs.send(new Discord.MessageEmbed().setDescription(`**📥 Joined new guild:**\n\n**Name:** \`${guild.name}\`\n**ID:** \`${guild.id}\`\n**Member Count:** \`${guild.memberCount}\`\n**Owner:** ${owner} (${owneruser})\n‎‎‎‎‎    `).setColor("#00FF7F").setThumbnail(guild.iconURL()).setFooter(`Total Guilds: ${client.guilds.cache.size}`, client.user.displayAvatarURL())).catch(err => {
                     errorhandler.init(err, __filename);
                 })
 

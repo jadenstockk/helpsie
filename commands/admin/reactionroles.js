@@ -43,9 +43,9 @@ module.exports = {
 
         if (reactionCommand === 'new') {
 
-            if (reactionRoles.length > 10) return message.channel.send(
+            if (reactionRoles.length >= settings.limits.reactionroles) return message.channel.send(
                 new Discord.MessageEmbed()
-                .setDescription(`${nopeEmoji} You are only allowed a maximum of 10 reaction roles`)
+                .setDescription(`${nopeEmoji} You are only allowed a maximum of ${settings.limits.reactionroles} reaction roles`)
                 .setColor("#FF3E3E")
             )
 

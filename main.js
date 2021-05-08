@@ -9,6 +9,7 @@ const guildData = require('./models/guildData');
 const botInfo = require("./models/botInfo");
 const mute = require("./functions/moderation/mute");
 const dotenv = require('dotenv');
+const shortNum = require('number-shortener');
 dotenv.config();
 const {
   DiscordInteractions,
@@ -22,6 +23,8 @@ const checkbirthdays = require("./functions/other/checkbirthdays");
 const errorhandler = require("./errorhandler");
 const spacetime = require("spacetime");
 const votingAndStatsManager = require("./functions/other/votingAndStatsManager");
+const supportSystem = require("./functions/other/supportSystem");
+const betaOnline = require("./functions/other/betaOnline");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
@@ -68,10 +71,7 @@ client.votingSites = [{
   code: 'bfd'
 }];
 
-client.disabledCommands = [{
-    command: 'removexp',
-    reason: 'Instability due to bugs and various other issues'
-  },
+client.disabledCommands = [
   {
     command: 'twitch',
     reason: 'Not completed due to issues with the Twitch API'
@@ -108,6 +108,7 @@ client.once("ready", async () => {
   global.nopeEmoji = client.emojis.cache.get('794858153694986271');
   global.muteEmoji = client.emojis.cache.get('794859653825691699');
   global.trashEmoji = client.emojis.cache.get('817888791733600286');
+  global.loadingEmoji = client.emojis.cache.get('840515988067581975');
   global.warnEmoji = `:warning:`;
   global.checkEmoji = client.emojis.cache.get('796336616494727205');
   global.logo = client.emojis.cache.get('794861368435408917');
@@ -188,18 +189,28 @@ client.once("ready", async () => {
     mute.expireManager(client);
     checkbirthdays.expireManager(client);
     votingAndStatsManager.listen(client);
-    if (process.env['TOKEN'] !== process.env['BETA_TOKEN']) votingAndStatsManager.update(client);
+    if (process.env['TOKEN'] !== process.env['BETA_TOKEN']) votingAndStatsManager.update(client), betaOnline(), supportSystem(client);
     botFunctions();
-    console.log(`Loaded events`)
+    console.log(`Loaded events`);
   }
 });
 
 //TESTING
 client.on('message', async message => {
-  if (message.author.bot) return;
-  const args = message.content.split(/[ ]+/)
+  return;
 
-  if (message.member.roles.cache.get('824641926832848916')) {}
+  if (message.author.bot) return;
+  const args = message.content.split(/[ ]+/);
+
+  const {
+    channel,
+    member
+  } = message;
+
+  if (message.member.roles.cache.get('824641926832848916')) {
+    if (message.content === '132') {
+    }
+  }
 })
 
 async function botFunctions() {
@@ -221,6 +232,41 @@ async function botFunctions() {
     votingAndStatsManager.update(client);
 
   }, 60000 * 20);
+
+  //PRESENCE UPDATER
+  /*
+  let currentPresence = 1;
+  setInterval(async () => {
+    let users = 0;
+
+    await client.guilds.cache.forEach(guild => {
+      users = users + guild.memberCount;
+    })
+
+    let presences = [
+      {
+        name: process.env['ACTIVITYNAME'],
+        type: 'LISTENING'
+      },
+      {
+        name: `over ${`${shortNum(users)}`.replace('+', '').replace('-', '')} users`,
+        type: 'WATCHING'
+      }
+    ];
+
+    let presence = presences[currentPresence];
+    if (!presence) currentPresence = 0, presence = presences[currentPresence];
+
+    client.user.setPresence({
+      activity: {
+        name: presence.name,
+        type: presence.type
+      }
+    });
+    currentPresence++
+    
+  }, 15000);
+  */
 
   //STATS UPDATER
   setInterval(async () => {

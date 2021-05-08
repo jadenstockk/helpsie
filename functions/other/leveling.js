@@ -14,7 +14,7 @@ module.exports = {
         let min = 15;
         let randomXP = Math.floor(Math.random() * (max - min) + min);
 
-        addXP(message.guild.id, message.author.id, randomXP, message, client);
+        addXP(message.guild.id, message.author.id, randomXP, message, client, true);
 
         client.levelingTimeouts.add(`${message.author.id} | ${message.guild.id}`);
 
@@ -25,7 +25,10 @@ module.exports = {
     }
 }
 
-const addXP = async (guild, user, addedXP, message, client) => {
+const addXP = async (guild, user, addedXP, message, client, auto) => {
+    let addedMessages = 0;
+    if (auto) addedMessages = 1;
+
     const result = await userData.findOneAndUpdate({
         guild,
         user,
@@ -35,6 +38,7 @@ const addXP = async (guild, user, addedXP, message, client) => {
         $inc: {
             xp: addedXP,
             totalxp: addedXP,
+            messages: addedMessages,
         }
     }, {
         upsert: true,
@@ -90,6 +94,7 @@ const addXP = async (guild, user, addedXP, message, client) => {
 }
 
 const removeXP = async (guild, user, addedXP, message, client) => {
+
     const result = await userData.findOneAndUpdate({
         guild,
         user,
@@ -97,8 +102,8 @@ const removeXP = async (guild, user, addedXP, message, client) => {
         guild,
         user,
         $inc: {
-            xp: addedXP,
-            totalxp: addedXP,
+            xp: -addedXP,
+            totalxp: -addedXP,
         }
     }, {
         upsert: true,
@@ -107,45 +112,55 @@ const removeXP = async (guild, user, addedXP, message, client) => {
 
     let USER = message.guild.members.cache.get(user).user;
 
-    let {
-        xp,
-        level,
-        totalxp
-    } = result;
+    let needed = getRequiredXP(result.level);
 
-    if (xp < 0) {
-        let excess = xp * -1;
-        totalxp -= excess;
+    if (result.totalxp < 1) {
 
-        while (xp < 0) {
-            excess = xp * -1;
+        result.totalxp = 0;
+        result.xp = 0;
+        result.level = 0;
 
-            --level
-            xp = getRequiredXP(level) - excess;
-        }
-    }
+        result.save();
 
-    if (totalxp < 1) {
-        await userData.updateOne({
-            guild,
-            user,
-        }, {
-            $unset: {
-                level,
-                xp,
-                totalxp,
+    } else if (result.xp < 1) {
+
+        while (result.xp < 1) {
+            --result.level
+            result.xp += needed
+
+            if (result.xp < 1) {
+                needed = getRequiredXP(result.level);
             }
-        })
+        }
 
-    } else {
-        await userData.updateOne({
-            guild,
-            user,
-        }, {
-            level,
-            xp,
-            totalxp,
-        })
+        result.save();
+
+        let levelingSettings = client.settings.get(message.guild.id).leveling;
+        if (!levelingSettings) return;
+
+        let levelroles = levelingSettings.roles;
+        if (!levelroles || levelroles.length < 1) return;
+
+        levelroles.sort(function (a, b) {
+            return a.level - b.level
+        });
+
+        try {
+            levelroles.forEach((levelrole, index) => {
+                if (result.level >= levelrole.level) {
+                    let rolesToAdd = levelroles.slice(0, index + 1);
+                    rolesToAdd.forEach(role => {
+                        message.guild.members.cache.get(user).roles.add(role.role);
+                    })
+                } else if (result.level < levelrole.level) {
+                    message.guild.members.cache.get(user).roles.remove(levelrole.role);
+                }
+            })
+
+        } catch (err) {
+            errorhandler.init(err, __filename);
+
+        }
     }
 }
 
