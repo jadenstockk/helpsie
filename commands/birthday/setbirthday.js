@@ -1,4 +1,5 @@
 const checkbirthdays = require("../../functions/other/checkbirthdays");
+const tip = require("../../functions/other/tip");
 
 module.exports = {
   commands: 'setbirthday',
@@ -55,7 +56,8 @@ module.exports = {
           })
           await newData.save();
 
-          return message.channel.send(
+          tip('birthday', message, client);
+          message.channel.send(
             new Discord.MessageEmbed()
             .setDescription(`${checkEmoji} Successfully added ${user}'s next birthday in **${spacetime.now().since(birthday).precise}** on **${localDate.getDate()} ${months[localDate.getMonth()]} ${localDate.getFullYear()}**`)
             .setColor("#00FF7F")
@@ -74,7 +76,8 @@ module.exports = {
           checkbirthdays.removeRoleCounter(message.guild, message.guild.members.cache.get(user.id), user, client);
           await data.save();
 
-          return message.channel.send(
+          tip('birthday', message, client);
+          message.channel.send(
             new Discord.MessageEmbed()
             .setDescription(`${checkEmoji} Successfully added ${user}'s next birthday in **${spacetime.now().since(birthday).precise}** on **${localDate.getDate()} ${months[localDate.getMonth()]} ${localDate.getFullYear()}**`)
             .setColor("#00FF7F")

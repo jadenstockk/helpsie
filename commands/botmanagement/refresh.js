@@ -19,7 +19,13 @@ module.exports = {
                 if (err) console.log(err);
                 if (!data) {
                     if (guildCache) {
-                      return message.channel.send(`\`🔴 guild found in client guild cache but not in database\`\n\n${guildInfo.join('\n')}`)
+                      message.channel.send(`\`🔴 guild found in client guild cache but not in database\`\n\n${guildInfo.join('\n')}`)
+                      message.channel.send(`\`🟡 refreshing guild data...\`\n\n${guildInfo.join('\n')}`).then(msg => {
+  
+                        client.database.fetchGuildData(guild, client)
+                        msg.edit(`\`🟢 succesfully refreshed guild data\`\n\n${guildInfo.join('\n')}`)
+
+                    })
   
                     } else {
                       return message.channel.send(`\`🔴 guild not found in client guild cache nor database\`\n\n${guildInfo.join('\n')}`)

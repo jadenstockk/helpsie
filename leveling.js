@@ -6,7 +6,7 @@ module.exports = {
     description: 'increase member xp for sending messages',
 
     execute(message, args, client) {
-        if (client.levelingTimeouts.has(`${message.author.id} | ${message.guild.id}`)) return;
+        if (client.levelingTimeouts.has(`${message.author.id}  | ${message.guild.id}`)) return;
         if (allCommands.includes(args[0].replace(client.settings.get(message.guild.id).prefix, '')) && message.content.startsWith(client.settings.get(message.guild.id).prefix)) return;
         if (client.blacklistedUsers && client.blacklistedUsers.find(person => person.user === message.author.id)) return;
 
@@ -16,16 +16,17 @@ module.exports = {
 
         addXP(message.guild.id, message.author.id, randomXP, message, client);
 
-        client.levelingTimeouts.add(`${message.author.id} | ${message.guild.id}`);
+        client.levelingTimeouts.add(`${message.author.id}  | ${message.guild.id}`)
 
         setTimeout(() => {
-            client.levelingTimeouts.delete(`${message.author.id} | ${message.guild.id}`);
+            client.levelingTimeouts.delete(`${message.author.id}  | ${message.guild.id}`)
 
         }, 60000);
     }
 }
 
 const addXP = async (guild, user, addedXP, message, client) => {
+    return;
     const result = await userData.findOneAndUpdate({
         guild,
         user,
@@ -43,38 +44,35 @@ const addXP = async (guild, user, addedXP, message, client) => {
 
     let USER = message.guild.members.cache.get(user).user;
 
-    let needed = getRequiredXP(result.level);
+    let {
+        xp,
+        level
+    } = result;
+    const needed = getRequiredXP(level);
 
-    if (result.xp >= needed) {
-        while (result.xp >= needed) {
-            ++result.level
-            result.xp -= needed
-
-            if (result.xp >= needed) {
-                needed = getRequiredXP(result.level);
-            }
+    if (xp >= needed) {
+        while (xp >= needed) {
+            ++level
+            xp = xp - needed
         }
 
-        result.save();
+        await userData.updateOne({
+            guild,
+            user,
+        }, {
+            level,
+            xp,
+        })
 
         let levelingSettings = client.settings.get(message.guild.id).leveling;
-        if (!levelingSettings) return;
-
-        let channel = message.guild.channels.cache.get(levelingSettings.channel);
-        if (!channel) channel = message.channel;
-
-        if (levelingSettings.message) channel.send(levelingSettings.message.replace('{level}', result.level).replace('{user}', USER));
-
         let levelroles = levelingSettings.roles;
-        if (!levelroles || levelroles.length < 1) return;
-
         levelroles.sort(function (a, b) {
             return a.level - b.level
         });
 
         try {
             levelroles.forEach((levelrole, index) => {
-                if (result.level >= levelrole.level) {
+                if (level >= levelrole.level) {
                     let rolesToAdd = levelroles.slice(0, index + 1);
                     rolesToAdd.forEach(role => {
                         message.guild.members.cache.get(user).roles.add(role.role);
@@ -86,6 +84,11 @@ const addXP = async (guild, user, addedXP, message, client) => {
             errorhandler.init(err, __filename);
 
         }
+
+        let channel = message.guild.channels.cache.get(levelingSettings.channel);
+        if (!channel) channel = message.channel;
+
+        channel.send(levelingSettings.message.replace('{level}', level).replace('{user}', USER));
     }
 }
 
@@ -176,7 +179,7 @@ function getRequiredXP(level) {
         xpAdd = xpAdd + 10;
 
     }
-    return requiredXP;
+    return requiredXP - 100;
 }
 
 function getLevel(xp) {

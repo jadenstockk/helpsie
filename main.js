@@ -21,6 +21,7 @@ const {
 const checkbirthdays = require("./functions/other/checkbirthdays");
 const errorhandler = require("./errorhandler");
 const spacetime = require("spacetime");
+const votingAndStatsManager = require("./functions/other/votingAndStatsManager");
 client.setMaxListeners(0);
 client.database = require("./database");
 client.cache = new Set();
@@ -53,6 +54,19 @@ client.settings = new Map();
 client.timeouts = new Map();
 client.birthdaysWished = [];
 client.commandsRun = 0;
+client.votingSites = [{
+  name: 'Top.gg',
+  link: 'https://top.gg/bot/781293073052991569/vote',
+  code: 'topgg'
+}, {
+  name: 'Discord Bot List',
+  link: 'https://discordbotlist.com/bots/helpsie/upvote',
+  code: 'dbl'
+}, {
+  name: 'Bots For Discord',
+  link: 'https://botsfordiscord.com/bot/781293073052991569/vote',
+  code: 'bfd'
+}];
 
 client.disabledCommands = [{
     command: 'removexp',
@@ -173,6 +187,8 @@ client.once("ready", async () => {
     readCommands('events');
     mute.expireManager(client);
     checkbirthdays.expireManager(client);
+    votingAndStatsManager.listen(client);
+    if (process.env['TOKEN'] !== process.env['BETA_TOKEN']) votingAndStatsManager.update(client);
     botFunctions();
     console.log(`Loaded events`)
   }
@@ -198,22 +214,22 @@ async function botFunctions() {
   setInterval(() => {
     console.log(`[${spacetime.now(`Africa/Johannesburg`).time()}]: Online: ${client.ws.ping}ms`);
 
-  }, 60000);
+  }, 300000);
 
-  //LEVELING
-  setInterval(() => {
-    console.log(`[${spacetime.now(`Africa/Johannesburg`).time()}]: Online: ${client.ws.ping}ms`);
+  //STATS POSTER
+  setInterval(async () => {
+    votingAndStatsManager.update(client);
 
-  }, 120000);
+  }, 60000 * 20);
 
   //STATS UPDATER
   setInterval(async () => {
-    updateStats();
+    updateDatabaseStats();
 
   }, 60000 * 20);
 }
 
-async function updateStats() {
+async function updateDatabaseStats() {
   let commandsRun = client.commandsRun;
 
   let guilds = client.guilds.cache.size;
@@ -247,7 +263,7 @@ async function updateStats() {
       }
       client.commandsRun = 0;
     }
-  )  
+  )
 }
 
 client.database.redis();

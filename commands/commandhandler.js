@@ -70,7 +70,7 @@ module.exports = (client, commandOptions) => {
     if (typeof botPermissions === 'string') {
       botPermissions = [botPermissions];
     }
-    botPermissions.push('VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS', 'READ_MESSAGE_HISTORY', 'USE_EXTERNAL_EMOJIS');
+    botPermissions.push('SEND_MESSAGES', 'EMBED_LINKS', 'READ_MESSAGE_HISTORY', 'USE_EXTERNAL_EMOJIS');
   }
 
   client.on('message', async (message) => {

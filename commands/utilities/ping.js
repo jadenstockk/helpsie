@@ -12,7 +12,7 @@ module.exports = {
 
       msg.edit(new Discord.MessageEmbed()
       .setAuthor(`${client.user.username} Latency and Uptime`, client.user.displayAvatarURL())
-      .setDescription(`**Bot Ping:** \`${ping}ms\`\n**API Ping:** \`${client.ws.ping}ms\`\n**Uptime:** \`${timeconverter.short(client.uptime)}\``)
+      .setDescription(`**Bot Ping:** \`${ping}ms\`\n**API Ping:** \`${client.ws.ping}ms\``)
       .setColor(process.env['EMBED_COLOR']))
     })
   },

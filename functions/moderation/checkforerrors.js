@@ -65,7 +65,7 @@ module.exports = (guild, roleCheck, missingPerms, neededPerms, client) => {
 
             outstandingPerms.forEach(perm => {
                 if (role.permissions.has(perm)) return outstandingPerms.splice(outstandingPerms.indexOf(perm), 1);
-                if (validPermissions.includes(perm) && me.permissions.has(perm)) return outstandingPerms.splice(outstandingPerms.indexOf(perm), 1);
+                if (validPermissions.includes(perm) && (me.permissions.has(perm))) return outstandingPerms.splice(outstandingPerms.indexOf(perm), 1);
             })
         })
 

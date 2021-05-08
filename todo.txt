@@ -1,6 +1,8 @@
 setup command
 tips
-discord bot list api
 setlevel comamnd
 command limiter
 channel.send access manager
+
+disable commands in specific channels
+remove the swear filter

@@ -15,7 +15,6 @@ module.exports = {
 
         } else {
           client.functions.get('filtermanager').execute(message, args, client);
-          return;
           client.functions.get('leveling').execute(message, args, client);
         }
 

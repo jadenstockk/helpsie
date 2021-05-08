@@ -31,10 +31,12 @@ module.exports = {
         let value = eval(type);
 
         try {
-          if (value && special)
+          if (value && special) {
             if (special === 'channel') value = message.guild.channels.cache.get(value);
-            else if (special === 'role') value = message.guild.roles.cache.get(value);
-          else if (special === 'message' && value === 'off') value === '\`off\`';
+            else if (special === 'role') value = message.guild.roles.cache.get(value)
+            else if (special === 'message' && value === 'off') value === '\`off\`';
+            else if (special === 'on/off') value === '\`on\`';
+          }
 
           if (!value && (!special)) value = 'off';
           else if (!value && special) value = '\`off\`';
@@ -49,6 +51,7 @@ module.exports = {
       p1 = [
         `**General Settings:**\n\n`,
         `\`${commandPrefix} prefix <new prefix>\` - ***currently set to: \`${setting('data.prefix')}\`***\nSet a new prefix for the bot *e.g. ${commandPrefix} prefix ?*\n\n`,
+        `\`${commandPrefix} tips <on/off>\` - ***currently set to: ${setting('data.tips', 'on/off')}***\nChoose whether or not you want helpful tips to display when something is configured wrong etc. *e.g. ${commandPrefix} tips on*\n\n`,
       ]
       p2 = [
         `**Moderation Settings:**\n\n`,
@@ -152,7 +155,7 @@ module.exports = {
 
         backwards.on('end', r => {
           if (CheckForErrors()) return msg.edit(CheckForErrors());
-          
+
           try {
             msg.reactions.removeAll();
 

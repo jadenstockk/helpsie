@@ -4,7 +4,10 @@ let Schema = new mongoose.Schema({
 
     guild: String,
 
-    prefix: String,
+    prefix: {
+        type: String,
+        default: '!',
+    },
 
     profanityFilter: String,
     inviteBlocker: String,
@@ -15,15 +18,18 @@ let Schema = new mongoose.Schema({
     modRole: String,
     muteRole: String,
 
-    disabled: Array,
+    disabled: {
+        type: Array,
+        default: [],
+    },
 
     leveling: {
         channel: String,
-        message: {
-            type: String,
-            default: `**Well done {user} you just reached level {level}!** 🥳`
+        message: String,
+        roles: {
+            type: Array,
+            default: [],
         },
-        roles: Array,
     },
 
     birthdays: {
@@ -38,13 +44,24 @@ let Schema = new mongoose.Schema({
         role: String,
     },
 
-    reactionRoles: Array,
+    reactionRoles: {
+        type: Array,
+        default: [],
+    },
 
-    logsChannel: Object,
+    logsChannel: {
+        token: String,
+        id: String,
+        channelID: String,
+    },
 
     blacklisted: Array,
     whitelisted: Array,
 
+    tips: {
+        type: Boolean,
+        default: true,
+    },
 });
 
 module.exports = mongoose.model("guildData", Schema);

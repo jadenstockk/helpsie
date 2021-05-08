@@ -17,6 +17,7 @@ module.exports = {
     if (user.bot) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} ${user} is a bot, and unfortunately you can't reset bot's xp`).setColor("#FF3E3E"));
 
     await leveling.resetXP(message.guild.id, user.id, message, client);
+    client.levelingTimeouts.delete(`${message.author.id} | ${message.guild.id}`)
     message.channel.send(new Discord.MessageEmbed().setDescription(`${checkEmoji} Succesfully reset ${user}'s xp`).setColor("#00FF7F"));
   },
 };

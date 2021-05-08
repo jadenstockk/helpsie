@@ -4,7 +4,11 @@
   "supportToken": "ODI5ODQxMzUyOTEyNDA0NTIx.YG9__A.yQN16qqCvbJVQP59X_99R_M0MZo",
   "database": "mongodb+srv://databaseADMIN:uMc0gVkmLkhT3M8M@discord-database.tdp8m.mongodb.net/Data",
   "youtubeAPI": "AIzaSyDf7WcajXU57j-rTeTKneD2HVQTQUIhz4A",
+  "authCode": "1rg4253647586erg97089786erg756",
   "dblToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxLCJpZCI6Ijc4MTI5MzA3MzA1Mjk5MTU2OSIsImlhdCI6MTYxODAwMjkxMn0.b3H2aIrg6nydSsQccUZBF0YNp6jQG9DebcQgZRRDelo",
+  "topggToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc4MTI5MzA3MzA1Mjk5MTU2OSIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4MjM5NDk4fQ.fPPIUHUz2C-ZUNMUxcE5NLY1V1dS2kVh2gvW6S-dQb4",
+  "bfdToken": "e29423d47c08bf4d2d3766ab2d25ca0ed596d52556eb15550470d7b9e91afb7fab1a5c3239f85dc69048fa887fe7006ce5a27729aeedf11aefa9749a95683a0a",
+  "blistToken": "3gZRH0I29_j033li0sF1",
   "twitchToken": "l2hxy6x6lput6kjalpmaln9gn73y6p",
   "twitchID": "5qxanaqez9051u1ok0fbqwjtnmcf1d",
   "pushsaferSecret": "qQjx5QAMTJsNYgF9AkEI",
@@ -12,7 +16,6 @@
   "imageSearchAPI": "AIzaSyDjTDikOFjBPFQoXiAo2_0hlo6uItqSfo0",
   "appID": "781293073052991569",
   "publicKey": "1ef2f875f2e64483d39327f16b4db60417133ab3706242dd310f3f9ac3dcc22f",
-  "topggToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc5MzQ0ODQxOTk2MzgzMDI3NCIsImJvdCI6dHJ1ZSwiaWF0IjoxNjEwODI1NDIyfQ.dAIr4Ai1TybtOdeKhvs74EslT3JYsTyYDK2o52DEso8",
   "activity": {
     "name": "!help",
     "type": "LISTENING"

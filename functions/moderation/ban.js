@@ -6,7 +6,7 @@ module.exports = {
   description: 'when a user gets banned',
 
   async execute(guild, user, client) {
-    if (checkforerrors(member.guild, false, false, ['VIEW_AUDIT_LOG'], client)) return;
+    if (checkforerrors(guild, false, false, ['VIEW_AUDIT_LOG'], client)) return;
 
     const fetchedLogs = await guild.fetchAuditLogs({
       limit: 1,

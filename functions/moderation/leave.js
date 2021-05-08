@@ -22,7 +22,7 @@ module.exports = {
       serverlogs.execute(member.guild, member.user, 'KICK', mod, reason, null, client);
     }
 
-    if (!kickLog) left();
+    if (!kickLog) return left();
 
     const {
       executor,

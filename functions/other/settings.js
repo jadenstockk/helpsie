@@ -537,7 +537,7 @@ module.exports = {
     } else if (setting === 'levelmessage') {
 
       if ((!settinginfo && !currentSettings.leveling.message)) return message.channel.send(new Discord.MessageEmbed().setDescription(`Leveling message is not setup`).setColor("#059DFF"))
-      if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Current leveling message is set to: ${currentSettings.leveling.message}}`).setColor("#059DFF"))
+      if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Current leveling message is set to: ${currentSettings.leveling.message}`).setColor("#059DFF"))
 
       settinginfo = args.splice(1).join(' ');
 
@@ -704,6 +704,30 @@ module.exports = {
       }
 
 
+    } else if (setting === 'tips') {
+      function simplify(value) {
+        if (value) return 'on';
+        else return 'off';
+      }
+
+      if ((!settinginfo && !currentSettings.tips)) return message.channel.send(new Discord.MessageEmbed().setDescription(`Tips is currently set to: \`off\``).setColor("#059DFF"))
+      if (!settinginfo) return message.channel.send(new Discord.MessageEmbed().setDescription(`Tips is currently is set to: \`${simplify(currentSettings.tips)}\``).setColor("#059DFF"))
+
+      settinginfo = args.splice(1).join(' ');
+
+      let success = (new Discord.MessageEmbed().setDescription(`${checkEmoji} Successfully set tips to: \`${settinginfo}\``).setColor("#00FF7F"));
+
+      let currenttips;
+      if (currentSettings.tips) currenttips = currentSettings.tips;
+      let tips = settinginfo;
+
+      if (tips === 'off') return updateSettings('tips', false, success);
+
+      if (tips === currenttips) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} Tips is already set to: \`${settinginfo}\``).setColor("#FF3E3E"))
+
+      updateSettings('levelingmessage', tips, success);
+
+
     } else {
       message.channel.send(
         new Discord.MessageEmbed()
@@ -809,6 +833,10 @@ module.exports = {
                   message: newsetting,
                 }
               });
+              else if (type === 'tips') newData = new guildData({
+                guild: message.guild.id,
+                tips: newsetting
+              });
 
               await newData.save();
 
@@ -840,6 +868,8 @@ module.exports = {
               else if (type === 'levelingmessage') data.leveling.message = newsetting;
               else if (type === 'levelroles') data.leveling.roles = newsetting;
               else if (type === 'levelrolesdelete') data.leveling.roles = newsetting;
+
+              else if (type === 'tips') data.tips = newsetting;
 
               await data.save();
 

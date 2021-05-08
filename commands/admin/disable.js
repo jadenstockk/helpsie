@@ -10,14 +10,19 @@ module.exports = {
   callback: (message, args, client) => {
     const Discord = require("discord.js");
     const guildData = require('../../models/guildData');
-    const blacklistedCommands = ['disable', 'enable', 'help', 'commands', 'setup', 'disabled', 'settings', 'config', 'invite', 'support', 'admin'];
+    const blacklistedCommands = ['disable', 'enable', 'help', 'commands', 'setup', 'disabled', 'settings', 'config', 'invite', 'support', 'admin', 'vote'];
     const commandGroups = ['utilities', 'support', 'moderation', 'admin', 'leveling', 'birthdays'];
+    const functions = ['profanityfilter', 'inviteblocker', 'linkblocker', 'leveler'];
 
     let disableCommand = args[0].toLowerCase();
+    let type = 'command';
 
-    if ((allCommands.includes(disableCommand) || commandGroups.includes(disableCommand)) && !blacklistedCommands.includes(disableCommand)) {
+    if ((allCommands.includes(disableCommand) || functions.includes(disableCommand) || commandGroups.includes(disableCommand)) && !blacklistedCommands.includes(disableCommand)) {
+      if (commandGroups.includes(disableCommand)) type = 'command group';
+      if (functions.includes(disableCommand)) type = 'function';
+
       let success = new Discord.MessageEmbed()
-        .setDescription(`${checkEmoji} Successfully disabled the command: \`${disableCommand}\``)
+        .setDescription(`${checkEmoji} Successfully disabled the ${type}: \`${disableCommand}\``)
         .setColor("#00FF7F")
 
       guildData.findOne({

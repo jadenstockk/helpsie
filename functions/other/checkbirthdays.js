@@ -129,7 +129,9 @@ module.exports = {
     },
     removeRoleCounter: async (guild, member, user, client) => {
         const settings = client.settings.get(guild.id).birthdays;
-        const role = guild.roles.cache.get(settings.role);
+        
+        let role;
+        if (settings.role) role = guild.roles.cache.get(settings.role);
 
         const redisClient = await database.redisClient;
         try {
@@ -142,7 +144,7 @@ module.exports = {
 
                 } else {
 
-                    member.roles.remove(role, 'Birthday role remove');
+                    if (role) member.roles.remove(role, 'Birthday role remove');
                     if (result) await redisClient.del(redisKey);
                 }
             });

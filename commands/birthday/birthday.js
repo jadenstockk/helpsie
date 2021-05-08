@@ -1,3 +1,5 @@
+const tip = require("../../functions/other/tip");
+
 module.exports = {
   commands: 'birthday',
   description: `Use this command to set your birthday`,
@@ -42,7 +44,8 @@ module.exports = {
           .setColor(process.env['EMBED_COLOR'])
         )
 
-        return message.channel.send(
+        tip('birthday', message, client);
+        message.channel.send(
           new Discord.MessageEmbed()
           .setDescription(`🎂 ${user}'s next birthday is in **${spacetime.now().since(birthday).precise}** on **${localDate.getDate()} ${months[localDate.getMonth()]} ${localDate.getFullYear()}**`)
           .setColor(process.env['EMBED_COLOR'])

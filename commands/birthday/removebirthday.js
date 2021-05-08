@@ -29,7 +29,7 @@ module.exports = {
         checkbirthdays.removeRoleCounter(message.guild, message.member, message.author, client);
         await data.save();
 
-        return message.channel.send(
+        message.channel.send(
           new Discord.MessageEmbed()
           .setDescription(`${checkEmoji} Successfully removed your birthday`)
           .setColor("#00FF7F")

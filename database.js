@@ -10,24 +10,19 @@ module.exports = {
     const dbOptions = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
       autoIndex: false,
-      reconnectTries: Number.MAX_VALUE,
-      reconnectInterval: 500,
-      poolSize: 5,
-      connectTimeoutMS: 10000,
-      family: 4,
-    };
+      poolSize: 10,
+      family: 4
+    }
 
     mongoose.connect(
       config.database,
       dbOptions
-    );
-    mongoose.set("useFindAndModify", false);
-    mongoose.Promise = global.Promise;
+    ).then(console.log("Database connected")).catch(err => console.log(`Database connection error: \n${err.stack}`))
 
-    mongoose.connection.on("connected", () => {
-      console.log("Database connected")
-    });
+    mongoose.set("useFindAndModify", false);
 
     mongoose.connection.on("err", () => {
       console.log(`Database connection error: \n${err.stack}`);
@@ -195,6 +190,7 @@ async function dataHandler(data, guild, client) {
 
     modRole = data.modRole;
     muteRole = data.muteRole;
+    tips = data.tips;
 
     if (!data.welcome) welcome = {
       channel: undefined,
@@ -244,7 +240,8 @@ async function dataHandler(data, guild, client) {
       reactionRoles,
       leveling,
       birthdays,
-      autoModActions
+      autoModActions,
+      tips
 
     });
 
@@ -280,7 +277,8 @@ async function dataHandler(data, guild, client) {
         message: undefined,
         roles: []
       },
-      autoModActions: []
+      autoModActions: [],
+      tips: true
 
     });
   }

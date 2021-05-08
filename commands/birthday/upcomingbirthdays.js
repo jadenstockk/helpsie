@@ -1,3 +1,5 @@
+const tip = require("../../functions/other/tip");
+
 module.exports = {
   commands: 'upcomingbirthdays',
   description: `Use this command to set your birthday`,
@@ -51,6 +53,7 @@ module.exports = {
 
     if (birthdays.length < 1) return message.channel.send(new Discord.MessageEmbed().setDescription(`${nopeEmoji} No birthdays are coming up in ${spacetime.now().year()}`).setColor("#FF3E3E"))
 
+    tip('birthday', message, client);
     message.channel.send(
       new Discord.MessageEmbed()
       .setAuthor(`🎂 Upcoming Birthdays in ${spacetime.now().year()}`)
