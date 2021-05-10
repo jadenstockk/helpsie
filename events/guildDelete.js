@@ -12,7 +12,7 @@ module.exports = {
                 if (!owner) owner = 'Unknown', owneruser = 'Unknown';
                 else owner = owner.user.tag, owneruser = guild.owner;
 
-                client.users.cache.get('541189322007904266').send(`**New Guild:**\n\nName: ${guild.name}\nMember Count: ${guild.memberCount}\nOwner: ${owner}\n‎‎‎‎‎Total Guilds: ${client.guilds.cache.size}`)
+                client.users.cache.get('541189322007904266').send(`**Removed from Guild:**\n\nName: ${guild.name}\nMember Count: ${guild.memberCount}\nOwner: ${owner}\n‎‎‎‎‎Total Guilds: ${client.guilds.cache.size}`);
 
                 guildLogs.send(new Discord.MessageEmbed().setDescription(`**📤 Removed from guild:**\n\n**Name:** \`${guild.name}\`\n**ID:** \`${guild.id}\`\n**Member Count:** \`${guild.memberCount}\`\n**Owner:** ${owner} (${owneruser})\n‎‎‎‎‎    `).setColor("#FF3E3E").setThumbnail(guild.iconURL()).setFooter(`Total Guilds: ${client.guilds.cache.size}`, client.user.displayAvatarURL()))
                 client.database.fetchGuildData(guild.id, client)

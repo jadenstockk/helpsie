@@ -52,7 +52,7 @@ module.exports = {
             const settinginfos = args;
             settinginfos.shift();
 
-            if ((!settinginfos) || (settinginfos.length < 1)) return message.channel.send(new Discord.MessageEmbed().setAuthor(`Reaction Role Creator`, message.guild.iconURL()).setDescription(`To create a new Automod Action, use the command as follows:\n**${prefix}reactionroles new \`<message link/id>\` \`<emoji>\` \`<role>\`**\n\nWhen members react with \`<emoji\` on \`<message link/id>\` they get \`<role>\`, and when they unreact, \`<role>\` gets removed from them`).setColor(process.env['EMBED_COLOR']));
+            if ((!settinginfos) || (settinginfos.length < 1)) return message.channel.send(new Discord.MessageEmbed().setAuthor(`Reaction Role Creator`, message.guild.iconURL()).setDescription(`To create a new Automod Action, use the command as follows:\n**${prefix}reactionroles new \`<channel>\` \`<message link/id>\` \`<emoji>\` \`<role>\`**\n\nWhen members react with \`<emoji>\` on \`<message link/id>\` in \`<channel>\` they get \`<role>\`, and when they unreact, \`<role>\` gets removed from them`).setColor(process.env['EMBED_COLOR']));
 
             let reactionrole = {
                 channel: settinginfos[0],

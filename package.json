@@ -40,8 +40,10 @@
     "top.gg-core": "^1.0.0-b",
     "twitch": "^4.5.1",
     "twitch-auth": "^4.5.1",
+    "twitch-user-info": "^1.0.0",
     "uniqid": "^5.2.0",
     "urban-dictionary": "^2.2.1",
+    "user-instagram": "^2.1.9",
     "youtube-search": "^1.1.6",
     "ytdl-core": "^4.5.0"
   },

@@ -155,7 +155,7 @@ module.exports = {
       new Discord.MessageEmbed()
       .setColor(process.env['EMBED_COLOR'])
       .setAuthor(`${client.user.username} Setup Process`, client.user.displayAvatarURL())
-      .setDescription(`Welcome to ${client.user.username}'s setup process. This makes it easier for you to customize ${client.user.username} to your liking, rather than having to type out long settings commands.\n\nWant to **skip** a **certain step** of the setup process? No problem, just **type \`skip\`** to move onto the **next step**!\n\nStarting to feel as though you **don't** really want to carry on with the **setup process**? No problem, just **type \`cancel\`**!\n\n**Missed out** a step or answered a step **incorrectly**? No problem, just **type \`back\`** to be taken back to the **previous** step!\n\nNow that you've been briefed on what to expect, let's get started on the setup process! We recommended doing this process in a private channel so that messages from other users don't interrupt you.\n\n> **Type \`start\` to begin**`)
+      .setDescription(`Welcome to ${client.user.username}'s setup process. This makes it easier for you to customize ${client.user.username} to your liking, rather than having to type out long settings commands.\n\nWant to **skip** a **certain step** of the setup process? No problem, just **type \`skip\`** to move onto the **next step**!\n\nStarting to feel as though you **don't** really want to carry on with the **setup process**? No problem, just **type \`cancel\`**!\n\n**Missed out** a step or answered a step **incorrectly**? No problem, just **type \`back\`** to be taken back to the **previous** step!\n\nNow that you've been briefed on what to expect, let's get started on the setup process! We recommended doing this process in a **private channel** so that messages from other users don't interrupt you.\n\n> **Type \`start\` to begin**`)
       .setFooter(`Want to get straight into the commands? Type ${prefix}help for a list of commands`)
 
     )
@@ -210,11 +210,9 @@ module.exports = {
               if (step >= (steps.length - 1)) {
                 return channel.send(
                   new Discord.MessageEmbed()
-                  .setColor(process.env['EMBED_COLOR'])
+                  .setColor('GREEN')
                   .setAuthor(`${client.user.username} Setup Completed`, client.user.displayAvatarURL())
-                  .setDescription(`${checkEmoji} **${client.user.username} is now ready to functional in your server!**\n\n**Try out some of these command to get full functionality from ${client.user.username}:**\n\`${current.prefix}settings levelroles\n\`${current.prefix}settings actions`)
-                  .setFooter(`Type "${current.prefix}settings" for more customizable options`)
-
+                  .setDescription(`${checkEmoji} **${client.user.username} is now ready to function in your server!**\n\n**Extra features to enhance your server:**\n\n\`${current.prefix}settings levelroles\`\n\`${current.prefix}settings actions\`\n\nTry out \`${current.prefix}settings\` for more customizable options`)
                 )
               }
 
@@ -244,7 +242,7 @@ module.exports = {
             let currentSettings = current;
             let setting = steps[step].c;
             let inputargs = `${setting} ${collected.first().content}`.split(/[ ]+/);
-            let settinginfo = inputargs[0];
+            let settinginfo = inputargs[1];
 
             await settings.execute(collected.first(), inputargs, client, setting, settinginfo, currentSettings);
 
@@ -254,7 +252,7 @@ module.exports = {
               if (step >= (steps.length - 1)) {
                 return channel.send(
                   new Discord.MessageEmbed()
-                  .setColor(process.env['EMBED_COLOR'])
+                  .setColor('GREEN')
                   .setAuthor(`${client.user.username} Setup Completed`, client.user.displayAvatarURL())
                   .setDescription(`${checkEmoji} **${client.user.username} is now ready to function in your server!**\n\n**Extra features to enhance your server:**\n\n\`${current.prefix}settings levelroles\`\n\`${current.prefix}settings actions\`\n\nTry out \`${current.prefix}settings\` for more customizable options`)
                 )
