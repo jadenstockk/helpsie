@@ -1,0 +1,25 @@
+      <div class="col-md-3 mb-md-0 mb-3">
+
+
+        <ul class="list-unstyled opensans-font">
+          <li>
+            <a class="footer-link nav-link" href="/invite">Add to Discord</a>
+          </li>
+          <li>
+            <a class="footer-link nav-link" href="/support">Support</a>
+          </li>
+        </ul>
+
+      </div>
+      <div class="col-md-3 mb-md-0 mb-3">
+
+        <ul class="list-unstyled opensans-font">
+          <li>
+            <a class="footer-link nav-link" href="/commands">Commands</a>
+          </li>
+          <li>
+            <a class="footer-link nav-link" href="/dashboard">Dashboard</a>
+          </li>
+        </ul>
+
+      </div>

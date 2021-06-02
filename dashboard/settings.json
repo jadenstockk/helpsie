@@ -1,0 +1,189 @@
+{
+  "website" : {
+    "name": "Helpsie",
+    "avatar": "https://cdn.discordapp.com/avatars/781293073052991569/8dee83dc3e014f7deae730bcfd76b578.webp",
+    "invite": "https://discord.com/oauth2/authorize?client_id=781293073052991569&permissions=1916267615&redirect_uri=http://localhost:3001/auth/discord/redirect&scope=bot",
+    "support": "https://discord.gg/5jaZRYnZU5"
+  },
+
+  "commands" : {
+
+    "Utilities": [{
+      "name": "help",
+      "description": "Get a list of available commands and their functions",
+      "usage": "!help [command group]"
+    }, {
+      "name": "userinfo",
+      "description": "Get information about a certain member in the server",
+      "usage": "!userinfo <member>"
+    }, {
+      "name": "youtube",
+      "description": "Search for a YouTube video",
+      "usage": "!youtube <video>"
+    }, {
+      "name": "imgur",
+      "description": "Search for an image on Imgur",
+      "usage": "!imgur <image>"
+    }, {
+      "name": "urban",
+      "description": "Get a definition of a word",
+      "usage": "!urban <word/phrase>"
+    }, {
+      "name": "covid",
+      "description": "Get Covid-19 stats of a country or the world",
+      "usage": "!covid <country/world>"
+    }, {
+      "name": "invite",
+      "description": "Invite the bot to your server",
+      "usage": "!invite"
+    }, {
+      "name": "ping",
+      "description": "Get the bot's response time in milliseconds",
+      "usage": "!ping"
+    }],
+
+    "Admin": [{
+      "name": "setup",
+      "description": "Run the bot's setup process to more easily personalize it to your liking",
+      "usage": "!setup"
+    }, {
+      "name": "settings",
+      "description": "Get a list of or change the bot's settings",
+      "usage": "!settings [setting] [new value]"
+    }, {
+      "name": "embed",
+      "description": "Create beautiful message embeds with the embed creator",
+      "usage": "!embed"
+    }, {
+      "name": "muteall",
+      "description": "Mute everyone except yourself in the voice channel you're in",
+      "usage": "!muteall"
+    }, {
+      "name": "unmuteall",
+      "description": "Unmute everyone in the voice channel you're in",
+      "usage": "!unmuteall"
+    }, {
+      "name": "moveall",
+      "description": "Move everyone in a voice channel to a different channel of your choice",
+      "usage": "!moveall <channel id/channel name>"
+    }, {
+      "name": "disable",
+      "description": "Disable a certain command or group of commands",
+      "usage": "!disable <command/command group>"
+    }, {
+      "name": "enable",
+      "description": "Enable a certain command or group of commands",
+      "usage": "!enable <command/command group>"
+    }, {
+      "name": "disabled",
+      "description": "Get a list of all the disabled commands in the server",
+      "usage": "!disabled"
+    }, {
+      "name": "reactionroles",
+      "description": "Create and manage reaction roles",
+      "usage": "!reactionroles"
+    }, {
+      "name": "simulate",
+      "description": "Simluate server events to test the bot's actions, such as simulating when a member joins",
+      "usage": "!simulate [event]"
+    }],
+    
+    "Moderation": [{
+      "name": "warn",
+      "description": "Warn a member",
+      "usage": "!warn <member> [optional reason]"
+    }, {
+      "name": "warns",
+      "description": "Get a list of a member's warns",
+      "usage": "!warns <member>"
+    }, {
+      "name": "findwarn",
+      "description": "Create and manage reaction roles",
+      "usage": "!findwarn <warn id>"
+    }, {
+      "name": "mute",
+      "description": "Mute a member",
+      "usage": "!mute <member> [optional duration] [optional reason]"
+    }, {
+      "name": "unmute",
+      "description": "Unmute a member",
+      "usage": "!unmute <member>"
+    }, {
+      "name": "kick",
+      "description": "Kick a member",
+      "usage": "!kick <member> [optional reason]"
+    }, {
+      "name": "clear",
+      "description": "Delete a certain amount of messages",
+      "usage": "!clear <number of messages>"
+    }, {
+      "name": "ban",
+      "description": "Ban a member",
+      "usage": "!ban <member> [optional reason]"
+    }, {
+      "name": "unban",
+      "description": "Unban a member",
+      "usage": "!unban <member>"
+    }, {
+      "name": "lock",
+      "description": "Lock a channel",
+      "usage": "!lock"
+    }, {
+      "name": "unlock",
+      "description": "Unlock a channel",
+      "usage": "!unlock"
+    }, {
+      "name": "slowmode",
+      "description": "Set slowmode in a channel",
+      "usage": "!slowmode <time in seconds>"
+    }],
+    
+    "Leveling": [{
+      "name": "rank",
+      "description": "Get the level and rank of a member",
+      "usage": "!rank [optional member]"
+    }, {
+      "name": "leaderboard",
+      "description": "Get a list of the top 10 members in the server",
+      "usage": "!leaderboard"
+    }, {
+      "name": "resetxp",
+      "description": "Reset a member's xp (requries admin)",
+      "usage": "!resetxp <member>"
+    }, {
+      "name": "addxp",
+      "description": "Add xp to a member (requries admin)",
+      "usage": "!addxp <member> <amount>"
+    }, {
+      "name": "removexp",
+      "description": "Remove xp from a member (requries admin)",
+      "usage": "!removexp <member> <amount>"
+    }],
+
+    "Birthdays": [{
+      "name": "birthday",
+      "description": "View your or another member's birthdays",
+      "usage": "!birthday [optional member]"
+    }, {
+      "name": "addbirthday",
+      "description": "Add your birthday",
+      "usage": "!addbirthday <date>"
+    }, {
+      "name": "removebirthday",
+      "description": "Remove your birthday",
+      "usage": "!removebirthday"
+    }, {
+      "name": "setbirthday",
+      "description": "Set another member's birthday (requries admin)",
+      "usage": "!setbirthday <member> <date>"
+    }, {
+      "name": "unsetbirthday",
+      "description": "Remove another member's birthday (requries admin)",
+      "usage": "!unsetbirthday"
+    }, {
+      "name": "upcomingbirthdays",
+      "description": "Get a list of the 10 next upcoming birthdays",
+      "usage": "!upcomingbirthdays"
+    }]
+  }
+}

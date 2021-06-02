@@ -13,7 +13,7 @@ module.exports = {
   usage: `[optional setting] [optional new setting option] - leave the optional parts out to get a full list of all the bot's settings`,
   group: 'admin',
 
-  callback: (message, args, client) => {
+  callback: (message, args, client, disbut) => {
     const Discord = require("discord.js");
     const guildData = require('../../models/guildData');
 
@@ -31,63 +31,92 @@ module.exports = {
         let value = eval(type);
 
         try {
-          if (value && special) {
+          if ((value) && special) {
             if (special === 'channel') value = message.guild.channels.cache.get(value);
+            else if (special === 'channels') returnedValues = [], value.forEach(v => returnedValues.push(message.guild.channels.cache.get(v))), value = returnedValues.join(', ')
+            else if (special === 'roles') returnedValues = [], value.forEach(v => returnedValues.push(message.guild.roles.cache.get(v))), value = returnedValues.join(', ')
             else if (special === 'role') value = message.guild.roles.cache.get(value);
-            else if (special === 'message' && value === 'off') value === '\`off\`';
+            else if (special === 'message' && value === 'off') return '';
             else if (special === 'on/off') return '\`on\`';
+
+          } else if (!special && value) {
+            value = `\`${value}\``;
           }
 
           if (!value && (!special)) value = 'off';
-          else if (!value && special) return '\`off\`';
+          else if (!value && special) return '';
 
-          return value;
+          if (value === 'off' || value === '`off`' || !value) return '';
+          else return ` - currently set to: ${value}`;
 
         } catch (err) {
           errorhandler.init(err, __filename);
         }
       }
 
+      function status(type, neutral) {
+        let value = eval(type);
+
+        if (neutral) {
+          if (!value || value.length < 1) return neutralEmoji;
+          else return neutral2Emoji;
+        }
+
+        if ((value && (typeof value === 'string' || typeof value === 'boolean')) || (value && (value.length > 0) && typeof value === 'object')) {
+          if (value === 'off') {
+            return disabledEmoji;
+
+          } else {
+            return enabledEmoji;
+          }
+
+        } else {
+          return disabledEmoji;
+        }
+
+      }
+
       p1 = [
-        `**General Settings:**\n\n`,
-        `\`${commandPrefix} prefix <new prefix>\` - ***currently set to: \`${setting('data.prefix')}\`***\nSet a new prefix for the bot *e.g. ${commandPrefix} prefix ?*\n\n`,
-        `\`${commandPrefix} tips <on/off>\` - ***currently set to: ${setting('data.tips', 'on/off')}***\nChoose whether or not you want helpful tips to display when something is configured wrong etc. *e.g. ${commandPrefix} tips on*\n\n`,
+        `**General Settings:**`,
+        `${neutral2Emoji} **Prefix**${setting('data.prefix')}\n\`${commandPrefix} prefix <new prefix>\`\nSet a new prefix for the bot *example: ${commandPrefix} prefix ?*\n`,
+        `${status('data.tips')} **Tips**\n\`${commandPrefix} tips <on/off>\`\nChoose whether or not you want helpful tips to display when something is configured wrong etc. *example: ${commandPrefix} tips on*\n`,
       ]
       p2 = [
-        `**Moderation Settings:**\n\n`,
-        `\`${commandPrefix} logs <channel/off>\` - ***currently set to: ${setting('data.logsChannel.channelID', 'channel')}***\nSet a new prefix for the bot\nSet a server logs channel where server events will be recorded *e.g. ${commandPrefix} logs #server-logs*\n\n`,
-        `\`${commandPrefix} moderator <role>\` - ***currently set to: ${setting('data.modRole', 'role')}***\nSet a role that will have access to moderator commands *e.g. ${commandPrefix} moderator @moderators*\n\n`,
-        `\`${commandPrefix} muted <role>\` - ***currently set to: ${setting('data.muteRole', 'role')}***\nSet a role that will be given to members when they are muted *e.g. ${commandPrefix} muted @mute-role*\n\n`,
+        `**Moderation Settings:**`,
+        `${status('data.logsChannel.channelID')} **Logs Channel**${setting('data.logsChannel.channelID', 'channel')}\n\`${commandPrefix} logs <channel/off>\`\nSet a server logs channel where server events will be recorded *example: ${commandPrefix} logs #server-logs*\n`,
+        `${status('data.modRole')} **Moderator Role**${setting('data.modRole', 'role')}\n\`${commandPrefix} moderator <role>\`\nSet a role that will have access to moderator commands *example: ${commandPrefix} moderator @moderators*\n`,
+        `${status('data.muteRole')} **Mute Role**${setting('data.muteRole', 'role')}\n\`${commandPrefix} muted <role>\`\nSet a role that will be given to members when they are muted *example: ${commandPrefix} muted @mute-role*\n`,
       ]
       p3 = [
-        `**Leveling Settings:**\n\n`,
-        `\`${commandPrefix} levelchannel <channel/off>\` - ***currently set to: ${setting('data.leveling.channel', 'channel')}***\nSet a channel where member levelups will be announced *e.g. ${commandPrefix} levelchannel #level-ups*\n\n`,
-        `\`${commandPrefix} levelmessage <message/off>\` - ***currently set to:*** ${setting('data.leveling.message', 'message')}\nSet a message that will be sent when a user levels up - use "{user}" to mention the user that's leveling up, and "{level}" to display the level *e.g. ${commandPrefix} levelmessage Well done {user} you just reached level {level}! 🥳*\n\n`,
-        `\`${commandPrefix} levelroles\`\nCreate new level role rewards when members reach a certain level *e.g. ${commandPrefix} levelroles*\n\n`,
+        `**Leveling Settings:**`,
+        `${status('data.leveling.channel')} **Leveling Channel**${setting('data.leveling.channel', 'channel')}\n\`${commandPrefix} levelchannel <channel/off>\`\nSet a channel where member levelups will be announced *example: ${commandPrefix} levelchannel #level-ups*\n`,
+        `${status('data.leveling.message')} **Leveling Message**${setting('data.leveling.message', 'message')}\n\`${commandPrefix} levelmessage <message/off>\`\nSet a message that will be sent when a user levels up - use "{user}" to mention the user that's leveling up, and "{level}" to display the level *example: ${commandPrefix} levelmessage Well done {user} you just reached level {level}! 🥳*\n`,
+        `${status('data.leveling.ignoredChannels')} **Leveling Ignored Channels**${setting('data.leveling.ignoredChannels', 'channels')}\n\`${commandPrefix} levelignore <channel/channels/off>\`\nChoose a channel or channels that you don't want to allow members to gain xp and levels in - separate multiple channels with commmas *example: ${commandPrefix} levelignore #no-xp-channel, #media-channel*\n`,
+        `${status('data.leveling.roles', true)} **Leveling Roles**\n\`${commandPrefix} levelroles\`\nCreate new level role rewards when members reach a certain level *example: ${commandPrefix} levelroles*\n\n`,
       ]
       p4 = [
-        `**Automod Settings:**\n\n`,
-        `\`${commandPrefix} profanityfilter <warn/warndelete/delete/off>\` - ***currently set to: \`${setting('data.profanityFilter')}\`***\nWhen on, the bot will filter bad words in messages, nicknames and links - choose whether you want the bot to warn, delete or warn and delete content containing profanity *e.g. ${commandPrefix} profanityfilter warndelete*\n\n`,
-        `\`${commandPrefix} inviteblocker <warn/warndelete/delete/off>\` - ***currently set to: \`${setting('data.inviteBlocker')}\`***\nWhen on, the bot will filter all server invite links sent - choose whether you want the bot to warn, delete or warn and delete content containing invite links *e.g. ${commandPrefix} inviteblocker warndelete*\n\n`,
-        `\`${commandPrefix} linkblocker <warn/warndelete/delete/off>\` - ***currently set to: \`${setting('data.linkBlocker')}\`***\nWhen on, the bot will delete all links sent - choose whether you want the bot to warn, delete or warn and delete content containing links *e.g. ${commandPrefix} linkblocker warndelete*\n\n`,
+        `**Automod Settings:**`,
+        `${status('data.profanityFilter')} **Profanity Filter**${setting('data.profanityFilter')}\n\`${commandPrefix} profanityfilter <warn/warndelete/delete/off>\`\nWhen on, the bot will filter bad words in messages, nicknames and links - choose whether you want the bot to warn, delete or warn and delete content containing profanity *example: ${commandPrefix} profanityfilter warndelete*\n`,
+        `${status('data.inviteBlocker')} **Invite Blocker**${setting('data.inviteBlocker')}\n\`${commandPrefix} inviteblocker <warn/warndelete/delete/off>\`\nWhen on, the bot will filter all server invite links sent - choose whether you want the bot to warn, delete or warn and delete content containing invite links *example: ${commandPrefix} inviteblocker warndelete*\n`,
+        `${status('data.linkBlocker')} **Link Blocker**${setting('data.linkBlocker')}\n\`${commandPrefix} linkblocker <warn/warndelete/delete/off>\`\nWhen on, the bot will delete all links sent - choose whether you want the bot to warn, delete or warn and delete content containing links *example: ${commandPrefix} linkblocker warndelete*\n`,
       ]
       p5 = [
-        `**Automod Action Settings:**\n\n`,
-        `\`${commandPrefix} actions\`\nGet a list of all the server's automod actions *e.g. ${commandPrefix} actions*\n\n`,
-        `\`${commandPrefix} actions new\`\nCreate a new action that will either kick, ban or mute a member depending on the number of warnings they've gotten in a certain amount of time *e.g. ${commandPrefix} actions new*\n\n`,
-        `\`${commandPrefix} actions delete <action number>\`\nDelete an existing automod action *e.g. ${commandPrefix} actions delete 3*\n\n`,
+        `**Automod Action Settings:**`,
+        `${status('data.autoModActions', true)} **List Automod Actions**\n\`${commandPrefix} actions\`\nGet a list of all the server's automod actions *example: ${commandPrefix} actions*\n\n`,
+        `${neutralEmoji} **New Automod Action**\n\`${commandPrefix} actions new\`\nCreate a new action that will either kick, ban or mute a member depending on the number of warnings they've gotten in a certain amount of time *example: ${commandPrefix} actions new*\n`,
+        `${neutralEmoji} **Delete Automod Action**\n\`${commandPrefix} actions delete <action number>\`\nDelete an existing automod action *example: ${commandPrefix} actions delete 3*\n\n`,
       ]
       p6 = [
-        `**Welcome Settings:**\n\n`,
-        `\`${commandPrefix} welcomechannel <channel>\` - ***currently set to: ${setting('data.welcome.channel', 'channel')}***\nSet a channel where new server members will be greeted *e.g. ${commandPrefix} welcomechannel #welcome-channel*\n\n`,
-        `\`${commandPrefix} welcomemessage <message/off>\` - ***currently set to:*** ${setting('data.welcome.message', 'message')}\nSet a message that will be sent in the welcome channel *e.g. ${commandPrefix} welcomemessage Hey {user}! Welcome to {server}!*\n\n`,
-        `\`${commandPrefix} welcomerole <role/off>\` - ***currently set to: ${setting('data.welcome.role', 'role')}***\nChoose a role that will be given to new server members when they join *e.g. ${commandPrefix} welcomerole @member*\n\n`,
+        `**Welcome Settings:**`,
+        `${status('data.welcome.channel')} **Welcome Channel**${setting('data.welcome.channel', 'channel')}\n\`${commandPrefix} welcomechannel <channel>\`\nSet a channel where new server members will be greeted *example: ${commandPrefix} welcomechannel #welcome-channel*\n`,
+        `${status('data.welcome.message')} **Welcome Message**${setting('data.welcome.message', 'message')}\n\`${commandPrefix} welcomemessage <message/off>\`\nSet a message that will be sent in the welcome channel *example: ${commandPrefix} welcomemessage Hey {user}! Welcome to {server}!*\n`,
+        `${status('data.welcome.role')} **Welcome Role**${setting('data.welcome.role', 'role')}\n\`${commandPrefix} welcomerole <role/off>\`\nChoose a role that will be given to new server members when they join *example: ${commandPrefix} welcomerole @member*\n`,
       ]
       p7 = [
-        `**Birthday Settings:**\n\n`,
-        `\`${commandPrefix} birthdaychannel <channel>\` - ***currently set to: ${setting('data.birthdays.channel', 'channel')}***\nSet a channel where member levelups will be announced *e.g. ${commandPrefix} birthdaychannel #level-ups*\n\n`,
-        `\`${commandPrefix} birthdaymessage <message/off>\` - ***currently set to:*** ${setting('data.birthdays.message', 'message')}\nSet a message that will be sent when it's a user's birthday - use "{user}" to mention the user who's birthday it is *e.g. ${commandPrefix} birthdaymessage Today is {user}'s Birthday! Make sure you wish them on their special day! 🥳*\n\n`,
-        `\`${commandPrefix} birthdayrole <role/off>\` - ***currently set to:*** ${setting('data.birthdays.role', 'role')}\nChoose a role to give to members when it's their birthday *e.g. ${commandPrefix} birthdayrole @its-my-birthday*\n\n`,
+        `**Birthday Settings:**`,
+        `${status('data.birthdays.channel')} **Birthday Channel**${setting('data.birthdays.channel', 'channel')}\n\`${commandPrefix} birthdaychannel <channel>\`\nSet a channel where member levelups will be announced *example: ${commandPrefix} birthdaychannel #level-ups*\n`,
+        `${status('data.birthdays.message')} **Birthday Message**${setting('data.birthdays.message', 'message')}\n\`${commandPrefix} birthdaymessage <message/off>\`\nSet a message that will be sent when it's a user's birthday - use "{user}" to mention the user who's birthday it is *example: ${commandPrefix} birthdaymessage Today is {user}'s Birthday! Make sure you wish them on their special day! 🥳*\n`,
+        `${status('data.birthdays.role')} **Birthday Role**${setting('data.birthdays.role', 'role')}\n\`${commandPrefix} birthdayrole <role/off>\`\nChoose a role to give to members when it's their birthday *example: ${commandPrefix} birthdayrole @its-my-birthday*\n`,
       ]
     }
 
@@ -97,7 +126,7 @@ module.exports = {
     }
 
     let pageNumber = 0;
-    let maxPage = 6;
+    let maxPage = 7;
 
     if (!isNaN(setting)) pageNumber = parseInt(setting) - 1, setting = undefined;
     if ((pageNumber < 0) || (pageNumber > maxPage)) pageNumber = 0;
@@ -105,11 +134,21 @@ module.exports = {
     if (!setting) {
       if (CheckForErrors()) return message.channel.send(CheckForErrors());
 
-      message.channel.send(page(pageNumber)).then(msg => {
+      let button = new disbut.MessageButton()
+        .setStyle('blue')
+        .setLabel('◀ Back')
+        .setID('settings_back')
 
-        msg.react('◀').then(r => {
-          msg.react('▶')
-        })
+      let button2 = new disbut.MessageButton()
+        .setStyle('blue')
+        .setLabel('Next ▶')
+        .setID('settings_next')
+
+      message.channel.send(page(pageNumber), {
+        buttons: [
+          button, button2
+        ]
+      }).then(msg => {
 
         const backwardsFilter = (reaction, user) => reaction.emoji.name === '◀' && user.id === message.author.id;
         const forwardsFilter = (reaction, user) => reaction.emoji.name === '▶' && user.id === message.author.id;
@@ -181,18 +220,19 @@ module.exports = {
           return settingsList;
           */
 
-        if (page === 0) list = p1.concat(p2);
-        else if (page === 1) list = p3;
-        else if (page === 2) list = p4;
-        else if (page === 3) list = p5;
-        else if (page === 4) list = p6;
-        else if (page === 5) list = p7;
-        else list = [`Error when loading settings page`];
+        if (page === 0) list = p1, title = 'General Settings';
+        else if (page === 1) list = p2, title = 'Moderation Settings';
+        else if (page === 2) list = p3, title = 'Leveling Settings';
+        else if (page === 3) list = p4, title = 'Automod Settings';
+        else if (page === 4) list = p5, title = 'Automod Action Settings';
+        else if (page === 5) list = p6, title = 'Welcome Settings';
+        else if (page === 6) list = p7, title = 'Birthday Settings';
+        else list = [`Error when loading settings page`], title = 'Unknown';
 
         settingsList = new Discord.MessageEmbed()
-          .setAuthor(`${message.guild.name} Server Settings:`, message.guild.iconURL())
-          .setDescription(list.join(''))
-          .setFooter(`Page ${page + 1} of ${maxPage}`)
+          .setAuthor(`Server Settings Menu:`, client.user.displayAvatarURL())
+          .setDescription(list.join('\n\n') + '\n\u200B')
+          .setFooter(`Page ${page + 1} of ${maxPage} - ${title}`, client.user.displayAvatarURL())
           .setColor(process.env['EMBED_COLOR'])
 
         return settingsList;

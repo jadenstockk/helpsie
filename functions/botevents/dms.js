@@ -8,7 +8,6 @@ module.exports = {
 
   execute(message, args, client) {
     if (message.author.bot) return;
-    if (client.blacklistedUsers && client.blacklistedUsers.find(person => person.user === message.author.id)) return message.author.send()
 
     let files = message.attachments.first();
     if (!files) dm = new Discord.MessageEmbed()

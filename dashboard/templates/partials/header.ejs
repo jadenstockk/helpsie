@@ -1,0 +1,85 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link href="/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/fonts.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <img src="https://cdn.discordapp.com/avatars/781293073052991569/8dee83dc3e014f7deae730bcfd76b578.png?size=256"
+          style="border-radius: 50%;" alt="Logo" width="30" height="30" class="d-inline-block align-top">
+        <span style="font-weight: 600;">Helpsie</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+        aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/commands">Commands</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/invite">Invite</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/support">Support Server</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <% if (user) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <img class="user-avatar"
+                src="<%= `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` %>" /><%= user.username %>
+            </a>
+            <ul class="dropdown-menu" style="border-radius: 10px;" aria-labelledby="navbarScrollingDropdown">
+              <li><a class="dropdown-item login-dropdown-header" href="/dashboard">My Servers</a></li>
+              <li><a class="dropdown-item login-dropdown-header" href="/commands">Commands</a></li>
+              <li><a class="dropdown-item login-dropdown-header" href="/invite">Invite</a></li>
+              <li><a class="dropdown-item login-dropdown-header" href="/support">Support</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item login-dropdown-header" style="color: rgb(255, 73, 73);" href="/logout">Logout</a></li>
+            </ul>
+          </li>
+          </li>
+          <% } else { %>
+          <li class="nav-item"><a href="/login" class="btn btn-primary text-white hovertext btn-header">Login</a></li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+  </script>
+  <!-- <% if (user) { %>
+    <p>Logged in as <%= user.username %>#<%= user.discriminator %>.</p>
+    <a href="/logout">Logout</a>
+  <% } else { %>
+    <a type="button" href="/login">Login</a><br>
+  <% } %>
+  <% if(user && title === "Home") { %>
+    <a type="button" href="/dashboard">Back to dashboard</a><br>
+  <% } %>
+  <%- title === "Dashboard" ? "" : "<hr>" %> -->

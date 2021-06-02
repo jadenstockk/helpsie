@@ -2,3 +2,5 @@ node_modules
 misc
 music
 .env
+.gitignore
+dashboard

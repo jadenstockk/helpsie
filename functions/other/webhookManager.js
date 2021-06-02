@@ -12,7 +12,6 @@ module.exports = {
     listen: (client) => {
 
         const app = express();
-        const PORT = 25579 || 5000;
 
         let sites = client.votingSites;
 
@@ -76,21 +75,46 @@ module.exports = {
     },
 
     update: async (client) => {
+
+        const topgg = new top.Client(config.topggToken);
+        topgg.post({
+            servers: client.guilds.cache.size,
+            shard: {
+                id: client.shard.ids,
+                count: client.shard.count
+            }
+        })
+    },
+
+    /**
+     * 
+     * @param {Discord.ShardingManager} manager
+     */
+
+    updateTotal: async (manager) => {
+        let guilds = 0;
+        await manager.fetchClientValues('guilds.cache.size').then(returned => {
+            returned.forEach(r => {
+                guilds = guilds + r;
+            })
+        })
+
         let users = 0;
-        await client.guilds.cache.forEach(guild => {
-            users = users + guild.memberCount;
+        await manager.broadcastEval('let users; this.guilds.cache.forEach(g => { users = users + g.memberCount }); users;').then(returned => {
+            returned.forEach(r => {
+                users = users + r;
+            })
         })
 
         const poster = new dbots.Poster({
             clientID: '781293073052991569',
             apiKeys: {
                 discordbotlist: config.dblToken,
-                topgg: config.topggToken,
                 botsfordiscord: config.bfdToken,
                 blist: config.blistToken
             },
-            serverCount: async () => client.guilds.cache.size,
-            userCount: async () => users,
+            serverCount: async () => 100, //guilds,
+            userCount: async () => 185098, //users,
             voiceConnections: async () => 0
         })
         poster.post();

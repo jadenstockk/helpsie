@@ -4,11 +4,26 @@ const ms = require('ms');
 const database = require('../../database');
 const timetostring = require('@danm/timespent');
 const serverlogs = require("./serverlogs");
-const { expire } = require("../../database");
+const {
+    expire
+} = require("../../database");
 const errorhandler = require("../../errorhandler");
 const checkpunishability = require("./checkforerrors");
 
 module.exports = {
+
+    /**
+     * 
+     * @param {Discord.User} user 
+     * @param {Discord.Guild} guild 
+     * @param {*} seconds 
+     * @param {Discord.User} moderator 
+     * @param {*} reason 
+     * @param {Discord.Client} client 
+     * @param {Discord.Message} message
+     * @returns 
+     */
+
     mute: async (user, guild, seconds, moderator, reason, client, message) => {
 
         let settings = client.settings.get(guild.id);
@@ -31,28 +46,46 @@ module.exports = {
                 .setColor("FF3E3E")
             )
         }
-        
-        if (!muteRole) if (checkpunishability(guild, false, false, ['MANAGE_ROLES'], client)) return;
-        if (!muteRole) await guild.roles.create({
-            data: {
-                name: "Muted",
-                permissions: false,
-                color: '818386',
-                position: 1,
-            }
-        }).then(role => {
-            muteRole = role;
-            client.database.updateGuildData(guild.id, client, 'muteRole', role.id);
 
-            guild.channels.cache.forEach(async channel => {
 
-                channel.overwritePermissions([{
-                    id: role.id,
-                    deny: ['SEND_MESSAGES'],
-                }, ]);
+        if (!muteRole) {
+            if (checkpunishability(guild, false, false, ['MANAGE_ROLES'], client)) return;
+            let notOverwritten = [];
 
+            await guild.roles.create({
+                data: {
+                    name: "Muted",
+                    permissions: false,
+                    color: '818386',
+                    position: 1,
+                }
+            }).then(async role => {
+                muteRole = role;
+                client.database.updateGuildData(guild.id, client, 'muteRole', role.id);
+
+                await guild.channels.cache.forEach(async channel => {
+
+                    if (!channel.permissionsFor(message.guild.me).has(['MANAGE_ROLES', 'VIEW_CHANNEL'])) return notOverwritten.push(channel);
+
+                    channel.updateOverwrite(role.id, {
+                        'SEND_MESSAGES': false
+
+                    }).catch(err => {
+                        notOverwritten.push(channel);
+                    })
+
+                })
             })
-        })
+            if (notOverwritten.length > 0) {
+                if (!message) return;
+
+                message.channel.send(
+                    new Discord.MessageEmbed()
+                    .setDescription(`${warnEmoji} Please note that muted members will still be able to talk in some channels because I don't have full admin access to all the channels`)
+                    .setColor("FFC24F")
+                )
+            }
+        }
 
         let checkPerms = checkpunishability(guild, muteRole, false, ['MANAGE_ROLES']);
         if (checkPerms && message) return message.channel.send(checkPerms);
@@ -146,9 +179,10 @@ module.exports = {
 
         const roleID = client.settings.get(guild.id).muteRole;
         if (roleID) muteRole = guild.roles.cache.get(roleID);
-        
+
         let checkPerms = checkpunishability(message.guild, muteRole, false, ['MANAGE_ROLES']);
-        if (muteRole) if (checkPerms) return message.channel.send(checkPerms);
+        if (muteRole)
+            if (checkPerms) return message.channel.send(checkPerms);
 
         const redisClient = await database.redisClient;
         try {
@@ -195,7 +229,10 @@ module.exports = {
             const guildID = muteData[2];
 
             const guild = client.guilds.cache.get(guildID);
+            if (!guild) return;
+
             const member = guild.members.cache.get(memberID);
+            if (!member) return;
 
             serverlogs.execute(guild, member.user, 'UNMUTED', client.user, null, null, client);
 

@@ -7,22 +7,6 @@ module.exports = {
         const Discord = require("discord.js");
         const config = require("../../config.json");
 
-        const twitchUserInfo = require('twitch-user-info');
-twitchUserInfo('Ninja', function (stats) {
-if (!stats) {
-  return console.error("User not found!")
-} 
-console.log(stats) /*{
-  username: 'Ninja',
-  user_profile_link: 'https://twitch.tv/ninja',
-  user_profile_image: 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-300x300.png',
-  user_followers: '16,092,446',
-  user_views: '502,633,567',
-  latest_game: 'Fortnite',
-  latest_status: 'Fortnite w/ Lachlan '
-}*/ 
-})
-
         /*
         const twitch = require("twitch-user-info");
 

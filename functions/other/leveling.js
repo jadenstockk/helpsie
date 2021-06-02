@@ -14,6 +14,10 @@ module.exports = {
         let min = 15;
         let randomXP = Math.floor(Math.random() * (max - min) + min);
 
+        const settings = client.settings.get(message.guild.id).leveling;
+        if (settings.ignoredChannels.includes(message.channel.id)) return;
+
+
         addXP(message.guild.id, message.author.id, randomXP, message, client, true);
 
         client.levelingTimeouts.add(`${message.author.id} | ${message.guild.id}`);
@@ -79,10 +83,7 @@ const addXP = async (guild, user, addedXP, message, client, auto) => {
         try {
             levelroles.forEach((levelrole, index) => {
                 if (result.level >= levelrole.level) {
-                    let rolesToAdd = levelroles.slice(0, index + 1);
-                    rolesToAdd.forEach(role => {
-                        message.guild.members.cache.get(user).roles.add(role.role);
-                    })
+                    message.guild.members.cache.get(user).roles.add(levelrole.role);
                 }
             })
 
@@ -148,10 +149,8 @@ const removeXP = async (guild, user, addedXP, message, client) => {
         try {
             levelroles.forEach((levelrole, index) => {
                 if (result.level >= levelrole.level) {
-                    let rolesToAdd = levelroles.slice(0, index + 1);
-                    rolesToAdd.forEach(role => {
-                        message.guild.members.cache.get(user).roles.add(role.role);
-                    })
+                    message.guild.members.cache.get(user).roles.add(role.role);
+
                 } else if (result.level < levelrole.level) {
                     message.guild.members.cache.get(user).roles.remove(levelrole.role);
                 }

@@ -1,14 +1,25 @@
 const Discord = require('discord.js');
+const config = require('../../config.json');
+const consoleLogs = new Discord.WebhookClient(config.consoleLogsID, config.consoleLogsTOKEN);
 
 module.exports = {
-    log: (message, type, client) => {
+
+    /**
+     * 
+     * @param {*} message 
+     * @param {*} type 
+     * @param {Discord.Client} client 
+    */
+    
+    log: async (message, type) => {
 
         if (type === 'success') emoji = '🟢 ';
         if (type === 'unsuccess') emoji = '🔴 ';
         if (!type) emoji = '';
 
-        client.guilds.cache.get('794565558862479360').channels.cache.get('797113522580094986').send(
-            `\`${emoji}${message}\``
-        )
+        let clientType = '';
+        if (process.env['TOKEN'] === process.env['BETA_TOKEN']) clientType = ' - BETA';
+
+        consoleLogs.send(`\`${emoji}${message}${clientType}\``)
     }
 }

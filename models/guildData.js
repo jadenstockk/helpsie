@@ -15,7 +15,7 @@ let Schema = new mongoose.Schema({
 
     autoModActions: Array,
 
-    modRole: String,
+    modRole: Array,
     muteRole: String,
 
     disabled: {
@@ -27,6 +27,11 @@ let Schema = new mongoose.Schema({
         channel: String,
         message: String,
         roles: {
+            type: Array,
+            default: [],
+        },
+        background: Number,
+        ignoredChannels: {
             type: Array,
             default: [],
         },
@@ -66,15 +71,15 @@ let Schema = new mongoose.Schema({
     limits: {
         levelroles: {
             type: Number,
-            default: 15,
+            default: 20,
         },
         reactionroles: {
             type: Number,
-            default: 15,
+            default: 20,
         },
         automodactions: {
             type: Number,
-            default: 4,
+            default: 5,
         }
     }
 });

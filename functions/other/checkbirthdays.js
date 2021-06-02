@@ -50,6 +50,9 @@ module.exports = {
                             .setColor('BLUE')
                         )
 
+                        member.bWished.push(`${now.year()}`);
+                        await member.save();
+
                         setTimeout(() => {
                             if (!client.birthdaysWished.includes(`${client.birthdaysWished}-${now.year()}`)) {
                                 client.birthdaysWished.push(`${client.birthdaysWished}-${now.year()}`);
@@ -61,7 +64,7 @@ module.exports = {
                                 );
                             }
                             
-                        }, index * 10);
+                        }, index * 100);
 
                         function secondsUntilMidnight() {
                             var midnight = new Date();
@@ -98,9 +101,6 @@ module.exports = {
                         } catch (err) {
                             errorhandler.init(err, __filename, message);
                         }
-
-                        member.bWished.push(`${now.year()}`);
-                        await member.save();
                     })
                 }
             }
@@ -115,7 +115,10 @@ module.exports = {
             const guildID = birthdayData[2];
 
             const guild = client.guilds.cache.get(guildID);
+            if (!guild) return;
+
             const member = guild.members.cache.get(memberID);
+            if (!member) return;
 
             const settings = client.settings.get(guild.id);
 

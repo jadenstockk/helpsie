@@ -97,7 +97,7 @@ module.exports = {
     })
 
     let utilityCommands = [
-      `\`${prefix}help\`\nGet information about a certain member in the server`,
+      `\`${prefix}help\`\nGet a list of the bot's commands`,
       `\`${prefix}userinfo <member>\`\nGet information about a certain member in the server`,
       `\`${prefix}youtube <video>\`\nSearch for a YouTube video`,
       `\`${prefix}imgur <image>\`\nSearch for an image on Imgur`,

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<body>
+
+<%- include("partials/header", { bot, user, path, title: `Helpsie - ${guild.name} Settings` }) %>
+
+<script>
+  function myAutosavedTextbox_onTextChanged() {
+    console.log('hey')
+    var timeoutId;
+    $('form input, form textarea').on('input propertychange change', function () {
+      console.log('Textarea Change');
+
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(function () {
+        // Runs 1 second (1000 ms) after the last change    
+        saveToDB();
+      }, 1000);
+    });
+
+    function saveToDB() {
+      console.log('Saving to the db');
+      form = $('.mainform');
+      form.submit();
+
+      $('.form-status-holder').html('Saved! Last: ' + d.toLocaleTimeString());
+    };
+  }
+
+  // This is just so we don't go anywhere  
+  // and still save if you submit the form
+  $('.mainform').submit(function (e) {
+    saveToDB();
+    e.preventDefault();
+  });
+</script>
+
+<link href="/fonts.css" rel="stylesheet">
+<a href="/dashboard" class="btn btn-primary btn-sm active text-white hoverbuttondash" role="button" aria-pressed="true"
+  style="margin: 5%;margin-bottom: 0;margin-top: 20px;">&laquo; Go Back</a>
+<div class="container-sm center" style="margin-top: 30pt;">
+  <div class="d-grid gap-2 col-4 mx-auto">
+    <% if (alert) { %>
+    <div class="alert alert-success" role="alert">
+      <%= alert %>
+    </div>
+    <% } %>
+    <div class="header-dashboard" style="display:block;">
+      <h1 class="text-white guild-text-dashboard">
+        <%- guild.icon ? `<img style="margin-right:5pt;" src="https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}" class="guild-icon-dashboard">` : "" %><%= guild.name %>
+      </h1>
+    </div>
+    <hr class="text-white">
+
+    <form method="POST" id="mainform" class="mainform">
+
+      <p class="h5 text-white" style="margin-bottom: 1rem; margin-top: 1rem;font-weight: 550;font-size: x-large;">
+        General Settings:</p>
+
+      <p class="h5 text-white" style="margin-bottom: 0.5rem; margin-top: 1rem;font-weight: 500;font-size: large;">Prefix
+      </p>
+      <p class="disabled text-white" style="font-size: small;">Set a new prefix for the bot that will be used to
+        trigger commands</p>
+      <input type="text" class="form-control" name="prefix" value="<%= current.prefix %>" placeholder="Enter a prefix">
+
+      <div class="form-check form-switch" style="margin-top: 3rem;">
+        <label class="h5 form-check-label text-white" style="font-weight: 500;font-size: large;"
+          for="flexSwitchCheckDefault">Tips</label>
+        <input name="tips" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+          <% if (current.tips) { %> checked <% } else { %> unchecked <% } %> />
+      </div>
+      <p class="disabled text-white" style="font-size: small;margin-bottom: 2.5rem;">Choose whether or not you want the
+        bot to send tips when it thinks you are doing something incorrectly</p>
+
+      <hr class="text-white">
+
+      <p class="h5 text-white" style="margin-bottom: 1rem; margin-top: 2.5rem;font-weight: 550;font-size: x-large;">
+        Automod Settings:</p>
+
+      <p class="h5 text-white" style="margin-bottom: 0.5rem; margin-top: 1rem;font-weight: 500;font-size: large;">
+        Profanity Filter</p>
+      <p class="disabled text-white" style="font-size: small;">Set a new prefix for the bot that will be used to trigger
+        commands</p>
+      <select name="profanityFilter" class="form-select" name="profanityFilter" aria-label="Default select example">
+        <option value="<%= current.profanityFilter %>" selected disabled hidden><%= current.profanityFilter %></option>
+        <option value="warn">warn</option>
+        <option value="delete">delete</option>
+        <option value="warndelete">warndelete</option>
+        <option value="off">off</option>
+      </select>
+      </input>
+
+      <p class="h5 text-white" style="margin-bottom: 0.5rem; margin-top: 1rem;font-weight: 500;font-size: large;">Invite
+        Blocker</p>
+      <p class="disabled text-white" style="font-size: small;">Set a new prefix for the bot that will be used to trigger
+        commands</p>
+      <select name="inviteBlocker" class="form-select" aria-label="Default select example">
+        <option value="<%= current.inviteBlocker %>" selected disabled hidden><%= current.inviteBlocker %></option>
+        <option value="warn">warn</option>
+        <option value="delete">delete</option>
+        <option value="warndelete">warndelete</option>
+        <option value="off">off</option>
+      </select>
+      </input>
+
+      <p class="h5 text-white" style="margin-bottom: 0.5rem; margin-top: 1rem;font-weight: 500;font-size: large;">Link
+        Blocker</p>
+      <p class="disabled text-white" style="font-size: small;">Set a new prefix for the bot that will be used to trigger
+        commands</p>
+      <select name="linkBlocker" class="form-select" aria-label="Default select example">
+        <option value="<%= current.linkBlocker %>" selected disabled hidden><%= current.linkBlocker %></option>
+        <option value="warn">warn</option>
+        <option value="delete">delete</option>
+        <option value="warndelete">warndelete</option>
+        <option value="off">off</option>
+      </select>
+
+
+
+
+
+
+
+
+      <br><button style="margin-bottom: 50pt;" type="submit" class="btn btn-secondary text-white hoverbuttondash">Save
+        Changes</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

@@ -9,12 +9,7 @@ module.exports = {
   mongoose: () => {
     const dbOptions = {
       useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-      autoIndex: false,
-      poolSize: 10,
-      family: 4
+      useUnifiedTopology: true
     }
 
     mongoose.connect(
@@ -90,7 +85,17 @@ module.exports = {
     if (connecting) {
       dataFetched++
     }
+  },
 
+  fetchAndReturnGuildData: async (guild, manager) => {
+    let data = await guildData.findOne({
+      guild
+    }).catch(err => {
+      console.log(err), client.console.log(`Problem when returning guild data\n\n${err}`, 'unsuccess')
+    })
+
+    let returnValue = await dataHandler(data, guild, undefined, true);
+    return returnValue;
   },
 
   updateGuildData: (guild, client, section, update) => {
@@ -128,7 +133,7 @@ module.exports = {
 
         if (!data) {
           let newData = new guildData({
-            guild: message.guild.id,
+            guild: guild.id,
 
           });
           await newData.save();
@@ -173,7 +178,9 @@ module.exports.expire = (callback) => {
   })
 }
 
-async function dataHandler(data, guild, client) {
+async function dataHandler(data, guild, client, onlyReturn) {
+  let obj;
+
   if (data) {
     if (!data.prefix) prefix = '!';
     else prefix = data.prefix;
@@ -202,7 +209,8 @@ async function dataHandler(data, guild, client) {
     if (!data.leveling) leveling = {
       channel: undefined,
       message: undefined,
-      roles: []
+      roles: [],
+      ignoredChannels: []
     };
     else leveling = data.leveling;
 
@@ -228,8 +236,7 @@ async function dataHandler(data, guild, client) {
 
     limits = data.limits;
 
-    await client.settings.set(guild, {
-
+    obj = {
       prefix,
       profanityFilter,
       inviteBlocker,
@@ -245,12 +252,14 @@ async function dataHandler(data, guild, client) {
       autoModActions,
       tips,
       limits
+    }
 
-    });
+    if (!onlyReturn) await client.settings.set(guild, obj);
+    return obj;
 
   } else {
 
-    await client.settings.set(guild, {
+    obj = {
 
       prefix: '!',
       profanityFilter: 'off',
@@ -278,15 +287,21 @@ async function dataHandler(data, guild, client) {
       leveling: {
         channel: undefined,
         message: undefined,
-        roles: []
+        roles: [],
+        ignoredChannels: []
       },
       autoModActions: [],
       tips: true,
 
       limits: {
-        levelroles: 5
+        levelroles: 20,
+        reactionroles: 20,
+        automodactions: 5
       }
 
-    });
+    }
   }
+
+  if (!onlyReturn) await client.settings.set(guild, obj);
+  return obj;
 }

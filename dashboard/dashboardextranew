@@ -1,0 +1,280 @@
+const url = require("url");
+const path = require("path");
+const express = require("express");
+const passport = require("passport");
+const settings = require("./settings");
+const ejs = require("ejs");
+const bodyParser = require("body-parser");
+const Discord = require("discord.js");
+const guildData = require("../models/guildData");
+const spacetime = require('spacetime');
+const helmet = require("helmet");
+const dashboard = require("./routes/dasboard")
+const mongoose = require('mongoose');
+require('dotenv').config();
+const {
+  fetchGuildData,
+  fetchAndReturnGuildData
+} = require("../database");
+const botInfo = require("../models/botInfo");
+const app = express();
+const redis = require('redis');
+const CryptoJS = require('crypto-js');
+const session = require('express-session');
+const {
+  getUserGuilds
+} = require("./utils/api");
+const { encrypt, decrypt, compileStartUp, checkAuth, renderTemplate } = require("./utils/utils");
+const { DiscordStatergy } = require("./strategies/discord");
+let RedisStore = require('connect-redis')(session);
+
+/**
+ * 
+ * @param {Discord.ShardingManager} manager
+ */
+
+module.exports = async (manager) => {
+
+  let {
+
+    callbackUrl,
+    domain,
+    dataDir,
+    templateDir,
+    config,
+    configMain
+
+  } = compileStartUp();
+
+  const redisClient = await redis.createClient({
+    url: configMain.redisPath
+  })
+
+  passport.serializeUser((user, done) => done(null, user));
+  passport.deserializeUser((obj, done) => done(null, obj));
+
+  manager.config = config;
+
+  passport.use(DiscordStatergy);
+
+  app.use(session({
+    store: new RedisStore({
+      client: redisClient
+    }),
+    name: 'sessionID',
+    secret: "Q*XH!@dcW6zTfNHd69q5C@pFqtRuRp6&nJ^g-2@_FMXhBAvM4q^7G#zkuz%Q",
+    resave: false,
+    saveUninitialized: false,
+  }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use(bodyParser.json());
+  app.use(helmet());
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
+  app.engine("html", ejs.renderFile);
+  app.set("view engine", "html");
+  app.set('views', templateDir);
+  app.use("/", express.static(path.resolve(`${dataDir}assets`)));
+
+  app.locals.domain = config.domain.split("//")[1];
+
+  app.get("/login", (req, res, next) => {
+      if (req.session.backURL) {
+        req.session.backURL = req.session.backURL;
+
+      } else if (req.headers.referer) {
+        const parsed = url.parse(req.headers.referer);
+        if (parsed.hostname === app.locals.domain) {
+          req.session.backURL = parsed.path;
+        }
+      } else {
+        req.session.backURL = "/";
+      }
+      next();
+    },
+    passport.authenticate("discord"));
+
+  app.get("/callback", passport.authenticate("discord", {
+    failureRedirect: "/",
+    successRedirect: '/dashboard'
+  }), (req, res) => {
+    if (req.session.backURL) {
+      const url = req.session.backURL;
+      req.session.backURL = null;
+      res.redirect(url);
+    } else {
+      res.redirect("/");
+    }
+  });
+
+  app.get("/logout", function (req, res) {
+    req.session.destroy(() => {
+      req.logout();
+      res.redirect("/");
+    });
+  });
+
+  // Index endpoint.
+  app.get("/", (req, res) => {
+    renderTemplate(res, req, "index.ejs");
+  });
+
+  app.use("/dashboard", dashboard);
+
+  // Dashboard endpoint.
+  app.get("/dashboard", checkAuth, async (req, res) => {
+    const perms = Discord.Permissions;
+
+    let botguilds = [];
+    let guildsrough = await manager.broadcastEval(`this.guilds.cache.map(g => g.id)`);
+    guildsrough.forEach(a => {
+      a.forEach(b => {
+        botguilds.push(b);
+      })
+    })
+
+    let userguilds = await getUserGuilds(req.user.accessToken);
+
+    const mainguilds = [];
+    const otherguilds = [];
+
+    await userguilds.forEach(guild => {
+      const permsOnGuild = new perms(guild.permissions)
+      if (!permsOnGuild.has("MANAGE_GUILD")) return;
+
+      if (botguilds.includes(guild.id)) mainguilds.push(guild);
+      else otherguilds.push(guild);
+    })
+
+    const guilds = mainguilds.concat(otherguilds);
+
+    renderTemplate(res, req, "dashboard.ejs", {
+      guilds,
+      botguilds
+    });
+  });
+
+  app.get("/invite", (req, res) => {
+    res.redirect('https://discord.com/api/oauth2/authorize?client_id=781293073052991569&permissions=1916267615&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fapi%2Fauth%2Fdiscord%2Fredirect&scope=bot')
+  })
+  app.get("/vote", (req, res) => {
+    res.redirect('https://top.gg/bot/781293073052991569/vote')
+  })
+  app.get("/support", (req, res) => {
+    res.redirect('https://discord.gg/5jaZRYnZU5')
+  })
+  app.get("/commands", (req, res) => {
+    renderTemplate(res, req, "commands.ejs", {
+      commands: settings.commands
+    });
+  })
+
+  async function editSettings(req, res) {
+    let hasPerms = false;
+    let guildID = req.params.guildID;
+
+    await manager.broadcastEval(`
+      let guild = this.guilds.cache.get('${guildID}');
+      let member = guild.members.cache.get('${req.user.id}');
+      member.permissions.has("MANAGE_GUILD");
+    `)
+      .catch(err => {
+
+      })
+      .then(results => {
+        results.forEach(s => {
+          if (s) hasPerms = true;
+        })
+      })
+
+    if (!hasPerms) return res.redirect("/dashboard");
+    const data = {
+      guild: await req.user.guilds.find(g => g.id === guildID) || null,
+      current: await fetchAndReturnGuildData(guildID, manager) || null
+    }
+    if (!data.guild) return res.redirect("/dashboard");
+    return data;
+  }
+
+  app.get("/dashboard/:guildID", checkAuth, async (req, res) => {
+
+    let returned = await editSettings(req, res);
+    if (!returned) return;
+
+    let {
+      guild,
+      current
+    } = returned;
+
+    renderTemplate(res, req, "dash-menu.ejs", {
+      guild,
+      current,
+      info: require('../functions/other/settingsdata/settings.json'),
+      alert: null
+    });
+  });
+
+  app.post("/dashboard/:guildID", checkAuth, async (req, res) => {
+
+    let returned = await editSettings(req, res);
+    if (!returned) return;
+
+    let {
+      guild
+    } = returned;
+
+    let data = await guildData.findOne({
+      guild: guild.id
+    });
+    if (!data) {
+      data = new guildData({
+        guild: guild.id
+      });
+    }
+
+    let {
+      prefix,
+      profanityFilter,
+      inviteBlocker,
+      linkBlocker,
+      tips
+
+    } = req.body;
+
+    console.log(req.body);
+
+    if (prefix) data.prefix = prefix;
+    if (profanityFilter) data.profanityFilter = profanityFilter;
+    if (inviteBlocker) data.inviteBlocker = inviteBlocker;
+    if (linkBlocker) data.linkBlocker = linkBlocker;
+    if (tips) data.tips = true;
+    else if (!tips) data.tips = false;
+
+
+    await data.save().catch(() => {});
+    await manager.broadcastEval(`
+    if (this.guilds.cache.get('${guild.id}')) this.database.fetchGuildData('${guild.id}', this, false);
+  `)
+      .catch(err => {
+        console.log(err)
+      })
+
+    let current = await fetchAndReturnGuildData(guild.id, manager);
+
+    renderTemplate(res, req, "dash-menu.ejs", {
+      guild,
+      current,
+      info: require('../functions/other/settingsdata/settings.json'),
+      alert: "Settings successfully updated"
+    });
+  });
+
+  app.get('*', (req, res) => {
+    res.status(404);
+    renderTemplate(res, req, "404.ejs");
+  });
+
+  app.listen(config.port, null, null, () => console.log(`\n[${spacetime.now(`Africa/Johannesburg`).time()} ${spacetime.now(`Africa/Johannesburg`).format('YYYY-MM-DD')}]: Web processes running on port ${config.port}\n`));
+};

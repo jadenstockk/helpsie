@@ -10,6 +10,7 @@ const botInfo = require("./models/botInfo");
 const mute = require("./functions/moderation/mute");
 const dotenv = require('dotenv');
 const shortNum = require('number-shortener');
+const prettyBytes = require('pretty-bytes');
 dotenv.config();
 const {
   DiscordInteractions,
@@ -22,12 +23,13 @@ const {
 const checkbirthdays = require("./functions/other/checkbirthdays");
 const errorhandler = require("./errorhandler");
 const spacetime = require("spacetime");
-const votingAndStatsManager = require("./functions/other/votingAndStatsManager");
-const supportSystem = require("./functions/other/supportSystem");
-const betaOnline = require("./functions/other/betaOnline");
+const webhookManager = require("./functions/other/webhookManager");
+const prettyMilliseconds = require("pretty-ms");
 client.setMaxListeners(0);
-client.database = require("./database");
 client.cache = new Set();
+client.database = require('./database');
+const disbut = require('discord-buttons')(client);
+
 
 const interaction = new DiscordInteractions({
   applicationId: config.appID,
@@ -52,6 +54,7 @@ async function slashCmds() {
 client.console = require("./functions/botevents/console");
 
 client.levelingTimeouts = new Set();
+client.dmTimeouts = new Set();
 client.addxpTimeouts = new Set();
 client.settings = new Map();
 client.timeouts = new Map();
@@ -71,10 +74,13 @@ client.votingSites = [{
   code: 'bfd'
 }];
 
-client.disabledCommands = [
-  {
+client.disabledCommands = [{
     command: 'twitch',
     reason: 'Not completed due to issues with the Twitch API'
+  },
+  {
+    command: 'importlevels',
+    reason: 'Still in the works! Hopefully coming soon :)'
   }
 ];
 
@@ -109,75 +115,22 @@ client.once("ready", async () => {
   global.muteEmoji = client.emojis.cache.get('794859653825691699');
   global.trashEmoji = client.emojis.cache.get('817888791733600286');
   global.loadingEmoji = client.emojis.cache.get('840515988067581975');
+  global.enabledEmoji = client.emojis.cache.get('843212731066089472');
+  global.disabledEmoji = client.emojis.cache.get('843212731196243999');
+  global.neutral2Emoji = client.emojis.cache.get('843237936211165225');
+  global.neutralEmoji = client.emojis.cache.get('843235204068147240');
   global.warnEmoji = `:warning:`;
   global.checkEmoji = client.emojis.cache.get('796336616494727205');
   global.logo = client.emojis.cache.get('794861368435408917');
   global.dataFetched = 0;
-  global.allCommands = [];
-  global.allCommandInfos = [];
 
   fetchAllGuildData(client, true);
 
-  /*
-  client.musicOptions = {
-    searchAPI: config.youtubeAPI,
-    play: require('./functions/music/playSong'),
-    volume: 1
-  }
-  client.connections = new Map();
-  */
-
   loadAll();
 
-  function loadAll() {
-    setTimeout(() => {
-      if (dataFetched > (client.guilds.cache.size - 1)) {
-
-        console.log(`Loaded guild data`)
-
-        loadCommands();
-        loadEvents();
-        let onlineMessage = ` ${client.user.username} is online in ${client.guilds.cache.size} guilds `;
-
-        allCommands = allCommands.toString();
-        console.log(allCommands);
-
-        console.clear(), console.log(`||${'-'.repeat(onlineMessage.length)}||\n||${onlineMessage}||\n||${'-'.repeat(onlineMessage.length)}||\n`) //, client.console.log(`All startup functions completed`, 'success', client);
-
-      } else {
-        setTimeout(() => {
-          loadAll();
-
-        }, 3000);
-      }
-    }, 4000);
-  }
-
-  function loadCommands() {
-    let baseFile = 'commandhandler.js'
-    let commandBase = require(`./commands/${baseFile}`)
-    const readCommands = (dir) => {
-      const files = fs.readdirSync(path.join(__dirname, dir))
-      for (const file of files) {
-        const stat = fs.lstatSync(path.join(__dirname, dir, file))
-
-        if (stat.isDirectory()) {
-          readCommands(path.join(dir, file))
-        } else if (file !== baseFile) {
-          const option = require(path.join(__dirname, dir, file));
-          commandBase(client, option);
-          allCommands.push(option.commands.toString());
-        }
-      }
-    }
-    readCommands('commands');
-
-    console.log(`Loaded commands`)
-  }
-
-  async function loadEvents() {
-    //if (process.env['TOKEN'] === process.env['BETA_TOKEN']) return client.user.setStatus('idle');
-
+  const loadEvents = async () => {
+    if (process.env['TOKEN'] === process.env['BETA_TOKEN']) client.user.setStatus('idle');
+  
     const readCommands = (dir) => {
       const files = fs.readdirSync(path.join(__dirname, dir))
       for (const file of files) {
@@ -188,16 +141,68 @@ client.once("ready", async () => {
     readCommands('events');
     mute.expireManager(client);
     checkbirthdays.expireManager(client);
-    votingAndStatsManager.listen(client);
-    if (process.env['TOKEN'] !== process.env['BETA_TOKEN']) votingAndStatsManager.update(client), betaOnline(), supportSystem(client);
     botFunctions();
+    if (process.env['TOKEN'] !== process.env['BETA_TOKEN']) webhookManager.update(client);
     console.log(`Loaded events`);
+  }
+  
+  const loadCommands = async () => {
+    global.allCommands = [];
+    global.allCommandInfos = [];
+
+    let baseFile = 'commandhandler.js'
+    let commandBase = require(`./commands/${baseFile}`)
+    const readCommands = (dir) => {
+      const files = fs.readdirSync(path.join(__dirname, dir))
+      for (const file of files) {
+        const stat = fs.lstatSync(path.join(__dirname, dir, file))
+  
+        if (stat.isDirectory()) {
+          readCommands(path.join(dir, file))
+        } else if (file !== baseFile) {
+          const option = require(path.join(__dirname, dir, file));
+          commandBase(client, option, disbut);
+          allCommands.push(option.commands.toString());
+        }
+      }
+    }
+    readCommands('commands');
+  
+    console.log(`Loaded commands`)
+  }
+
+  client.loadCommands = loadCommands;
+  client.loadEvents = loadEvents;
+
+  function loadAll() {
+    setTimeout(() => {
+      if (dataFetched > (client.guilds.cache.size - 1)) {
+
+        console.log(`Loaded guild data`)
+        loadCommands();
+        loadEvents();
+        //let onlineMessage = ` Shard #${client.shard.ids} is online in ${client.guilds.cache.size} guilds `;
+
+        allCommands = allCommands.toString();
+        //console.clear(), console.log(`||${'-'.repeat(onlineMessage.length)}||\n||${onlineMessage}||\n||${'-'.repeat(onlineMessage.length)}||\n`) //, client.console.log(`All startup functions completed`, 'success', client);
+
+        console.log(`\n[${spacetime.now(`Africa/Johannesburg`).time()} ${spacetime.now(`Africa/Johannesburg`).format('YYYY-MM-DD')}]: Shard #${client.shard.ids || 'Unknown'} is online in ${client.guilds.cache.size} guilds\nAPI Ping ${client.ws.ping}ms | Uptime ${prettyMilliseconds(client.uptime)} | Memory ${prettyBytes(process.memoryUsage().heapUsed)}\n`);
+
+      } else {
+        setTimeout(() => {
+          loadAll();
+
+        }, 1000);
+      }
+    }, 3000);
   }
 });
 
+client.on("error", console.error);
+client.on("warn", console.warn);
+
 //TESTING
 client.on('message', async message => {
-  return;
 
   if (message.author.bot) return;
   const args = message.content.split(/[ ]+/);
@@ -207,8 +212,23 @@ client.on('message', async message => {
     member
   } = message;
 
+  let button = new disbut.MessageButton()
+    .setStyle('red')
+    .setLabel('Hello')
+    .setID('hey')
+
+  let button2 = new disbut.MessageButton()
+    .setStyle('url')
+    .setLabel('Contribution Page')
+    .setURL('https://npmjs.com/discord-buttons')
+
   if (message.member.roles.cache.get('824641926832848916')) {
     if (message.content === '132') {
+      message.channel.send('Hey, i am powered by https://npmjs.com/discord-buttons', {
+        buttons: [
+          button, button2
+        ]
+      });
     }
   }
 })
@@ -223,13 +243,19 @@ async function botFunctions() {
 
   //TIME CHECKER
   setInterval(() => {
-    console.log(`[${spacetime.now(`Africa/Johannesburg`).time()}]: Online: ${client.ws.ping}ms`);
+    console.log(`\n[${spacetime.now(`Africa/Johannesburg`).time()} ${spacetime.now(`Africa/Johannesburg`).format('YYYY-MM-DD')}]: Shard #${client.shard.ids || 'Unknown'} is online in ${client.guilds.cache.size} guilds\nAPI Ping ${client.ws.ping}ms | Uptime ${prettyMilliseconds(client.uptime)} | Memory ${prettyBytes(process.memoryUsage().heapUsed)}\n`);
 
-  }, 300000);
+  }, 60000 * 60);
 
-  //STATS POSTER
+  //PRESENCE RELOADER
   setInterval(async () => {
-    votingAndStatsManager.update(client);
+
+    client.user.setPresence({
+      activity: {
+        name: process.env['ACTIVITYNAME'],
+        type: 'LISTENING'
+      }
+    });
 
   }, 60000 * 20);
 
@@ -273,16 +299,17 @@ async function botFunctions() {
     updateDatabaseStats();
 
   }, 60000 * 20);
+
+  //STATS POSTER
+  setInterval(async () => {
+    if (process.env['TOKEN'] !== process.env['BETA_TOKEN']) webhookManager.update(manager);
+
+  }, 30000 * 20);
 }
 
 async function updateDatabaseStats() {
   let commandsRun = client.commandsRun;
-
   let guilds = client.guilds.cache.size;
-  let users = 0;
-  await client.guilds.cache.forEach(guild => {
-    users = users + guild.memberCount;
-  })
 
   botInfo.findOne({
       mainID: 1
@@ -294,16 +321,12 @@ async function updateDatabaseStats() {
         let newData = new botInfo({
           mainID: 1,
           commandsRun: commandsRun,
-          users: users,
-          guilds: guilds,
 
         })
         await newData.save();
 
       } else {
         data.commandsRun = data.commandsRun + commandsRun;
-        data.users = users;
-        data.guilds = guilds;
         await data.save();
 
       }
@@ -312,6 +335,6 @@ async function updateDatabaseStats() {
   )
 }
 
-client.database.redis();
 client.database.mongoose();
+client.database.redis();
 client.login(process.env['TOKEN']);

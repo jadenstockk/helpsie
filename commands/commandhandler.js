@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const errHandler = require('../errorhandler');
 const errchecker = require('../functions/moderation/checkforerrors');
+const tip = require('../functions/other/tip');
 
 const validPermissions = [
   'CREATE_INSTANT_INVITE',
@@ -42,7 +43,7 @@ const validPermissions = [
  * @param {*} commandOptions 
  */
 
-module.exports = (client, commandOptions) => {
+module.exports = (client, commandOptions, disbut) => {
 
   let {
     commands,
@@ -76,6 +77,7 @@ module.exports = (client, commandOptions) => {
   client.on('message', async (message) => {
     if (message.author.bot) return;
     if (message.channel.type === 'dm') return;
+    if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
     if (client.blacklistedUsers && client.blacklistedUsers.find(person => person.user === message.author.id)) return;
 
     try {
@@ -177,17 +179,19 @@ module.exports = (client, commandOptions) => {
               return;
             }
           }
+
+          tip('checksyntax', message, client);
         
-          const args = content.split(/[ ]+/)
-          args.shift()
-          if (args[0] === alias) args.splice(0, 1)
+          const args = content.split(/[ ]+/);
+          args.shift();
+          if (args[0] === alias) args.splice(0, 1);
         
           client.commandsRun = client.commandsRun + 1;
-          callback(message, args, client);
+          callback(message, args, client, disbut);
         }
       }
     } catch (err) {
-      errHandler.init(err, __filename, message)
+      errHandler.init(err, __filename, message);
 
     }
   })
