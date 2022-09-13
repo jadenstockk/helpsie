@@ -41,7 +41,7 @@
     "node-fetch": "^2.6.1",
     "number-shortener": "^1.0.1",
     "opusscript": "0.0.7",
-    "passport": "^0.4.1",
+    "passport": "^0.6.0",
     "passport-discord": "^0.1.4",
     "passport-oauth2-refresh": "^2.0.2",
     "pm2": "^4.5.6",
